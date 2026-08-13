@@ -8,9 +8,15 @@
     <!-- PWA: Manifest e Cor do Tema -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#ffffff">
+    <!-- Ícone padrão para o navegador (Aba) -->
+    <link rel="icon" type="image/png" href="imagem/icon_solid_192.png">
+    
+    <!-- Ícone para quando o usuário salva o site na tela inicial do celular (iOS/Android) -->
+    <link rel="apple-touch-icon" href="imagem/icon_solid_192.png">
+    
 
     <!-- CSS Externo e Fontes -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/main.css">
     <!-- Carrega a fonte Poppins + Material Symbols Outlined -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
@@ -26,34 +32,6 @@
         </a>
     </header>
 
-    <!-- SPLASH SCREEN / CARREGAMENTO E ERRO -->
-    <div id="splash-screen" class="splash-container">
-        <!-- ESTADO 1: CARREGANDO -->
-        <div id="splash-loading" class="splash-content">
-            <div class="splash-logo-box">
-                <h1>Chibi<span>Heart</span></h1>
-            </div>
-            <div class="splash-spinner"></div>
-            <p class="splash-status">Carregando aplicativo...</p>
-        </div>
-
-        <!-- ESTADO 2: ERRO -->
-        <div id="splash-error" class="splash-content hidden">
-            <span class="material-symbols-outlined splash-error-icon">error</span>
-            <h2>Ops! Algo deu errado</h2>
-            <p id="splash-error-msg" class="splash-error-text">Não foi possível carregar os dados.</p>
-            
-            <details class="splash-error-details">
-                <summary>Ver motivo do erro</summary>
-                <pre id="splash-error-code"></pre>
-            </details>
-
-            <button id="btn-splash-retry" class="btn-disney-play" onclick="window.location.reload()" tabindex="0">
-                <span class="material-symbols-outlined">refresh</span>
-                TENTAR NOVAMENTE
-            </button>
-        </div>
-    </div>
 
     <!-- Conteúdo Principal (SPA) -->
     <main class="main-content">
@@ -74,27 +52,6 @@
 
         <!-- VIEW DA HOME -->
         <section id="inicio" class="app-view active">
-            <!-- Hero Banner Dinâmico -->
-            <section id="hero-banner" class="hero-banner" aria-label="Destaques principais"></section>
-        
-            <!-- Template do Hero Banner -->
-            <template id="modelo-hero-banner">
-                <div class="hero-banner-slide">
-                    <img class="hero-banner-img" src="" alt="">
-                    <div class="hero-banner-overlay"></div>
-        
-                    <div class="hero-banner-content">
-                        <span class="hero-badge-tag">EM DESTAQUE</span>
-                        <h2 class="hero-banner-title"></h2>
-                        <p class="hero-banner-desc"></p>
-        
-                        <div class="hero-actions">
-                            <a class="btn-hero btn-hero-play" role="button" tabindex="0" aria-label="Assistir">Assistir</a>
-                            <a class="btn-hero btn-hero-info" role="button" tabindex="0" aria-label="Detalhes">Mais Informações</a>
-                        </div>
-                    </div>
-                </div>
-            </template>
         
             <!-- Adicionados Recentemente -->
             <section class="secao-categoria">
@@ -189,6 +146,7 @@
                         </div>
                         <div class="ep-info">
                             <h3 class="card-title-ep"></h3>
+			    <p class="card-descricao-ep"></p>
                         </div>
                     </div>
                 </template>

@@ -3,33 +3,50 @@
    ========================================================================== */
 
 /* Esconde o Header por padrão nas outras telas */
+
+/* ==========================================================================
+   MAIN HEADER (TAB BAR SUPERIOR) - TOTALMENTE INVISÍVEL / APENAS SOMBRA
+   ========================================================================== */
 .main-header {
-    display: none;
-    position: sticky; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 60px;
-    align-items: center; 
-    justify-content: space-between; 
-    padding: 0 20px;
-    background-color: var(--bg-glass);
-    backdrop-filter: blur(10px); 
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border-glass); 
+    display: flex;
+    position: sticky; /* Mantido como sticky conforme conversamos */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 56px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    box-sizing: border-box;
+
+    /* Estado Inicial: Fundo com leve opacidade e borda invisível */
+    background-color: rgba(9, 9, 11, 0.95); 
+    border-bottom: 1px solid transparent; /* IMPORTANTE: Começa transparente */
+
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+
     z-index: 1000;
     
-    /* ⚡ FORÇA A GPU: Cria uma camada isolada de aceleração de hardware */
-    will-change: transform, opacity;
-    transform: translateZ(0);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    /* Transição suave para a borda e o fundo não piscarem ao rolar */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-/* ⚡ Classe adicionada via JS ao rolar para baixo (oculta o header) */
-.main-header.header-hidden {
-    transform: translateY(-100%) translateZ(0);
-    opacity: 0;
-    pointer-events: none;
+/* ESTADO QUANDO ROLAR A TELA (Seu JS já ativa isso automaticamente após 20px) */
+.main-header.scrolled {
+    background-color: rgba(9, 9, 11, 0.98); /* Fica ligeiramente mais sólido */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12); /* A bordinha surge de forma sutil aqui! */
+}
+
+
+
+/* ⚡ Classe adicionada via JS ao rolar para baixo: fica 100% sólido */
+.main-header.scrolled {
+    background: var(--bg-glass, rgba(18, 19, 26, 0.98));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-glass, rgba(255, 255, 255, 0.1));
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 /* Mostra o Header SOMENTE quando a tela #inicio estiver ativa */
@@ -74,10 +91,10 @@ body:has(#inicio.active) .main-header {
 }
 
 .main-content {
-    padding: calc(16px + env(safe-area-inset-top, 0px)) 20px 16px 20px;
+    padding: 0 20px 16px 20px;
     padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
     min-height: calc(100vh - 118px); 
-    max-width: 1200px; 
+    width: 100%; 
     margin: 0 auto;
 }
 
@@ -121,7 +138,6 @@ body:has(#inicio.active) .main-header {
     left: 0;
     transform: translateZ(0);
     width: 100%;
-    max-width: 100%;
     height: calc(60px + env(safe-area-inset-bottom, 0px)); 
     padding-bottom: env(safe-area-inset-bottom, 0px);
     display: flex; 
@@ -187,7 +203,7 @@ body:has(#player.active) .tab-bar {
    ========================================================================== */
 
 #pesquisa {
-    padding-top: 8px;
+    padding-top: 80px; /* Compensação de espaço para a aba de pesquisa não ficar por baixo do header fixo */
 }
 
 .search-input-wrapper {
@@ -195,7 +211,6 @@ body:has(#player.active) .tab-bar {
     display: flex;
     align-items: center;
     width: 100%;
-    max-width: 600px;
     margin: 0 auto 24px auto;
 }
 

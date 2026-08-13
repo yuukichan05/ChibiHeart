@@ -1,178 +1,79 @@
 // js/main.js
 
-// 🔄 IMPORTS UNIFICADOS
+// 🔄 IMPORTS DOS MÓDULOS
 import { 
-  carregarHeroBanner, 
   carregarAnimesRecomendados, 
   carregarAnimesRecentes, 
-  carregarNovosEpisodios, 
   carregarAnimesPorGenero 
 } from './modules/inicio.js';
 
-import { gerenciarTelaInfo, fecharOverlayEp } from './modules/info.js';
+import { gerenciarTelaInfo } from './modules/info.js';
 import { gerenciarTelaPlayer } from './modules/playerView.js';
 import { inicializarPesquisa } from './modules/pesquisa.js';
-import { ocultarSplashScreen, exibirErroSplash } from './modules/splash.js';
 
-// --- CONTROLE DE SCROLL DO CABEÇALHO SUPERIOR ---
+// --- GERENCIADOR DO HEADER NO SCROLL ---
 function inicializarScrollHeader() {
-  let lastScrollY = window.scrollY;
-  const header = document.querySelector('.main-header');
+  const header = document.querySelector(".main-header");
 
-  window.addEventListener('scroll', () => {
-    if (!header) return;
-
-    const currentScrollY = window.scrollY;
-
-    // Se rolar para baixo e passar de 50px, oculta o cabeçalho
-    if (currentScrollY > lastScrollY && currentScrollY > 50) {
-      header.classList.add('header-hidden');
+  window.addEventListener("scroll", () => {
+    // Quando rolar mais de 20px, adiciona a classe .scrolled (fundo sólido escuro)
+    if (window.scrollY > 20) {
+      header?.classList.add("scrolled");
     } else {
-      // Se rolar para cima, exibe o cabeçalho
-      header.classList.remove('header-hidden');
+      header?.classList.remove("scrolled");
     }
-
-    lastScrollY = currentScrollY;
-  });
+  }, { passive: true });
 }
 
-// --- MÓDULO TV INTEGRADO DIRECTAMENTE ---
-function inicializarNavegacaoTV() {
-  window.addEventListener("keydown", (e) => {
-    const chavesSuportadas = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Enter", "BackSpace", "Escape"];
-    if (chavesSuportadas.includes(e.key)) {
-      document.body.classList.add("tv-mode");
-    }
-  });
-
-  document.addEventListener("focus", (event) => {
-      const elementoFocado = event.target;
-      if (elementoFocado && elementoFocado !== document.body) {
-        elementoFocado.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-      }
-    }, true
-  );
-
-  window.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" || event.keyCode === 27 || event.keyCode === 10009) {
-      const overlay = document.querySelector('.overlay-ep[aria-hidden="false"]');
-      if (overlay) {
-        event.preventDefault();
-        const btnFechar = overlay.querySelector('.overlay-close');
-        if (btnFechar) btnFechar.click();
-        return;
-      }
-
-      if (window.location.hash && window.location.hash !== "#inicio") {
-        event.preventDefault();
-        window.history.back();
-      }
-    }
-  });
-}
-
-function atualizarElementosFocaveis(container = document) {
-  const seletores = ".card, .card-ep, .btn-hero, .tab-item, button, a[href]";
-  const elementos = container.querySelectorAll(seletores);
-
-  elementos.forEach((el) => {
-    if (!el.hasAttribute("tabindex")) {
-      el.setAttribute("tabindex", "0");
-    }
-  });
-}
-
-// --- ROTEADOR ---
-function navegarPeloHash() {
-  const rawHash = window.location.hash || "#inicio";
-  const [hashLimpa] = rawHash.split("?");
+// --- ROTEADOR CORE ---
+async function processarRota() {
+  const hash = window.location.hash.split("?")[0] || "#inicio";
 
   const views = document.querySelectorAll(".app-view");
-  const tabItems = document.querySelectorAll(".tab-item");
-
-  let encontrouView = false;
+  let rotaExiste = false;
 
   views.forEach((view) => {
-    if (`#${view.id}` === hashLimpa) {
-      view.classList.add("active");
-      encontrouView = true;
-    } else {
-      view.classList.remove("active");
-    }
+    const ativa = `#${view.id}` === hash;
+    view.classList.toggle("active", ativa);
+    if (ativa) rotaExiste = true;
   });
 
-  if (!encontrouView) {
-    views.forEach((view) => {
-      if (view.id === "erro") {
-        view.classList.add("active");
-      } else {
-        view.classList.remove("active");
-      }
-    });
+  if (!rotaExiste) {
+    document.getElementById("erro")?.classList.add("active");
   }
 
-  tabItems.forEach((tab) => {
-    const tabHref = tab.getAttribute("href");
-    if (tabHref === hashLimpa) {
-      tab.classList.add("active");
-    } else {
-      tab.classList.remove("active");
-    }
+  document.querySelectorAll(".tab-item").forEach((tab) => {
+    tab.classList.toggle("active", tab.getAttribute("href") === hash);
   });
+
+  await gerenciarTelaInfo();
+  await gerenciarTelaPlayer();
 
   window.scrollTo(0, 0);
 }
 
-// --- INICIALIZAÇÃO DA APLICAÇÃO ---
+// --- BOOTSTRAP DA APLICAÇÃO ---
 document.addEventListener("DOMContentLoaded", async () => {
-  const btnErroVoltar = document.getElementById("btn-erro-voltar");
-  if (btnErroVoltar) {
-    btnErroVoltar.addEventListener("click", () => {
-      window.location.hash = "#inicio";
-    });
-  }
+  document.getElementById("btn-erro-voltar")?.addEventListener("click", () => {
+    window.location.hash = "#inicio";
+  });
+
+  // Ativa a alteração de transparência/solidez do header no scroll
+  inicializarScrollHeader();
 
   try {
-    // 1. Executa todas as buscas de dados iniciais em paralelo
     await Promise.all([
-      carregarHeroBanner(),
       carregarAnimesRecomendados(),
       carregarAnimesRecentes(),
-      carregarNovosEpisodios(),
       carregarAnimesPorGenero()
     ]);
-    
     inicializarPesquisa();
-    inicializarNavegacaoTV();
-    inicializarScrollHeader(); // 👈 Ativa o controle do cabeçalho na rolagem
 
-    window.addEventListener("hashchange", async () => {
-      try {
-        navegarPeloHash();
-        fecharOverlayEp();
-        await gerenciarTelaInfo();
-        await gerenciarTelaPlayer();
-        atualizarElementosFocaveis();
-      } catch (e) {
-        console.error("Erro ao alterar rota:", e);
-      }
-    });
+    window.addEventListener("hashchange", processarRota);
 
-    navegarPeloHash();
-    await gerenciarTelaInfo();
-    await gerenciarTelaPlayer();
-    atualizarElementosFocaveis();
+    await processarRota();
 
-    // 2. TUDO OK: Esconde a tela de Splash!
-    ocultarSplashScreen();
-
-  } catch (erroGeral) {
-    console.error("Erro crítico na inicialização:", erroGeral);
-    
-    // 3. ERRO: Exibe a interface de falha com os detalhes
-    exibirErroSplash(
-      "Ocorreu uma falha ao carregar os dados do aplicativo.",
-      erroGeral
-    );
+  } catch (erro) {
+    console.error("Erro crítico na inicialização:", erro);
   }
 });

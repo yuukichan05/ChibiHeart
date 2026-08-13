@@ -2,8 +2,10 @@
    ARQUIVO MAESTRO - CARREGAMENTO DOS MÓDULOS CSS
    ========================================================================== */
 
-@import 'css/base.css';
-@import 'css/layout.css';
-@import 'css/componentes.css';
-@import 'css/views.css';
-@import 'css/player.css';
+@import url("modules/base.css");
+@import url("modules/layout.css");
+@import url("modules/componentes.css");
+@import url("modules/player.css");
+@import url("modules/views.css");
+
+

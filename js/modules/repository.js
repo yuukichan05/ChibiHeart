@@ -1,7 +1,6 @@
 // js/modules/repository.js
 
 let cacheInfo = null;
-let cacheHeroBanner = null;
 let cacheRecomendados = null;
 let cacheRecentes = null;
 let cacheNovosEpisodios = null;
@@ -30,23 +29,6 @@ export async function obterAnimePorId(animeId) {
   if (!animeId) return null;
   const info = await obterInfoCompleta();
   return info ? info[animeId] || null : null;
-}
-
-/**
- * Busca a lista do hero banner
- */
-export async function obterHeroBanner() {
-  if (cacheHeroBanner) return cacheHeroBanner;
-
-  try {
-    const resposta = await fetch('./dados/hero_banner.json');
-    if (!resposta.ok) return [];
-    cacheHeroBanner = await resposta.json();
-    return cacheHeroBanner;
-  } catch (erro) {
-    console.error('❌ [Repository] Falha ao carregar hero_banner.json:', erro);
-    return [];
-  }
 }
 
 /**
@@ -105,7 +87,6 @@ export async function obterNovosEpisodios() {
  */
 export function limparCacheRepository() {
   cacheInfo = null;
-  cacheHeroBanner = null;
   cacheRecomendados = null;
   cacheRecentes = null;
   cacheNovosEpisodios = null;
