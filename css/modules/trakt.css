@@ -88,7 +88,7 @@ body {
    ========================================================================== */
 
 .main-header {
-    display: flex;
+    display: none;
     position: sticky;
     top: 0;
     left: 0;
@@ -109,6 +109,10 @@ body {
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
+body:has(#inicio.active) .main-header {
+    display: flex;
+}
+
 .main-header.scrolled {
     background-color: rgba(17, 17, 22, 0.98); 
     border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
@@ -117,10 +121,6 @@ body {
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08));
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-}
-
-body:has(#inicio.active) .main-header {
-    display: flex;
 }
 
 .logo h1 { 
@@ -258,30 +258,27 @@ body:has(#player.active) .tab-bar {
     display: grid; 
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
     gap: 8px; 
-    padding-top: 12px; 
+    padding-top: 8px; 
     padding-bottom: 24px; 
 }
 
-/* PESQUISA */
+/* ==========================================================================
+   PESQUISA (CAIXA FIXA NO TOPO DA TELA DE PESQUISA)
+   ========================================================================== */
+
 #pesquisa {
-    padding-top: 80px;
+    padding-top: 12px;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
 }
 
 .search-input-wrapper {
-    position: relative;
+    position: sticky;
+    top: calc(12px + env(safe-area-inset-top, 0px));
+    width: 100%;
+    margin: 0 auto 12px auto;
     display: flex;
     align-items: center;
-    width: 100%;
-    margin: 0 auto 24px auto;
-}
-
-.search-input-wrapper .search-icon {
-    position: absolute;
-    left: 16px;
-    color: var(--text-secondary);
-    font-size: 22px;
-    pointer-events: none;
-    transition: color 0.25s ease;
+    z-index: 100;
 }
 
 #input-busca {
@@ -292,15 +289,26 @@ body:has(#player.active) .tab-bar {
     font-size: 0.95rem;
     font-weight: 500;
     color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background-color: rgba(23, 23, 30, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.12));
     border-radius: 16px;
     outline: none;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
     transform: translateZ(0);
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-input-wrapper .search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 22px;
+    pointer-events: none;
+    transition: color 0.25s ease;
 }
 
 #input-busca::placeholder {
@@ -321,6 +329,8 @@ body:has(#player.active) .tab-bar {
 .btn-clear-search {
     position: absolute;
     right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -493,10 +503,6 @@ body:has(#player.active) .tab-bar {
 .card-media img.loaded {
     opacity: 1;
 }
-
-
-
-
 
 .card-subtitle { font-size: 0.75rem; color: var(--text-secondary); }
 a.card { text-decoration: none; color: inherit; }

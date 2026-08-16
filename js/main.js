@@ -1,3 +1,5 @@
+// js/main.js
+
 import { 
   gerarEsqueletosIniciais,
   carregarAnimesRecomendados, 
@@ -8,6 +10,7 @@ import {
 import { gerenciarTelaInfo } from './modules/info.js';
 import { gerenciarTelaPlayer } from './modules/playerView.js';
 import { inicializarPesquisa } from './modules/pesquisa.js';
+import { gerenciarTelaHistorico } from './modules/historico.js';
 
 function inicializarScrollHeader() {
   const header = document.querySelector(".main-header");
@@ -40,8 +43,10 @@ async function processarRota() {
     tab.classList.toggle("active", tab.getAttribute("href") === hash);
   });
 
+  // Executa os gerenciadores de view da SPA
   await gerenciarTelaInfo();
   await gerenciarTelaPlayer();
+  await gerenciarTelaHistorico();
 
   window.scrollTo(0, 0);
 }
@@ -52,22 +57,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   inicializarScrollHeader();
-
-  // Execução síncrona imediata para exibir a estrutura visual enquanto o JSON carrega
   gerarEsqueletosIniciais();
 
+  // 1. Inicializa pesquisa e rotas IMEDIATAMENTE sem bloquear a tela
+  inicializarPesquisa();
+  window.addEventListener("hashchange", processarRota);
+  await processarRota();
+
+  // 2. Carrega os dados das seções da home em segundo plano
   try {
     await Promise.all([
       carregarAnimesRecomendados(),
       carregarAnimesRecentes(),
       carregarAnimesPorGenero()
     ]);
-    inicializarPesquisa();
-
-    window.addEventListener("hashchange", processarRota);
-    await processarRota();
-
   } catch (erro) {
-    console.error("Erro crítico na inicialização:", erro);
+    console.error("Erro ao carregar conteúdos da Home:", erro);
   }
 });
