@@ -1,7 +1,5 @@
-// js/main.js
-
-// 🔄 IMPORTS DOS MÓDULOS
 import { 
+  gerarEsqueletosIniciais,
   carregarAnimesRecomendados, 
   carregarAnimesRecentes, 
   carregarAnimesPorGenero 
@@ -11,12 +9,10 @@ import { gerenciarTelaInfo } from './modules/info.js';
 import { gerenciarTelaPlayer } from './modules/playerView.js';
 import { inicializarPesquisa } from './modules/pesquisa.js';
 
-// --- GERENCIADOR DO HEADER NO SCROLL ---
 function inicializarScrollHeader() {
   const header = document.querySelector(".main-header");
 
   window.addEventListener("scroll", () => {
-    // Quando rolar mais de 20px, adiciona a classe .scrolled (fundo sólido escuro)
     if (window.scrollY > 20) {
       header?.classList.add("scrolled");
     } else {
@@ -25,10 +21,8 @@ function inicializarScrollHeader() {
   }, { passive: true });
 }
 
-// --- ROTEADOR CORE ---
 async function processarRota() {
   const hash = window.location.hash.split("?")[0] || "#inicio";
-
   const views = document.querySelectorAll(".app-view");
   let rotaExiste = false;
 
@@ -52,14 +46,15 @@ async function processarRota() {
   window.scrollTo(0, 0);
 }
 
-// --- BOOTSTRAP DA APLICAÇÃO ---
 document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("btn-erro-voltar")?.addEventListener("click", () => {
     window.location.hash = "#inicio";
   });
 
-  // Ativa a alteração de transparência/solidez do header no scroll
   inicializarScrollHeader();
+
+  // Execução síncrona imediata para exibir a estrutura visual enquanto o JSON carrega
+  gerarEsqueletosIniciais();
 
   try {
     await Promise.all([
@@ -70,7 +65,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     inicializarPesquisa();
 
     window.addEventListener("hashchange", processarRota);
-
     await processarRota();
 
   } catch (erro) {

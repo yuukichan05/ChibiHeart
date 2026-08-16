@@ -82,119 +82,6 @@ body {
     text-overflow: ellipsis;
 }
 
-/* ==========================================================================
-   SPLASH SCREEN & TELA DE CARREGAMENTO / ERRO
-   ========================================================================== */
-.splash-container {
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: var(--bg-main);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 99999;
-    transition: opacity 0.4s ease, visibility 0.4s ease;
-    padding: 20px;
-}
-
-.splash-container.fade-out {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
-
-.splash-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 16px;
-    max-width: 420px;
-    width: 100%;
-}
-
-.splash-logo-box h1 {
-    font-size: 2.2rem;
-    font-weight: 400;
-    color: var(--text-main);
-    letter-spacing: -0.5px;
-}
-
-.splash-logo-box h1 span {
-    font-weight: 800;
-    background: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 10px var(--accent-glow));
-}
-
-.splash-spinner {
-    width: 38px;
-    height: 38px;
-    border: 3px solid rgba(255, 255, 255, 0.1);
-    border-top-color: var(--accent-color);
-    border-radius: 50%;
-    animation: spinSplash 0.8s linear infinite;
-}
-
-@keyframes spinSplash {
-    to { transform: rotate(360deg); }
-}
-
-.splash-status {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-.splash-error-icon {
-    font-size: 64px !important;
-    color: #a855f7;
-    filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.5));
-}
-
-.splash-error-text {
-    color: var(--text-light);
-    font-size: 0.95rem;
-    line-height: 1.4;
-}
-
-.splash-error-details {
-    background: var(--bg-card);
-    border: 1px solid var(--border-glass);
-    border-radius: 8px;
-    padding: 10px 14px;
-    width: 100%;
-    text-align: left;
-    font-size: 0.8rem;
-}
-
-.splash-error-details summary {
-    cursor: pointer;
-    color: var(--text-secondary);
-    font-weight: 600;
-}
-
-.splash-error-details pre {
-    margin-top: 10px;
-    color: #c084fc;
-    white-space: pre-wrap;
-    word-break: break-all;
-    font-family: monospace;
-    font-size: 0.75rem;
-    max-height: 150px;
-    overflow-y: auto;
-}
-
-#btn-splash-retry {
-    margin-top: 10px;
-    width: auto;
-    padding: 10px 24px;
-    border: none;
-    cursor: pointer;
-}
-
 
 /* ==========================================================================
    2. HEADER, ESTRUTURA DAS VIEWS E TAB BAR
@@ -504,7 +391,7 @@ body:has(#player.active) .tab-bar {
 }
 
 .card.landscape { width: 170px; }
-.card.poster { width: 105px; }
+.card.poster { width: 7.8125rem;}
 
 .card-media { 
     width: 100%; 
@@ -524,6 +411,92 @@ body:has(#player.active) .tab-bar {
     overflow: hidden; 
     text-overflow: ellipsis; 
 }
+
+
+/* Container do esqueleto */
+.card.poster.skeleton {
+  width: 7.8125rem; /* Seus 125px convertidos */
+  pointer-events: none; /* Impede cliques enquanto carrega */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Área da imagem com efeito de barra correndo */
+.card.poster.skeleton .skeleton-shimmer {
+  width: 100%;
+  height: 11.7188rem; /* Proporção 1:1.5 */
+  border-radius: 8px;
+  background: #2a2a2a linear-gradient(
+    90deg,
+    #2a2a2a 0px,
+    #373737 40px,
+    #2a2a2a 80px
+  );
+  background-size: 250px 100%;
+  animation: shimmer-efeito 1.5s infinite linear;
+}
+
+/* Esqueleto para simular o texto do título embaixo */
+.card.poster.skeleton .skeleton-text {
+  width: 85%;
+  height: 1rem;
+  border-radius: 4px;
+  background: #2a2a2a linear-gradient(
+    90deg,
+    #2a2a2a 0px,
+    #373737 40px,
+    #2a2a2a 80px
+  );
+  background-size: 250px 100%;
+  animation: shimmer-efeito 1.5s infinite linear;
+}
+
+/* Animação que move o gradiente da esquerda para a direita */
+@keyframes shimmer-efeito {
+  0% {
+    background-position: -150px 0;
+  }
+  100% {
+    background-position: 150px 0;
+  }
+}
+
+
+/* Instrui o navegador a pausar a renderização de cards e seções fora da tela */
+.card,
+.secao-genero-container {
+  content-visibility: auto;
+  /* contain-intrinsic-size reserva o espaço em pixels para o scroll não dar "pulos" */
+  contain-intrinsic-size: 125px 187px; 
+}
+
+
+
+/* Utilitário para Imagens e Supressão de Texto ALT */
+.card-media img {
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    display: block;
+    
+    /* Esconde o texto ALT visualmente mantendo a acessibilidade */
+    color: transparent;
+    font-size: 0;
+    
+    /* Inicia invisível para evitar renderização progressiva */
+    opacity: 0;
+    transition: opacity 0.25s ease-in-out;
+}
+
+/* Classe aplicada via JS assim que a imagem for totalmente baixada na RAM */
+.card-media img.loaded {
+    opacity: 1;
+}
+
+
+
+
 
 .card-subtitle { font-size: 0.75rem; color: var(--text-secondary); }
 a.card { text-decoration: none; color: inherit; }
