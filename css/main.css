@@ -2,9 +2,7 @@
    ARQUIVO MAESTRO - CARREGAMENTO DOS MÓDULOS CSS
    ========================================================================== */
 
-@import url("modules/base.css");
-@import url("modules/layout.css");
-@import url("modules/componentes.css");
+@import url("modules/trakt.css");
 @import url("modules/player.css");
 @import url("modules/views.css");
 

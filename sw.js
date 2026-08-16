@@ -8,9 +8,7 @@ const ASSETS_TO_CACHE = [
   
   // CSS - Estrutura nova
   './css/main.css',
-  './css/modules/base.css',
-  './css/modules/componentes.css',
-  './css/modules/layout.css',
+  './css/modules/trakt.css',
   './css/modules/player.css',
   './css/modules/views.css',
 
