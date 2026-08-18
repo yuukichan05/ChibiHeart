@@ -11,6 +11,17 @@ import { gerenciarTelaInfo } from './modules/info.js';
 import { gerenciarTelaPlayer } from './modules/playerView.js';
 import { inicializarPesquisa } from './modules/pesquisa.js';
 import { gerenciarTelaHistorico } from './modules/historico.js';
+import { renderizarContinuarAssistindo } from './modules/continuarAssistindo.js';
+
+/* ==========================================================================
+   CAPTURA GLOBAL DE IMAGENS
+   Adiciona .loaded automaticamente em QUALQUER <img> assim que o download termina
+   ========================================================================== */
+document.addEventListener('load', (event) => {
+  if (event.target && event.target.tagName === 'IMG') {
+    event.target.classList.add('loaded');
+  }
+}, true);
 
 function inicializarScrollHeader() {
   const header = document.querySelector(".main-header");
@@ -43,7 +54,12 @@ async function processarRota() {
     tab.classList.toggle("active", tab.getAttribute("href") === hash);
   });
 
-  // Executa os gerenciadores de view da SPA
+  // Atualiza a seção "Continuar Assistindo" sempre que navegar para a Home (#inicio)
+  if (hash === "#inicio" || hash === "") {
+    await renderizarContinuarAssistindo();
+  }
+
+  // Executa os gerenciadores das outras telas da SPA
   await gerenciarTelaInfo();
   await gerenciarTelaPlayer();
   await gerenciarTelaHistorico();
@@ -59,12 +75,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   inicializarScrollHeader();
   gerarEsqueletosIniciais();
 
-  // 1. Inicializa pesquisa e rotas IMEDIATAMENTE sem bloquear a tela
+  // 1. Inicializa pesquisa e rotas IMEDIATAMENTE sem bloquear a interface
   inicializarPesquisa();
   window.addEventListener("hashchange", processarRota);
   await processarRota();
 
-  // 2. Carrega os dados das seções da home em segundo plano
+  // 2. Carrega as fileiras adicionais da Home em segundo plano
   try {
     await Promise.all([
       carregarAnimesRecomendados(),

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'chibiheart-v3'; // Incrementado para v3 para forçar a limpeza do lixo em disco
+const CACHE_NAME = 'chibiheart-v4'; // Incrementado para v3 para forçar a limpeza do lixo em disco
 
 // Arquivos para guardar em cache estático
 const ASSETS_TO_CACHE = [
@@ -29,6 +29,7 @@ const ASSETS_TO_CACHE = [
   './js/modules/pesquisa.js',
   './js/modules/playerView.js',
   './js/modules/repository.js',
+  './js/modules/continuarAssistindo.js',
 
   // Imagens (Ícones PWA)
   './imagem/icon_solid_192.png',

@@ -51,64 +51,86 @@
         </section>
 
         <!-- VIEW DA HOME -->
-        <section id="inicio" class="app-view active">
+        <!-- VIEW DA HOME -->
+                <section id="inicio" class="app-view active">
         
-            <!-- Adicionados Recentemente -->
-            <section class="secao-categoria">
-                <h2 class="titulo-categoria">Adicionados Recentemente</h2>
-                <div id="grade-recentes" class="cards-grid carrossel-horizontal">
-                    <!-- Esqueletos iniciais -->
-                    <div class="card poster skeleton">
-                        <div class="card-media skeleton-shimmer"></div>
-                        <div class="card-title skeleton-text"></div>
-                    </div>
-                    <div class="card poster skeleton">
-                        <div class="card-media skeleton-shimmer"></div>
-                        <div class="card-title skeleton-text"></div>
-                    </div>
-                    <div class="card poster skeleton">
-                        <div class="card-media skeleton-shimmer"></div>
-                        <div class="card-title skeleton-text"></div>
-                    </div>
-                </div>
-            </section>
+                    <!-- Continuar Assistindo (Agora no topo) -->
+                    <section id="secao-continuar-assistindo" class="secao-categoria" style="display: none;">
+                        <h2 class="titulo-categoria">Continuar Assistindo</h2>
+                        <div id="grade-continuar-assistindo" class="cards-grid carrossel-horizontal"></div>
+                    </section>
         
-            <!-- Grade de Animes Recomendados -->
-            <section class="secao-categoria">
-                <h2 class="titulo-categoria">Assista no Chibi Heart</h2>
-                <div id="grade-recomendados" class="cards-grid">
-                    <!-- Esqueletos iniciais -->
-                    <div class="card poster skeleton">
-                        <div class="card-media skeleton-shimmer"></div>
-                        <div class="card-title skeleton-text"></div>
-                    </div>
-                    <div class="card poster skeleton">
-                        <div class="card-media skeleton-shimmer"></div>
-                        <div class="card-title skeleton-text"></div>
-                    </div>
-                    <div class="card poster skeleton">
-                        <div class="card-media skeleton-shimmer"></div>
-                        <div class="card-title skeleton-text"></div>
-                    </div>
-                </div>
-            </section>
+                    <!-- Adicionados Recentemente -->
+                    <section class="secao-categoria">
+                        <h2 class="titulo-categoria">Adicionados Recentemente</h2>
+                        <div id="grade-recentes" class="cards-grid carrossel-horizontal">
+                            <!-- Esqueletos iniciais -->
+                            <div class="card poster skeleton">
+                                <div class="card-media skeleton-shimmer"></div>
+                                <div class="card-title skeleton-text"></div>
+                            </div>
+                            <div class="card poster skeleton">
+                                <div class="card-media skeleton-shimmer"></div>
+                                <div class="card-title skeleton-text"></div>
+                            </div>
+                            <div class="card poster skeleton">
+                                <div class="card-media skeleton-shimmer"></div>
+                                <div class="card-title skeleton-text"></div>
+                            </div>
+                        </div>
+                    </section>
         
-            <template id="modelo-secao-genero">
-                <section class="secao-genero-container">
-                    <h2 class="titulo-categoria">-- Nome do Gênero --</h2>
-                    <div class="cards-grid carrossel-horizontal"></div>
+                    <!-- Grade de Animes Recomendados -->
+                    <section class="secao-categoria">
+                        <h2 class="titulo-categoria">Assista no Chibi Heart</h2>
+                        <div id="grade-recomendados" class="cards-grid">
+                            <!-- Esqueletos iniciais -->
+                            <div class="card poster skeleton">
+                                <div class="card-media skeleton-shimmer"></div>
+                                <div class="card-title skeleton-text"></div>
+                            </div>
+                            <div class="card poster skeleton">
+                                <div class="card-media skeleton-shimmer"></div>
+                                <div class="card-title skeleton-text"></div>
+                            </div>
+                            <div class="card poster skeleton">
+                                <div class="card-media skeleton-shimmer"></div>
+                                <div class="card-title skeleton-text"></div>
+                            </div>
+                        </div>
+                    </section>
+        
+                    <template id="modelo-card-continuar">
+                        <a href="" class="card card-continuar" tabindex="0">
+                            <div class="card-media">
+                                <img src="" alt="" class="continuar-thumb">
+                                <div class="barra-progresso-container" style="display: none;">
+                                    <div class="barra-progresso-preenchimento"></div>
+                                </div>
+                                <span class="ep-duration continuar-duracao">--:--</span>
+                            </div>
+                            <h3 class="card-title continuar-titulo-anime"></h3>
+                            <p class="continuar-subtitulo-ep" style="font-size: 0.75rem; color: #aaa; margin-top: 2px;"></p>
+                        </a>
+                    </template>
+        
+                    <template id="modelo-secao-genero">
+                        <section class="secao-genero-container">
+                            <h2 class="titulo-categoria">-- Nome do Gênero --</h2>
+                            <div class="cards-grid carrossel-horizontal"></div>
+                        </section>
+                    </template>
+        
+                    <template id="modelo-card-anime">
+                        <a href="" class="card poster" tabindex="0">
+                            <div class="card-media">
+                                <img src="" alt="">
+                            </div>
+                            <h3 class="card-title"></h3>
+                        </a>
+                    </template>
                 </section>
-            </template>
         
-            <template id="modelo-card-anime">
-                <a href="" class="card poster" tabindex="0">
-                    <div class="card-media">
-                        <img src="" alt="">
-                    </div>
-                    <h3 class="card-title"></h3>
-                </a>
-            </template>
-        </section>
         
 
         <!-- VIEW DE DETALHES -->
