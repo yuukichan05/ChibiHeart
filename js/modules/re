@@ -32,48 +32,35 @@ export async function obterAnimePorId(animeId) {
 }
 
 /**
- * Busca a lista de animes recomendados (Destaques) diretamente do info.json
+ * Busca a lista de animes recomendados
  */
 export async function obterRecomendados() {
   if (cacheRecomendados) return cacheRecomendados;
 
   try {
-    const info = await obterInfoCompleta();
-    if (!info) return [];
-
-    // Filtra animes que possuem a propriedade destaque definida como true
-    cacheRecomendados = Object.entries(info)
-      .filter(([_, anime]) => anime.destaque === true)
-      .map(([id]) => ({ id }));
-
+    const resposta = await fetch('./dados/destaque_principal_card.json');
+    if (!resposta.ok) return [];
+    cacheRecomendados = await resposta.json();
     return cacheRecomendados;
   } catch (erro) {
-    console.error('❌ [Repository] Falha ao processar animes recomendados:', erro);
+    console.error('❌ [Repository] Falha ao carregar destaque_principal_card.json:', erro);
     return [];
   }
 }
 
 /**
- * Busca os 15 animes adicionados mais recentemente diretamente do info.json,
- * ordenando do mais recente para o mais antigo pela data em "adicionado_em".
+ * Busca a lista de animes adicionados recentemente
  */
 export async function obterRecentes() {
   if (cacheRecentes) return cacheRecentes;
 
   try {
-    const info = await obterInfoCompleta();
-    if (!info) return [];
-
-    // Filtra animes com 'adicionado_em', ordena do mais recente para o mais antigo e pega apenas os 15 primeiros
-    cacheRecentes = Object.entries(info)
-      .filter(([_, anime]) => anime.adicionado_em)
-      .sort((a, b) => new Date(b[1].adicionado_em) - new Date(a[1].adicionado_em))
-      .slice(0, 15)
-      .map(([id]) => ({ id }));
-
+    const resposta = await fetch('./dados/add_recent.json');
+    if (!resposta.ok) return [];
+    cacheRecentes = await resposta.json();
     return cacheRecentes;
   } catch (erro) {
-    console.error('❌ [Repository] Falha ao processar animes recentes:', erro);
+    console.error('❌ [Repository] Falha ao carregar add_recent.json:', erro);
     return [];
   }
 }

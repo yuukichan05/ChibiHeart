@@ -1,4 +1,4 @@
-const CACHE_NAME = 'chibiheart-v4'; // Incrementado para v3 para forçar a limpeza do lixo em disco
+const CACHE_NAME = 'chibiheart-v3'; // Incrementado para v3 para forçar a limpeza do lixo em disco
 
 // Arquivos para guardar em cache estático
 const ASSETS_TO_CACHE = [
@@ -8,18 +8,12 @@ const ASSETS_TO_CACHE = [
   
   // CSS
   './css/main.css',
-  './css/modules/base.css',
-  './css/modules/componentes.css',
-  './css/modules/layout.css',
+  './css/modules/trakt.css',
   './css/modules/player.css',
   './css/modules/views.css',
 
   // JSON
-  './dados/add_recent.json',
-  './dados/destaque_principal_card.json',
-  './dados/hero_banner.json',
   './dados/info.json',
-  './dados/novos_episodios.json',
 
   // JS
   './js/main.js',
@@ -29,6 +23,7 @@ const ASSETS_TO_CACHE = [
   './js/modules/pesquisa.js',
   './js/modules/playerView.js',
   './js/modules/repository.js',
+  './js/modules/historico.js'
   './js/modules/continuarAssistindo.js',
 
   // Imagens (Ícones PWA)
