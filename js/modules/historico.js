@@ -16,6 +16,49 @@ function formatarTempo(segundos) {
   return `${String(minutos).padStart(2, '0')}:${String(seg).padStart(2, '0')}`;
 }
 
+/**
+ * Busca um episódio no catálogo universalmente, sem depender de um padrão de ID engessado.
+ */
+function encontrarEpisodioNoCatalogo(idBuscado, infoCompleta) {
+  if (!infoCompleta || !idBuscado) return null;
+
+  for (const [idAnimeKey, anime] of Object.entries(infoCompleta)) {
+    const temporadas = Array.isArray(anime.temporadas)
+      ? anime.temporadas
+      : Array.isArray(anime.episodios)
+        ? [{ nome: "Temporada Única", episodios: anime.episodios }]
+        : [];
+
+    for (let tIdx = 0; tIdx < temporadas.length; tIdx++) {
+      const temp = temporadas[tIdx];
+      const eps = Array.isArray(temp.episodios) ? temp.episodios : [];
+
+      for (let eIdx = 0; eIdx < eps.length; eIdx++) {
+        const ep = eps[eIdx];
+        const indexEp = typeof ep.index === "number" ? ep.index : eIdx + 1;
+        const s = String(tIdx + 1).padStart(2, "0");
+        const e = String(indexEp).padStart(2, "0");
+
+        // Variantes possíveis para quando o JSON não declara o campo "id"
+        const idFallbackHifen = `${idAnimeKey}-s${s}e${e}`;
+        const idFallbackUnderline = `${idAnimeKey}_s${s}e${e}`;
+
+        // 1. COMPARAÇÃO DIRETA (A mais importante): Se o ep.id do JSON for igual ao salvo no banco
+        if (ep.id && ep.id === idBuscado) {
+          return { anime, animeId: idAnimeKey, ep, temporadaNome: temp.nome || `${tIdx + 1}ª Temporada` };
+        }
+
+        // 2. FALLBACK: Caso o objeto do episódio no JSON não possua a propriedade "id"
+        if (!ep.id && (idBuscado === idFallbackHifen || idBuscado === idFallbackUnderline)) {
+          return { anime, animeId: idAnimeKey, ep, temporadaNome: temp.nome || `${tIdx + 1}ª Temporada` };
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
 export async function gerenciarTelaHistorico() {
   const hash = window.location.hash;
 
@@ -35,7 +78,7 @@ export async function gerenciarTelaHistorico() {
 
     const listaRegistros = Object.values(mapaProgresso || {});
 
-    // Limpa os filhos anteriores do container sem innerHTML
+    // Limpa a tela antes de renderizar
     container.replaceChildren();
 
     if (listaRegistros.length === 0) {
@@ -45,48 +88,23 @@ export async function gerenciarTelaHistorico() {
 
     if (estadoVazio) estadoVazio.style.display = "none";
 
-    // Ordena do mais recente para o mais antigo
+    // Ordena do progresso mais recente para o mais antigo
     listaRegistros.sort((a, b) => (b.atualizadoEm || 0) - (a.atualizadoEm || 0));
 
     const fragment = document.createDocumentFragment();
 
     listaRegistros.forEach((registro) => {
-      // registro.id formato: "animeId_s01e01"
-      const partes = registro.id.split("_s");
-      const animeId = partes[0];
-      const anime = infoCompleta ? infoCompleta[animeId] : null;
+      if (!registro || !registro.id) return;
 
-      if (!anime) return;
+      // Busca universal do episódio no catálogo JSON
+      const achado = encontrarEpisodioNoCatalogo(registro.id, infoCompleta);
 
-      let epInfo = null;
-      let temporadaNome = "Temporada 1";
+      // Se o episódio salvo não existir mais no JSON, ignora silenciosamente
+      if (!achado) return;
 
-      const temporadas = Array.isArray(anime.temporadas)
-        ? anime.temporadas
-        : Array.isArray(anime.episodios)
-          ? [{ nome: "Temporada Única", episodios: anime.episodios }]
-          : [];
+      const { anime, animeId, ep, temporadaNome } = achado;
 
-      for (let tIdx = 0; tIdx < temporadas.length; tIdx++) {
-        const temp = temporadas[tIdx];
-        const eps = Array.isArray(temp.episodios) ? temp.episodios : [];
-
-        const achado = eps.find((ep, eIdx) => {
-          const indexEp = typeof ep.index === "number" ? ep.index : eIdx + 1;
-          const s = String(tIdx + 1).padStart(2, "0");
-          const e = String(indexEp).padStart(2, "0");
-          const epIdGerado = `${animeId}_s${s}e${e}`;
-          return (ep.id || epIdGerado) === registro.id;
-        });
-
-        if (achado) {
-          epInfo = achado;
-          temporadaNome = temp.nome || `Temporada ${tIdx + 1}`;
-          break;
-        }
-      }
-
-      // Clona o template
+      // Clona a estrutura do card no HTML
       const clone = template.content.cloneNode(true);
 
       const link = clone.querySelector("a");
@@ -98,22 +116,26 @@ export async function gerenciarTelaHistorico() {
       const elTitulo = clone.querySelector(".historico-titulo-ep");
       const elStatus = clone.querySelector(".historico-status");
 
-      // Preenche propriedades DOM
-      if (link) link.href = `#player?anime=${animeId}&ep=${registro.id}`;
-      
-      if (img) {
-        img.src = epInfo?.thumb || anime.banner || anime.poster || "";
-        img.alt = epInfo?.titulo || anime.titulo || "Episódio";
+      // Monta a URL para assistir no Player
+      if (link) {
+        link.href = `#player?anime=${encodeURIComponent(animeId)}&ep=${encodeURIComponent(registro.id)}`;
       }
 
+      // Preenche imagem da thumbnail/poster
+      if (img) {
+        img.src = ep.thumb || anime.poster || anime.banner || "";
+        img.alt = ep.titulo || anime.titulo || "Episódio";
+      }
+
+      // Metadados
       if (elMeta) elMeta.textContent = `${anime.titulo || "Anime"} • ${temporadaNome}`;
-      if (elTitulo) elTitulo.textContent = epInfo?.titulo || "Episódio";
+      if (elTitulo) elTitulo.textContent = ep.titulo || `Episódio ${ep.index || ""}`;
 
       if (elDuracao) {
-        elDuracao.textContent = epInfo?.duracao || formatarTempo(registro.total);
+        elDuracao.textContent = ep.duracao || formatarTempo(registro.total);
       }
 
-      // Preenchimento da barra de progresso
+      // Barra de progresso visual
       if (registro.total > 0 && registro.tempo > 0) {
         const porcentagem = (registro.tempo / registro.total) * 100;
         if (barraContainer && barraPreenchimento) {
@@ -122,6 +144,7 @@ export async function gerenciarTelaHistorico() {
         }
       }
 
+      // Status
       if (elStatus) {
         if (registro.concluido) {
           elStatus.textContent = "Concluído";
@@ -137,6 +160,6 @@ export async function gerenciarTelaHistorico() {
     container.appendChild(fragment);
 
   } catch (erro) {
-    console.error("❌ [Histórico] Falha ao carregar o histórico:", erro);
+    console.error("❌ [Histórico] Falha ao carregar a tela de histórico:", erro);
   }
 }
