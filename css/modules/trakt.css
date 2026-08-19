@@ -262,6 +262,42 @@ body:has(#player.active) .tab-bar {
     padding-bottom: 24px; 
 }
 
+
+/* Container de ações no header (Agrupa busca + perfil) */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espaçamento entre a lupa e o ícone de perfil */
+}
+
+/* Mantém os botões do header circulares e centralizados */
+.header-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-main);
+    text-decoration: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    overflow: hidden; /* Garante o recorte perfeito da imagem circular */
+}
+
+.header-action-btn:hover {
+    color: var(--accent-color);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Avatar de Perfil no Header */
+.header-profile-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Evita que a foto do usuário fique esmagada/esticada */
+    border-radius: 50%;
+    border: 1.5px solid var(--border-glass, rgba(255, 255, 255, 0.15));
+}
+
 /* ==========================================================================
    PESQUISA (CAIXA FIXA NO TOPO DA TELA DE PESQUISA)
    ========================================================================== */

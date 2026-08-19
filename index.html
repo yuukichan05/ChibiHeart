@@ -23,14 +23,26 @@
 <body>
 
     <!-- TAB BAR SUPERIOR / MAIN HEADER -->
-    <header class="main-header">
-        <div class="logo">
-            <h1>Chibi<span>Heart</span></h1>
-        </div>
-        <a href="#pesquisa" class="header-action-btn" aria-label="Pesquisar" tabindex="0">
-            <span class="material-symbols-outlined">search</span>
-        </a>
-    </header>
+    	<!-- TAB BAR SUPERIOR / MAIN HEADER -->
+    	<header class="main-header">
+    	    <div class="logo">
+    	        <h1>Chibi<span>Heart</span></h1>
+    	    </div>
+    	
+    	    <!-- Container agrupando os botões de ação à direita -->
+    	    <div class="header-actions">
+    	        <a href="#pesquisa" class="header-action-btn" aria-label="Pesquisar" tabindex="0">
+    	            <span class="material-symbols-outlined">search</span>
+    	        </a>
+    	
+    	        <!-- Novo Ícone de Perfil -->
+    	        <a href="#perfil" class="header-action-btn profile-btn" aria-label="Perfil" tabindex="0">
+    	            <img src="https://via.placeholder.com/150" alt="Foto de Perfil" class="header-profile-avatar">
+    	            <!-- Caso a imagem falhe, pode usar um ícone da Google Fontes de fallback: -->
+    	            <!-- <span class="material-symbols-outlined">account_circle</span> -->
+    	        </a>
+    	    </div>
+    	</header>
 
 
     <!-- Conteúdo Principal (SPA) -->
@@ -322,6 +334,57 @@
                     </div>
                 </a>
             </template>
+        </section>
+
+        <!-- VIEW DE PERFIL -->
+        <section id="perfil" class="app-view">
+            <div class="perfil-header">
+                <div class="perfil-avatar-large">
+                    <img id="perfil-foto" src="" alt="Foto do Usuário">
+                    <label for="input-foto-perfil" class="btn-trocar-foto" aria-label="Alterar Foto">
+                        <span class="material-symbols-outlined">photo_camera</span>
+                    </label>
+                    <!-- Input invisível para upload da foto -->
+                    <input type="file" id="input-foto-perfil" accept="image/*" style="display: none;">
+                </div>
+        
+                <h2 id="perfil-nome" class="perfil-nome">Usuário Chibi</h2>
+                <p id="perfil-email" class="perfil-email">usuario@chibiheart.com</p>
+            </div>
+        
+            <!-- Opções/Ações do Perfil estilo App Moderno -->
+            <div class="perfil-opcoes">
+                <div class="opcao-item">
+                    <div class="opcao-info">
+                        <span class="material-symbols-outlined">edit</span>
+                        <span>Editar Nome</span>
+                    </div>
+                    <span class="material-symbols-outlined chevron">chevron_right</span>
+                </div>
+        
+                <a href="#historico" class="opcao-item" style="text-decoration: none; color: inherit;">
+                    <div class="opcao-info">
+                        <span class="material-symbols-outlined">history</span>
+                        <span>Meu Histórico</span>
+                    </div>
+                    <span class="material-symbols-outlined chevron">chevron_right</span>
+                </a>
+        
+                <div class="opcao-item">
+                    <div class="opcao-info">
+                        <span class="material-symbols-outlined">settings</span>
+                        <span>Configurações</span>
+                    </div>
+                    <span class="material-symbols-outlined chevron">chevron_right</span>
+                </div>
+        
+                <div class="opcao-item logout">
+                    <div class="opcao-info">
+                        <span class="material-symbols-outlined">logout</span>
+                        <span>Sair da Conta</span>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
 

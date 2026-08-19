@@ -11,6 +11,7 @@ const ASSETS_TO_CACHE = [
   './css/modules/trakt.css',
   './css/modules/player.css',
   './css/modules/views.css',
+  './css/modules/perfil.css',
 
   // JSON
   './dados/info.json',
@@ -19,6 +20,7 @@ const ASSETS_TO_CACHE = [
   './js/main.js',
   './js/modules/db.js',
   './js/modules/info.js',
+  './js/modules/perfil.js',
   './js/modules/inicio.js',
   './js/modules/pesquisa.js',
   './js/modules/playerView.js',

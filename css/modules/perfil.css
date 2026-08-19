@@ -1,0 +1,124 @@
+/* ==========================================================================
+   VIEW DE PERFIL
+   ========================================================================== */
+#perfil {
+    padding-top: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.perfil-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.perfil-avatar-large {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 16px;
+    box-shadow: 0 0 20px rgba(129, 36, 228, 0.3);
+}
+
+.perfil-avatar-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid var(--accent-color, #8124e4);
+}
+
+/* Botão da Câmera por cima do Avatar */
+.btn-trocar-foto {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    background: var(--accent-gradient, linear-gradient(135deg, #a855f7, #8124e4));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease;
+}
+
+.btn-trocar-foto:active {
+    transform: scale(0.9);
+}
+
+.btn-trocar-foto .material-symbols-outlined {
+    font-size: 18px;
+}
+
+.perfil-nome {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-main, #fff);
+    margin-bottom: 4px;
+}
+
+.perfil-email {
+    font-size: 0.85rem;
+    color: var(--text-secondary, #a0a0b2);
+}
+
+/* Lista de Opções do Perfil */
+.perfil-opcoes {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.opcao-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background-color: var(--bg-card, #1f1f2a);
+    border-radius: 12px;
+    border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08));
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.opcao-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.opcao-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-main, #fff);
+}
+
+.opcao-info .material-symbols-outlined {
+    color: var(--accent-color, #8124e4);
+}
+
+.opcao-item .chevron {
+    color: var(--text-secondary, #a0a0b2);
+    font-size: 20px;
+}
+
+.opcao-item.logout {
+    margin-top: 16px;
+    border-color: rgba(255, 64, 129, 0.2);
+}
+
+.opcao-item.logout .opcao-info,
+.opcao-item.logout .material-symbols-outlined {
+    color: #ff4081;
+}

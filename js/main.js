@@ -12,6 +12,7 @@ import { gerenciarTelaPlayer } from './modules/playerView.js';
 import { inicializarPesquisa } from './modules/pesquisa.js';
 import { gerenciarTelaHistorico } from './modules/historico.js';
 import { renderizarContinuarAssistindo } from './modules/continuarAssistindo.js';
+import { inicializarPerfil, gerenciarTelaPerfil } from './modules/perfil.js';
 
 /* ==========================================================================
    CAPTURA GLOBAL DE IMAGENS
@@ -59,10 +60,11 @@ async function processarRota() {
     await renderizarContinuarAssistindo();
   }
 
-  // Executa os gerenciadores das outras telas da SPA
+  // Executa os gerenciadores das telas da SPA
   await gerenciarTelaInfo();
   await gerenciarTelaPlayer();
   await gerenciarTelaHistorico();
+  await gerenciarTelaPerfil();
 
   window.scrollTo(0, 0);
 }
@@ -75,12 +77,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   inicializarScrollHeader();
   gerarEsqueletosIniciais();
 
-  // 1. Inicializa pesquisa e rotas IMEDIATAMENTE sem bloquear a interface
+  // Inicializa a pesquisa, módulo de perfil e rotas
   inicializarPesquisa();
+  inicializarPerfil();
+
   window.addEventListener("hashchange", processarRota);
   await processarRota();
 
-  // 2. Carrega as fileiras adicionais da Home em segundo plano
+  // Carrega as fileiras adicionais da Home em segundo plano
   try {
     await Promise.all([
       carregarAnimesRecomendados(),
