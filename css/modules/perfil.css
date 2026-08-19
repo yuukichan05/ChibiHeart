@@ -3,6 +3,10 @@
    ========================================================================== */
 #perfil {
     padding-top: 24px;
+}
+
+/* Aplica o flexbox apenas quando a tela de perfil estiver ativa */
+#perfil.active {
     display: flex;
     flex-direction: column;
     align-items: center;

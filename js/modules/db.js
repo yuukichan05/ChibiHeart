@@ -44,7 +44,7 @@ const perfilPadrao = {
   id: PERFIL_KEY,
   nome: "Usuário Chibi",
   email: "usuario@chibiheart.com",
-  foto: "https://via.placeholder.com/150"
+  foto: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSP-d8FnyUc7-qF7238NfPxfjaILuYofuXX40GH3RCUFJES5zDqFP3ptKs&s=10"
 };
 
 /**
