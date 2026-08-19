@@ -5,7 +5,6 @@
     padding-top: 24px;
 }
 
-/* Aplica o flexbox apenas quando a tela de perfil estiver ativa */
 #perfil.active {
     display: flex;
     flex-direction: column;
@@ -36,7 +35,6 @@
     border: 3px solid var(--accent-color, #8124e4);
 }
 
-/* Botão da Câmera por cima do Avatar */
 .btn-trocar-foto {
     position: absolute;
     bottom: 0;
@@ -74,7 +72,6 @@
     color: var(--text-secondary, #a0a0b2);
 }
 
-/* Lista de Opções do Perfil */
 .perfil-opcoes {
     width: 100%;
     max-width: 480px;
@@ -125,4 +122,182 @@
 .opcao-item.logout .opcao-info,
 .opcao-item.logout .material-symbols-outlined {
     color: #ff4081;
+}
+
+/* ==========================================================================
+   MODAL EDITAR NOME (POP-UP COM DESFOQUE DE FUNDO)
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 16px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-container {
+    background-color: var(--bg-card, #1f1f2a);
+    border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.12));
+    border-radius: 16px;
+    width: 100%;
+    max-width: 400px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.25s ease;
+}
+
+.modal-overlay.active .modal-container {
+    transform: scale(1);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.modal-header h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-main, #fff);
+    margin: 0;
+}
+
+.btn-fechar-modal {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary, #a0a0b2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-fechar-modal:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.modal-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary, #a0a0b2);
+    font-weight: 500;
+}
+
+.modal-input {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.15));
+    border-radius: 10px;
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.modal-input:focus {
+    border-color: var(--accent-color, #8124e4);
+}
+
+.modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.btn-modal {
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+.btn-modal:active {
+    transform: scale(0.96);
+}
+
+.btn-cancelar {
+    background: transparent;
+    color: var(--text-secondary, #a0a0b2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-cancelar:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.btn-salvar {
+    background: var(--accent-gradient, linear-gradient(135deg, #a855f7, #8124e4));
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(129, 36, 228, 0.3);
+}
+
+.btn-salvar:hover {
+    opacity: 0.9;
+}
+
+/* Texto descritivo dentro dos modais */
+.modal-texto {
+    font-size: 0.95rem;
+    color: var(--text-secondary, #a0a0b2);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Layout flexível/empilhado para o modal de backup */
+.modal-footer-stack {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 10px;
+    width: 100%;
+}
+
+.modal-footer-stack .btn-modal {
+    width: 100%;
+    text-align: center;
+}
+
+/* Botão de destaque destrutivo (Logout Sim) */
+.btn-danger {
+    background: #ff4081;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(255, 64, 129, 0.3);
+}
+
+.btn-danger:hover {
+    opacity: 0.9;
 }

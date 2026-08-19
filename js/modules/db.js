@@ -1,7 +1,7 @@
 // js/modules/db.js
 
 const DB_NAME = "ChibiHeartDB";
-const DB_VERSION = 2; // Incrementado para criar novas stores
+const DB_VERSION = 2;
 const STORES = {
   PROGRESSO: "progresso",
   PERFIL: "perfil"
@@ -14,16 +14,13 @@ function abrirBanco() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
 
-    // Atualiza a estrutura do banco se a versão mudar
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
 
-      // Store para o progresso dos episódios
       if (!db.objectStoreNames.contains(STORES.PROGRESSO)) {
         db.createObjectStore(STORES.PROGRESSO, { keyPath: "id" });
       }
 
-      // Nova Store para o Perfil do Usuário
       if (!db.objectStoreNames.contains(STORES.PERFIL)) {
         db.createObjectStore(STORES.PERFIL, { keyPath: "id" });
       }
@@ -35,7 +32,7 @@ function abrirBanco() {
 }
 
 /* ==========================================================================
-   MÉTODOS DE PERFIL (NOVO)
+   MÉTODOS DE PERFIL
    ========================================================================== */
 
 const PERFIL_KEY = "usuario_atual";
@@ -59,7 +56,12 @@ export async function buscarPerfilDB() {
       const request = store.get(PERFIL_KEY);
 
       request.onsuccess = (e) => {
-        resolve(e.target.result || perfilPadrao);
+        const resultado = e.target.result;
+        if (resultado) {
+          resolve({ ...perfilPadrao, ...resultado });
+        } else {
+          resolve(perfilPadrao);
+        }
       };
       request.onerror = (e) => reject(e.target.error);
     });
@@ -71,7 +73,6 @@ export async function buscarPerfilDB() {
 
 /**
  * Salva ou atualiza os dados do perfil no IndexedDB
- * @param {Object} perfil
  */
 export async function salvarPerfilDB(perfil) {
   try {
@@ -81,6 +82,7 @@ export async function salvarPerfilDB(perfil) {
       const store = transaction.objectStore(STORES.PERFIL);
 
       const registro = {
+        ...perfilPadrao,
         ...perfil,
         id: PERFIL_KEY,
         atualizadoEm: Date.now()
@@ -96,21 +98,112 @@ export async function salvarPerfilDB(perfil) {
 }
 
 /**
- * Limpa os dados do perfil (Logout)
+ * Limpa TODOS os dados do banco (Perfil e Histórico)
  */
-export async function limparPerfilDB() {
+export async function limparTudoDB() {
   try {
     const db = await abrirBanco();
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(STORES.PERFIL, "readwrite");
-      const store = transaction.objectStore(STORES.PERFIL);
-      const request = store.delete(PERFIL_KEY);
+      const transaction = db.transaction([STORES.PERFIL, STORES.PROGRESSO], "readwrite");
 
-      request.onsuccess = () => resolve(true);
-      request.onerror = (e) => reject(e.target.error);
+      transaction.objectStore(STORES.PERFIL).clear();
+      transaction.objectStore(STORES.PROGRESSO).clear();
+
+      transaction.oncomplete = () => resolve(true);
+      transaction.onerror = (e) => reject(e.target.error);
     });
   } catch (erro) {
-    console.error("❌ [DB] Falha ao limpar perfil:", erro);
+    console.error("❌ [DB] Falha ao limpar banco de dados completo:", erro);
+  }
+}
+
+/* ==========================================================================
+   MÉTODOS DE BACKUP / RESTAURAÇÃO DE DADOS DA CONTA
+   ========================================================================== */
+
+/**
+ * Extrai todos os dados salvos garantindo que o perfil atual nunca vá vazio
+ */
+export async function exportarDadosDB() {
+  try {
+    const db = await abrirBanco();
+
+    // Busca o perfil ativo (inclusive o padrão caso não tenha sido editado ainda)
+    const perfilAtual = await buscarPerfilDB();
+
+    const progressoData = await new Promise((resolve, reject) => {
+      const tx = db.transaction(STORES.PROGRESSO, "readonly");
+      const req = tx.objectStore(STORES.PROGRESSO).getAll();
+      req.onsuccess = () => resolve(req.result || []);
+      req.onerror = (e) => reject(e.target.error);
+    });
+
+    return {
+      versao: 1,
+      exportadoEm: new Date().toISOString(),
+      perfil: [perfilAtual],
+      progresso: progressoData
+    };
+  } catch (erro) {
+    console.error("❌ [DB] Erro ao exportar dados:", erro);
+    throw erro;
+  }
+}
+
+/**
+ * Importa e sobrescreve as stores de Perfil e Progresso
+ */
+export async function importarDadosDB(dados) {
+  if (!dados || typeof dados !== "object") return false;
+
+  try {
+    const db = await abrirBanco();
+
+    // Importa dados do Perfil (aceita Array ou Objeto simples)
+    let listaPerfil = [];
+    if (Array.isArray(dados.perfil)) {
+      listaPerfil = dados.perfil;
+    } else if (dados.perfil && typeof dados.perfil === "object") {
+      listaPerfil = [dados.perfil];
+    }
+
+    if (listaPerfil.length > 0) {
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(STORES.PERFIL, "readwrite");
+        const store = tx.objectStore(STORES.PERFIL);
+        store.clear();
+
+        listaPerfil.forEach((item) => {
+          const registro = {
+            ...perfilPadrao,
+            ...item,
+            id: PERFIL_KEY,
+            atualizadoEm: Date.now()
+          };
+          store.put(registro);
+        });
+
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = (e) => reject(e.target.error);
+      });
+    }
+
+    // Importa dados de Progresso
+    if (Array.isArray(dados.progresso)) {
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(STORES.PROGRESSO, "readwrite");
+        const store = tx.objectStore(STORES.PROGRESSO);
+        store.clear();
+        dados.progresso.forEach((item) => store.put(item));
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = (e) => reject(e.target.error);
+      });
+    }
+
+    return true;
+  } catch (erro) {
+    console.error("❌ [DB] Erro ao importar dados:", erro);
+    return false;
   }
 }
 
@@ -118,9 +211,6 @@ export async function limparPerfilDB() {
    MÉTODOS DE PROGRESSO DOS EPISÓDIOS
    ========================================================================== */
 
-/**
- * Salva ou atualiza o progresso de um episódio
- */
 export async function salvarProgressoDB(epId, tempo, total) {
   try {
     const db = await abrirBanco();
@@ -147,9 +237,6 @@ export async function salvarProgressoDB(epId, tempo, total) {
   }
 }
 
-/**
- * Marca ou desmarca manualmente um episódio como concluído no banco
- */
 export async function alternarConcluidoDB(epId, concluido = true) {
   try {
     const db = await abrirBanco();
@@ -184,9 +271,6 @@ export async function alternarConcluidoDB(epId, concluido = true) {
   }
 }
 
-/**
- * Busca o progresso de um episódio específico
- */
 export async function buscarProgressoDB(epId) {
   try {
     const db = await abrirBanco();
@@ -204,9 +288,6 @@ export async function buscarProgressoDB(epId) {
   }
 }
 
-/**
- * Busca o progresso de TODOS os episódios de uma vez
- */
 export async function buscarTodoProgressoDB() {
   try {
     const db = await abrirBanco();
