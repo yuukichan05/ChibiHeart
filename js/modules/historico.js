@@ -150,7 +150,7 @@ export async function gerenciarTelaHistorico() {
           elStatus.textContent = "Concluído";
           elStatus.style.color = "#4caf50";
         } else {
-          elStatus.textContent = `Parou em ${formatarTempo(registro.tempo)}`;
+          elStatus.textContent = `Resume ${formatarTempo(registro.tempo)}`;
         }
       }
 

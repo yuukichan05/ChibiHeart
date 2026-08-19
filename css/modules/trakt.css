@@ -159,8 +159,7 @@ body:has(#inicio.active) .main-header {
 }
 
 .main-content {
-    padding: 0 12px 12px 12px;
-    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    padding: 0 0 calc(80px + env(safe-area-inset-bottom, 0px)) 0;
     min-height: calc(100vh - 118px); 
     width: 100%; 
     margin: 0 auto;
@@ -176,13 +175,6 @@ body:has(#inicio.active) .main-header {
     display: block; 
     will-change: transform, opacity;
     animation: surgiraTela 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards; 
-}
-
-@keyframes surgiraTela { 
-    to { 
-        opacity: 1; 
-        transform: translateY(0) translateZ(0); 
-    } 
 }
 
 .app-view h2 { 
@@ -258,16 +250,14 @@ body:has(#player.active) .tab-bar {
     display: grid; 
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
     gap: 8px; 
-    padding-top: 8px; 
-    padding-bottom: 24px; 
+    padding: 8px 12px 24px 12px; 
 }
-
 
 /* Container de ações no header (Agrupa busca + perfil) */
 .header-actions {
     display: flex;
     align-items: center;
-    gap: 8px; /* Espaçamento entre a lupa e o ícone de perfil */
+    gap: 8px;
 }
 
 /* Mantém os botões do header circulares e centralizados */
@@ -281,7 +271,7 @@ body:has(#player.active) .tab-bar {
     height: 40px;
     border-radius: 50%;
     transition: background-color 0.2s ease, color 0.2s ease;
-    overflow: hidden; /* Garante o recorte perfeito da imagem circular */
+    overflow: hidden;
 }
 
 .header-action-btn:hover {
@@ -293,7 +283,7 @@ body:has(#player.active) .tab-bar {
 .header-profile-avatar {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Evita que a foto do usuário fique esmagada/esticada */
+    object-fit: cover;
     border-radius: 50%;
     border: 1.5px solid var(--border-glass, rgba(255, 255, 255, 0.15));
 }
@@ -311,6 +301,7 @@ body:has(#player.active) .tab-bar {
     position: sticky;
     top: calc(12px + env(safe-area-inset-top, 0px));
     width: 100%;
+    padding: 0 12px;
     margin: 0 auto 12px auto;
     display: flex;
     align-items: center;
@@ -338,7 +329,7 @@ body:has(#player.active) .tab-bar {
 
 .search-input-wrapper .search-icon {
     position: absolute;
-    left: 16px;
+    left: 28px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-secondary);
@@ -364,7 +355,7 @@ body:has(#player.active) .tab-bar {
 
 .btn-clear-search {
     position: absolute;
-    right: 12px;
+    right: 24px;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
@@ -404,6 +395,7 @@ body:has(#player.active) .tab-bar {
     font-size: 1.08rem !important; 
     font-weight: 700; 
     color: var(--text-main); 
+    padding: 0 12px;
     margin: 14px 0 8px 0; 
     letter-spacing: -0.2px; 
     display: flex; 
@@ -418,15 +410,14 @@ body:has(#player.active) .tab-bar {
     flex-wrap: nowrap; 
     overflow-x: auto; 
     overflow-y: hidden; 
-    gap: 8px; /* Espaço entre cards estilo Trakt */
-    margin: 0 -12px; /* Encurta a margem para colar nas bordas da tela */
-    padding: 0 12px 6px 12px; /* Sangria suave lateral */
+    gap: 8px; 
+    padding: 4px 12px 10px 12px;
 }
 
 .cards-grid { 
     display: grid; 
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
-    gap: 8px; /* Espaçamento entre cards na grade estilo Trakt */
+    gap: 8px; 
 }
 
 .card { 
@@ -442,7 +433,7 @@ body:has(#player.active) .tab-bar {
 .card-media { 
     width: 100%; 
     overflow: hidden; 
-    border-radius: 6px; /* Bordas levemente mais sutis como no Trakt */
+    border-radius: 6px; 
     background-color: var(--bg-card); 
 }
 
@@ -461,8 +452,8 @@ body:has(#player.active) .tab-bar {
 
 /* Container do esqueleto */
 .card.poster.skeleton {
-  width: 7.8125rem; /* Seus 125px convertidos */
-  pointer-events: none; /* Impede cliques enquanto carrega */
+  width: 7.8125rem;
+  pointer-events: none;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -471,7 +462,7 @@ body:has(#player.active) .tab-bar {
 /* Área da imagem com efeito de barra correndo */
 .card.poster.skeleton .skeleton-shimmer {
   width: 100%;
-  height: 11.7188rem; /* Proporção 1:1.5 */
+  height: 11.7188rem;
   border-radius: 8px;
   background: #2a2a2a linear-gradient(
     90deg,
@@ -498,26 +489,12 @@ body:has(#player.active) .tab-bar {
   animation: shimmer-efeito 1.5s infinite linear;
 }
 
-/* Animação que move o gradiente da esquerda para a direita */
-@keyframes shimmer-efeito {
-  0% {
-    background-position: -150px 0;
-  }
-  100% {
-    background-position: 150px 0;
-  }
-}
-
-
 /* Instrui o navegador a pausar a renderização de cards e seções fora da tela */
 .card,
 .secao-genero-container {
   content-visibility: auto;
-  /* contain-intrinsic-size reserva o espaço em pixels para o scroll não dar "pulos" */
   contain-intrinsic-size: 125px 187px; 
 }
-
-
 
 /* Utilitário para Imagens e Supressão de Texto ALT */
 .card-media img {
@@ -525,17 +502,12 @@ body:has(#player.active) .tab-bar {
     height: 100%; 
     object-fit: cover; 
     display: block;
-    
-    /* Esconde o texto ALT visualmente mantendo a acessibilidade */
     color: transparent;
     font-size: 0;
-    
-    /* Inicia invisível para evitar renderização progressiva */
     opacity: 0;
     transition: opacity 0.25s ease-in-out;
 }
 
-/* Classe aplicada via JS assim que a imagem for totalmente baixada na RAM */
 .card-media img.loaded {
     opacity: 1;
 }
@@ -568,31 +540,19 @@ body.overlay-open .main-content { filter: blur(3px) brightness(0.92); pointer-ev
 
 
 /* ==========================================================================
-   CARDS E CONTAINER DE CONTINUAR ASSISTINDO (LANDSCAPE 16:9)
+   4. CARDS E CONTAINER DE CONTINUAR ASSISTINDO (LANDSCAPE 16:9 ESTILO TRAKT)
    ========================================================================== */
 
-/* Ajuste do container para carrossel horizontal de cards landscape */
-/* ==========================================================================
-   CARDS E CONTAINER DE CONTINUAR ASSISTINDO (LANDSCAPE 16:9 ESTILO TRAKT)
-   ========================================================================== */
-
-/* ==========================================================================
-   CARDS E CONTAINER DE CONTINUAR ASSISTINDO (LANDSCAPE 16:9)
-   ========================================================================== */
-
-/* Seção externa */
 #secao-continuar-assistindo {
     margin-bottom: 20px;
 }
 
-/* Container do Carrossel (Substitui o comportamento de .cards-grid) */
 #grade-continuar-assistindo {
     display: flex !important;
     flex-direction: row !important;
     overflow-x: auto !important;
     overflow-y: hidden !important;
     gap: 12px;
-    margin: 0 -12px;
     padding: 4px 12px 10px 12px;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
@@ -616,7 +576,6 @@ body.overlay-open .main-content { filter: blur(3px) brightness(0.92); pointer-ev
     color: inherit;
 }
 
-/* Mídia do Card em Proporção TV (16:9) */
 .card-continuar .card-media {
     width: 100%;
     aspect-ratio: 16 / 9;
@@ -699,4 +658,3 @@ body.overlay-open .main-content { filter: blur(3px) brightness(0.92); pointer-ev
     text-overflow: ellipsis;
     margin: 0;
 }
-

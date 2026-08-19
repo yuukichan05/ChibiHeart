@@ -121,7 +121,7 @@ export async function renderizarContinuarAssistindo() {
         tempoRestante = registro.tempo;
         totalTempo = registro.total;
         percentual = (tempoRestante / totalTempo) * 100;
-        subtituloTexto = `Parou em ${formatarTempo(tempoRestante)}`;
+        subtituloTexto = `Resume ${formatarTempo(tempoRestante)}`;
       } else {
         // CASO 2: O episódio atual foi concluído -> Tenta pegar o PRÓXIMO episódio
         if (indexEpAtual + 1 < episodiosLinear.length) {
