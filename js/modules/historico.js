@@ -39,16 +39,13 @@ function encontrarEpisodioNoCatalogo(idBuscado, infoCompleta) {
         const s = String(tIdx + 1).padStart(2, "0");
         const e = String(indexEp).padStart(2, "0");
 
-        // Variantes possíveis para quando o JSON não declara o campo "id"
         const idFallbackHifen = `${idAnimeKey}-s${s}e${e}`;
         const idFallbackUnderline = `${idAnimeKey}_s${s}e${e}`;
 
-        // 1. COMPARAÇÃO DIRETA (A mais importante): Se o ep.id do JSON for igual ao salvo no banco
         if (ep.id && ep.id === idBuscado) {
           return { anime, animeId: idAnimeKey, ep, temporadaNome: temp.nome || `${tIdx + 1}ª Temporada` };
         }
 
-        // 2. FALLBACK: Caso o objeto do episódio no JSON não possua a propriedade "id"
         if (!ep.id && (idBuscado === idFallbackHifen || idBuscado === idFallbackUnderline)) {
           return { anime, animeId: idAnimeKey, ep, temporadaNome: temp.nome || `${tIdx + 1}ª Temporada` };
         }
@@ -59,16 +56,51 @@ function encontrarEpisodioNoCatalogo(idBuscado, infoCompleta) {
   return null;
 }
 
+/**
+ * Configura os ouvintes de clique nos botões de filtro.
+ */
+function inicializarFiltros() {
+  const botoes = document.querySelectorAll(".btn-filtro-historico");
+  const secaoAssistindo = document.getElementById("secao-assistindo");
+  const secaoConcluidos = document.getElementById("secao-concluidos");
+
+  botoes.forEach((btn) => {
+    btn.onclick = () => {
+      const filtro = btn.getAttribute("data-filtro");
+
+      botoes.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      if (filtro === "concluidos") {
+        secaoAssistindo?.classList.add("hidden");
+        secaoConcluidos?.classList.remove("hidden");
+      } else {
+        secaoConcluidos?.classList.add("hidden");
+        secaoAssistindo?.classList.remove("hidden");
+      }
+    };
+  });
+}
+
 export async function gerenciarTelaHistorico() {
   const hash = window.location.hash;
 
   if (!hash.startsWith("#historico")) return;
 
-  const container = document.getElementById("grade-historico");
+  const containerAssistindo = document.getElementById("grade-historico-assistindo");
+  const containerConcluidos = document.getElementById("grade-historico-concluidos");
   const template = document.getElementById("modelo-card-historico");
-  const estadoVazio = document.getElementById("historico-vazio");
+  
+  const vazioAssistindo = document.getElementById("historico-vazio-assistindo");
+  const vazioConcluidos = document.getElementById("historico-vazio-concluidos");
 
-  if (!container || !template) return;
+  const badgeAssistindo = document.getElementById("qtd-assistindo");
+  const badgeConcluidos = document.getElementById("qtd-concluidos");
+
+  if (!containerAssistindo || !containerConcluidos || !template) return;
+
+  // Garante que os eventos de clique dos filtros estejam configurados
+  inicializarFiltros();
 
   try {
     const [mapaProgresso, infoCompleta] = await Promise.all([
@@ -78,35 +110,36 @@ export async function gerenciarTelaHistorico() {
 
     const listaRegistros = Object.values(mapaProgresso || {});
 
-    // Limpa a tela antes de renderizar
-    container.replaceChildren();
+    // Limpa as duas listas antes de renderizar
+    containerAssistindo.replaceChildren();
+    containerConcluidos.replaceChildren();
 
     if (listaRegistros.length === 0) {
-      if (estadoVazio) estadoVazio.style.display = "block";
+      if (vazioAssistindo) vazioAssistindo.style.display = "block";
+      if (vazioConcluidos) vazioConcluidos.style.display = "block";
+      if (badgeAssistindo) badgeAssistindo.textContent = "0";
+      if (badgeConcluidos) badgeConcluidos.textContent = "0";
       return;
     }
-
-    if (estadoVazio) estadoVazio.style.display = "none";
 
     // Ordena do progresso mais recente para o mais antigo
     listaRegistros.sort((a, b) => (b.atualizadoEm || 0) - (a.atualizadoEm || 0));
 
-    const fragment = document.createDocumentFragment();
+    const fragAssistindo = document.createDocumentFragment();
+    const fragConcluidos = document.createDocumentFragment();
+
+    let countAssistindo = 0;
+    let countConcluidos = 0;
 
     listaRegistros.forEach((registro) => {
       if (!registro || !registro.id) return;
 
-      // Busca universal do episódio no catálogo JSON
       const achado = encontrarEpisodioNoCatalogo(registro.id, infoCompleta);
-
-      // Se o episódio salvo não existir mais no JSON, ignora silenciosamente
       if (!achado) return;
 
       const { anime, animeId, ep, temporadaNome } = achado;
 
-      // Clona a estrutura do card no HTML
       const clone = template.content.cloneNode(true);
-
       const link = clone.querySelector("a");
       const img = clone.querySelector(".historico-thumb");
       const barraContainer = clone.querySelector(".barra-progresso-container");
@@ -116,18 +149,15 @@ export async function gerenciarTelaHistorico() {
       const elTitulo = clone.querySelector(".historico-titulo-ep");
       const elStatus = clone.querySelector(".historico-status");
 
-      // Monta a URL para assistir no Player
       if (link) {
         link.href = `#player?anime=${encodeURIComponent(animeId)}&ep=${encodeURIComponent(registro.id)}`;
       }
 
-      // Preenche imagem da thumbnail/poster
       if (img) {
         img.src = ep.thumb || anime.poster || anime.banner || "";
         img.alt = ep.titulo || anime.titulo || "Episódio";
       }
 
-      // Metadados
       if (elMeta) elMeta.textContent = `${anime.titulo || "Anime"} • ${temporadaNome}`;
       if (elTitulo) elTitulo.textContent = ep.titulo || `Episódio ${ep.index || ""}`;
 
@@ -144,20 +174,34 @@ export async function gerenciarTelaHistorico() {
         }
       }
 
-      // Status
-      if (elStatus) {
-        if (registro.concluido) {
+      // Separa entre Concluído e Assistindo
+      if (registro.concluido) {
+        countConcluidos++;
+        if (elStatus) {
           elStatus.textContent = "Concluído";
           elStatus.style.color = "#4caf50";
-        } else {
+        }
+        fragConcluidos.appendChild(clone);
+      } else {
+        countAssistindo++;
+        if (elStatus) {
           elStatus.textContent = `Resume ${formatarTempo(registro.tempo)}`;
         }
+        fragAssistindo.appendChild(clone);
       }
-
-      fragment.appendChild(clone);
     });
 
-    container.appendChild(fragment);
+    // Anexa nas respectivas grades
+    containerAssistindo.appendChild(fragAssistindo);
+    containerConcluidos.appendChild(fragConcluidos);
+
+    // Atualiza contadores dos filtros
+    if (badgeAssistindo) badgeAssistindo.textContent = String(countAssistindo);
+    if (badgeConcluidos) badgeConcluidos.textContent = String(countConcluidos);
+
+    // Trata visibilidade das mensagens de estado vazio por aba
+    if (vazioAssistindo) vazioAssistindo.style.display = countAssistindo === 0 ? "block" : "none";
+    if (vazioConcluidos) vazioConcluidos.style.display = countConcluidos === 0 ? "block" : "none";
 
   } catch (erro) {
     console.error("❌ [Histórico] Falha ao carregar a tela de histórico:", erro);

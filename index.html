@@ -308,35 +308,58 @@
         </section>
 
         <!-- VIEW DO HISTÓRICO -->
-        <section id="historico" class="app-view">
-            <h2 class="titulo-categoria">Histórico de Assistidos</h2>
+        <!-- VIEW DO HISTÓRICO -->
+                <section id="historico" class="app-view">
+                    <h2 class="titulo-categoria">Histórico de Assistidos</h2>
         
-            <div id="grade-historico" class="episodes-list" style="margin-top: 16px;"></div>
+                    <!-- FILTROS (ASSISTINDO / CONCLUÍDOS) -->
+                    <div class="historico-filtros">
+                        <button type="button" class="btn-filtro-historico active" data-filtro="assistindo">
+                            Continuar Assistindo
+                            <span id="qtd-assistindo" class="contador-badge">0</span>
+                        </button>
+                        <button type="button" class="btn-filtro-historico" data-filtro="concluidos">
+                            Concluídos
+                            <span id="qtd-concluidos" class="contador-badge">0</span>
+                        </button>
+                    </div>
         
-            <div id="historico-vazio" class="badge-tag" style="display: none; margin: 40px auto; text-align: center; color: #888;">
-                Você ainda não começou a assistir nenhum episódio.
-            </div>
-        
-            <!-- TEMPLATE DO CARD DE HISTÓRICO -->
-            <template id="modelo-card-historico">
-                <a href="" class="card-ep item-historico" tabindex="0" style="text-decoration: none; color: inherit;">
-                    <div class="ep-media">
-                        <img src="" alt="" class="historico-thumb">
-                        <div class="barra-progresso-container" style="display: none;">
-                            <div class="barra-progresso-preenchimento"></div>
+                    <!-- SEÇÃO: CONTINUAR ASSISTINDO -->
+                    <div id="secao-assistindo" class="historico-secao">
+                        <div id="grade-historico-assistindo" class="episodes-list"></div>
+                        <div id="historico-vazio-assistindo" class="historico-vazio-msg" style="display: none;">
+                            Você não tem nenhum episódio em andamento no momento.
                         </div>
-                        <span class="ep-duration historico-duracao">--:--</span>
                     </div>
-                    <div class="ep-info">
-                        <span class="historico-anime-meta" style="font-size: 0.75rem; color: #ff4081; font-weight: 600; display: block; margin-bottom: 2px;"></span>
-                        <h3 class="card-title-ep historico-titulo-ep"></h3>
-                        <p class="card-descricao-ep historico-status" style="font-size: 0.8rem; color: #aaa; margin-top: 4px;"></p>
+        
+                    <!-- SEÇÃO: CONCLUÍDOS -->
+                    <div id="secao-concluidos" class="historico-secao hidden">
+                        <div id="grade-historico-concluidos" class="episodes-list"></div>
+                        <div id="historico-vazio-concluidos" class="historico-vazio-msg" style="display: none;">
+                            Você ainda não concluiu nenhum episódio.
+                        </div>
                     </div>
-                </a>
-            </template>
-        </section>
+        
+                    <!-- TEMPLATE DO CARD DE HISTÓRICO -->
+                    <template id="modelo-card-historico">
+                        <a href="" class="card-ep item-historico" tabindex="0" style="text-decoration: none; color: inherit;">
+                            <div class="ep-media">
+                                <img src="" alt="" class="historico-thumb">
+                                <div class="barra-progresso-container" style="display: none;">
+                                    <div class="barra-progresso-preenchimento"></div>
+                                </div>
+                                <span class="ep-duration historico-duracao">--:--</span>
+                            </div>
+                            <div class="ep-info">
+                                <span class="historico-anime-meta"></span>
+                                <h3 class="card-title-ep historico-titulo-ep"></h3>
+                                <p class="card-descricao-ep historico-status"></p>
+                            </div>
+                        </a>
+                    </template>
+                </section>
 
-        <!-- VIEW DE PERFIL -->
+        
         <!-- VIEW DE PERFIL -->
         <section id="perfil" class="app-view">
             <div class="perfil-header">
