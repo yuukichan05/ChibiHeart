@@ -1,4 +1,4 @@
-const CACHE_NAME = 'chibiheart-v3'; // Incrementado para v3 para forçar a limpeza do lixo em disco
+const CACHE_NAME = 'chibiheart-v5';
 
 // Arquivos para guardar em cache estático
 const ASSETS_TO_CACHE = [
