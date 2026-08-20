@@ -1,4 +1,4 @@
-const CACHE_NAME = 'chibiheart-v5';
+const CACHE_NAME = 'chibiheart-v6';
 
 // Arquivos para guardar em cache estático
 const ASSETS_TO_CACHE = [
@@ -12,6 +12,10 @@ const ASSETS_TO_CACHE = [
   './css/modules/player.css',
   './css/modules/views.css',
   './css/modules/perfil.css',
+  './css/modules/notifi.css',
+  './css/modules/animacoes.css',
+  './css/modules/historico.css',
+  './css/modules/pesquisa.css',
 
   // JSON
   './dados/info.json',
@@ -25,8 +29,9 @@ const ASSETS_TO_CACHE = [
   './js/modules/pesquisa.js',
   './js/modules/playerView.js',
   './js/modules/repository.js',
-  './js/modules/historico.js'
+  './js/modules/historico.js',
   './js/modules/continuarAssistindo.js',
+  './js/modules/notificacoes.js',
 
   // Imagens (Ícones PWA)
   './imagem/icon_solid_192.png',
@@ -39,7 +44,7 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[SW] Cache v3: Guardando arquivos atualizados...');
+      console.log('[SW] Cache v6: Guardando arquivos atualizados...');
       return Promise.all(
         ASSETS_TO_CACHE.map(url => {
           return cache.add(url).catch(err => console.error(`[SW] Erro ao cachear: ${url}`, err));

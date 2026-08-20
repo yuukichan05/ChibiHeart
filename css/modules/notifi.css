@@ -1,0 +1,144 @@
+/* css/modules/notificacoes.css */
+
+/* Badge no Ícone do Cabeçalho */
+.notification-btn {
+  position: relative;
+}
+
+.notificacao-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: #ff4081;
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid #121212;
+}
+
+/* Cabeçalho da View de Notificações */
+.notificacoes-header-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.btn-limpar-notif {
+  background: transparent;
+  border: none;
+  color: #ff4081;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.btn-limpar-notif:hover {
+  background: rgba(255, 64, 129, 0.1);
+}
+
+/* Grupos de Data (Dia / Mês / Ano) */
+.notificacao-grupo-data {
+  margin-bottom: 24px;
+}
+
+.notificacao-grupo-data .data-grupo-titulo {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #aaa;
+  margin-bottom: 12px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Cards de Notificação */
+.notificacao-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: #1e1e1e;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.notificacao-card.nao-lida {
+  border-left: 4px solid #ff4081;
+  background: #25252d;
+}
+
+/* Tipos de Notificação */
+.notificacao-card.sucesso .notificacao-icone-wrapper {
+  background: rgba(76, 175, 80, 0.15);
+  color: #4caf50;
+}
+
+.notificacao-card.erro .notificacao-icone-wrapper {
+  background: rgba(244, 67, 54, 0.15);
+  color: #f44336;
+}
+
+.notificacao-card.alerta .notificacao-icone-wrapper {
+  background: rgba(255, 152, 0, 0.15);
+  color: #ff9800;
+}
+
+.notificacao-card.info .notificacao-icone-wrapper {
+  background: rgba(33, 150, 243, 0.15);
+  color: #2196f3;
+}
+
+.notificacao-icone-wrapper {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.notificacao-conteudo {
+  flex: 1;
+}
+
+.notificacao-topo-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.notificacao-titulo {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.notificacao-hora {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.notificacao-mensagem {
+  font-size: 0.85rem;
+  color: #bbb;
+  margin: 0;
+  line-height: 1.4;
+}

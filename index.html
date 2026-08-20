@@ -24,6 +24,7 @@
 
     <!-- TAB BAR SUPERIOR / MAIN HEADER -->
     	<!-- TAB BAR SUPERIOR / MAIN HEADER -->
+    	<!-- TAB BAR SUPERIOR / MAIN HEADER -->
     	<header class="main-header">
     	    <div class="logo">
     	        <h1>Chibi<span>Heart</span></h1>
@@ -35,14 +36,19 @@
     	            <span class="material-symbols-outlined">search</span>
     	        </a>
     	
-    	        <!-- Novo Ícone de Perfil -->
+    	        <!-- NOVO ÍCONE DE NOTIFICAÇÕES -->
+    	        <a href="#notificacoes" class="header-action-btn notification-btn" aria-label="Notificações" tabindex="0">
+    	            <span class="material-symbols-outlined">notifications</span>
+    	            <span id="notificacao-badge" class="notificacao-badge" style="display: none;">0</span>
+    	        </a>
+    	
+    	        <!-- Ícone de Perfil -->
     	        <a href="#perfil" class="header-action-btn profile-btn" aria-label="Perfil" tabindex="0">
     	            <img src="https://via.placeholder.com/150" alt="Foto de Perfil" class="header-profile-avatar">
-    	            <!-- Caso a imagem falhe, pode usar um ícone da Google Fontes de fallback: -->
-    	            <!-- <span class="material-symbols-outlined">account_circle</span> -->
     	        </a>
     	    </div>
     	</header>
+
 
 
     <!-- Conteúdo Principal (SPA) -->
@@ -526,6 +532,40 @@
                     </div>
                 </div>
             </div>
+        </section>
+
+        <!-- VIEW DE NOTIFICAÇÕES -->
+        <section id="notificacoes" class="app-view">
+            <div class="notificacoes-header-topo">
+                <h2 class="titulo-categoria">Central de Notificações</h2>
+                <button type="button" id="btn-limpar-notificacoes" class="btn-limpar-notif">
+                    <span class="material-symbols-outlined">delete_sweep</span>
+                    Limpar
+                </button>
+            </div>
+        
+            <!-- Lista Agrupada por Data (Dia/Mês/Ano) -->
+            <div id="container-lista-notificacoes" class="notificacoes-lista-container"></div>
+        
+            <div id="notificacoes-vazio" class="historico-vazio-msg" style="display: none;">
+                Sua central de notificações está vazia.
+            </div>
+        
+            <!-- TEMPLATE DO CARD DE NOTIFICAÇÃO -->
+            <template id="modelo-card-notificacao">
+                <div class="notificacao-card">
+                    <div class="notificacao-icone-wrapper">
+                        <span class="material-symbols-outlined notificacao-icone">info</span>
+                    </div>
+                    <div class="notificacao-conteudo">
+                        <div class="notificacao-topo-info">
+                            <h4 class="notificacao-titulo"></h4>
+                            <span class="notificacao-hora"></span>
+                        </div>
+                        <p class="notificacao-mensagem"></p>
+                    </div>
+                </div>
+            </template>
         </section>
         
     </main>

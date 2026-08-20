@@ -1,17 +1,22 @@
 // js/modules/db.js
 
+import { adicionarNotificacao } from './notificacoes.js';
+
 const DB_NAME = "ChibiHeartDB";
-const DB_VERSION = 2;
+const DB_VERSION = 3; // Atualizado para suporte a notificações
 const STORES = {
   PROGRESSO: "progresso",
-  PERFIL: "perfil"
+  PERFIL: "perfil",
+  NOTIFICACOES: "notificacoes"
 };
 
 const GIST_FILENAME = "chibiheart_sync_backup.json";
 const GIST_DESCRIPTION = "[ChibiHeart Streaming] Backup Automático de Conta";
 
+let timerReSincronizacao = null;
+
 /**
- * Inicializa e abre a conexão com o IndexedDB
+ * Conexão com o IndexedDB
  */
 function abrirBanco() {
   return new Promise((resolve, reject) => {
@@ -26,6 +31,10 @@ function abrirBanco() {
 
       if (!db.objectStoreNames.contains(STORES.PERFIL)) {
         db.createObjectStore(STORES.PERFIL, { keyPath: "id" });
+      }
+
+      if (!db.objectStoreNames.contains(STORES.NOTIFICACOES)) {
+        db.createObjectStore(STORES.NOTIFICACOES, { keyPath: "id" });
       }
     };
 
@@ -46,12 +55,10 @@ const perfilPadrao = {
   email: "usuario@chibiheart.com",
   foto: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSP-d8FnyUc7-qF7238NfPxfjaILuYofuXX40GH3RCUFJES5zDqFP3ptKs&s=10",
   githubToken: "",
-  gistId: ""
+  gistId: "",
+  atualizadoEm: Date.now()
 };
 
-/**
- * Busca os dados do perfil e configurações salvos no IndexedDB
- */
 export async function buscarPerfilDB() {
   try {
     const db = await abrirBanco();
@@ -62,11 +69,7 @@ export async function buscarPerfilDB() {
 
       request.onsuccess = (e) => {
         const resultado = e.target.result;
-        if (resultado) {
-          resolve({ ...perfilPadrao, ...resultado });
-        } else {
-          resolve(perfilPadrao);
-        }
+        resolve(resultado ? { ...perfilPadrao, ...resultado } : perfilPadrao);
       };
       request.onerror = (e) => reject(e.target.error);
     });
@@ -76,9 +79,6 @@ export async function buscarPerfilDB() {
   }
 }
 
-/**
- * Salva ou atualiza os dados do perfil/chaves no IndexedDB
- */
 export async function salvarPerfilDB(perfil) {
   try {
     const db = await abrirBanco();
@@ -102,20 +102,109 @@ export async function salvarPerfilDB(perfil) {
   }
 }
 
-/**
- * Limpa TODOS os dados do banco (Perfil e Histórico)
- */
+/* ==========================================================================
+   MÉTODOS DA STORE DE NOTIFICAÇÕES (IndexedDB)
+   ========================================================================== */
+
+export async function buscarNotificacoesDB() {
+  try {
+    const db = await abrirBanco();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORES.NOTIFICACOES, "readonly");
+      const req = tx.objectStore(STORES.NOTIFICACOES).getAll();
+
+      req.onsuccess = () => {
+        const lista = req.result || [];
+        // Ordena da mais recente para a mais antiga
+        lista.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        resolve(lista);
+      };
+      req.onerror = (e) => reject(e.target.error);
+    });
+  } catch {
+    return [];
+  }
+}
+
+export async function salvarNotificacaoDB(notificacao) {
+  try {
+    const db = await abrirBanco();
+    const listaAtual = await buscarNotificacoesDB();
+
+    listaAtual.unshift(notificacao);
+
+    // Mantém no máximo as últimas 50 notificações
+    const listaFormatada = listaAtual.slice(0, 50);
+
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORES.NOTIFICACOES, "readwrite");
+      const store = tx.objectStore(STORES.NOTIFICACOES);
+      store.clear();
+
+      listaFormatada.forEach((item) => store.put(item));
+
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = (e) => reject(e.target.error);
+    });
+  } catch (erro) {
+    console.error("❌ [DB] Erro ao salvar notificação:", erro);
+  }
+}
+
+export async function marcarNotificacoesLidasDB() {
+  try {
+    const db = await abrirBanco();
+    const lista = await buscarNotificacoesDB();
+    let alterou = false;
+
+    lista.forEach(n => {
+      if (!n.lida) {
+        n.lida = true;
+        alterou = true;
+      }
+    });
+
+    if (!alterou) return;
+
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORES.NOTIFICACOES, "readwrite");
+      const store = tx.objectStore(STORES.NOTIFICACOES);
+      store.clear();
+      lista.forEach(item => store.put(item));
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = (e) => reject(e.target.error);
+    });
+  } catch (erro) {
+    console.error("❌ [DB] Erro ao marcar lidas:", erro);
+  }
+}
+
+export async function limparNotificacoesDB() {
+  try {
+    const db = await abrirBanco();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORES.NOTIFICACOES, "readwrite");
+      tx.objectStore(STORES.NOTIFICACOES).clear();
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = (e) => reject(e.target.error);
+    });
+  } catch (erro) {
+    console.error("❌ [DB] Erro ao limpar notificações:", erro);
+  }
+}
+
 export async function limparTudoDB() {
   try {
     const db = await abrirBanco();
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction([STORES.PERFIL, STORES.PROGRESSO], "readwrite");
+      const tx = db.transaction([STORES.PERFIL, STORES.PROGRESSO, STORES.NOTIFICACOES], "readwrite");
 
-      transaction.objectStore(STORES.PERFIL).clear();
-      transaction.objectStore(STORES.PROGRESSO).clear();
+      tx.objectStore(STORES.PERFIL).clear();
+      tx.objectStore(STORES.PROGRESSO).clear();
+      tx.objectStore(STORES.NOTIFICACOES).clear();
 
-      transaction.oncomplete = () => resolve(true);
-      transaction.onerror = (e) => reject(e.target.error);
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = (e) => reject(e.target.error);
     });
   } catch (erro) {
     console.error("❌ [DB] Falha ao limpar banco de dados completo:", erro);
@@ -123,36 +212,45 @@ export async function limparTudoDB() {
 }
 
 /* ==========================================================================
-   MÉTODOS DE BACKUP / RESTAURAÇÃO DE DADOS DA CONTA
+   EXPORTAÇÃO E IMPORTAÇÃO COMPLETA DE DADOS
    ========================================================================== */
 
-/**
- * Retorna uma string formatada com Data e Hora para o nome do arquivo de backup
- * Exemplo: 2026-08-20_01-14-05
- */
 export function obterDataHoraFormatada() {
   const agora = new Date();
   const pad = (n) => String(n).padStart(2, '0');
 
-  const ano = agora.getFullYear();
-  const mes = pad(agora.getMonth() + 1);
-  const dia = pad(agora.getDate());
-  const horas = pad(agora.getHours());
-  const minutos = pad(agora.getMinutes());
-  const segundos = pad(agora.getSeconds());
-
-  return `${ano}-${mes}-${dia}_${horas}-${minutos}-${segundos}`;
+  return `${agora.getFullYear()}-${pad(agora.getMonth() + 1)}-${pad(agora.getDate())}_${pad(agora.getHours())}-${pad(agora.getMinutes())}-${pad(agora.getSeconds())}`;
 }
 
 /**
- * Extrai todos os dados garantindo a remoção do token para evitar vazamento
+ * Calcula a data/hora exata do estado local mais recente
+ */
+export async function obterMaiorTimestampLocal() {
+  const perfil = await buscarPerfilDB();
+  const progressos = await buscarTodoProgressoListaDB();
+  const notificacoes = await buscarNotificacoesDB();
+
+  let maxTs = perfil.atualizadoEm || 0;
+
+  progressos.forEach(p => {
+    if (p.atualizadoEm && p.atualizadoEm > maxTs) maxTs = p.atualizadoEm;
+  });
+
+  notificacoes.forEach(n => {
+    if (n.timestamp && n.timestamp > maxTs) maxTs = n.timestamp;
+  });
+
+  return maxTs || Date.now();
+}
+
+/**
+ * Exporta todos os dados com o timestamp exato de sincronização
  */
 export async function exportarDadosDB() {
   try {
     const db = await abrirBanco();
     const perfilAtual = await buscarPerfilDB();
 
-    // REMOVE O TOKEN E O ID DO GIST ANTES DE GERAR O JSON
     const perfilSeguro = {
       ...perfilAtual,
       githubToken: "",
@@ -166,11 +264,16 @@ export async function exportarDadosDB() {
       req.onerror = (e) => reject(e.target.error);
     });
 
+    const notificacoesData = await buscarNotificacoesDB();
+    const timestampLocal = await obterMaiorTimestampLocal();
+
     return {
-      versao: 1,
-      exportadoEm: new Date().toISOString(),
+      versao: 2,
+      exportadoEm: new Date(timestampLocal).toISOString(),
+      timestampModificacao: timestampLocal,
       perfil: [perfilSeguro],
-      progresso: progressoData
+      progresso: progressoData,
+      notificacoes: notificacoesData
     };
   } catch (erro) {
     console.error("❌ [DB] Erro ao exportar dados:", erro);
@@ -179,7 +282,7 @@ export async function exportarDadosDB() {
 }
 
 /**
- * Importa e sobrescreve as stores de Perfil e Progresso preservando credenciais locais
+ * Importa perfil, progresso e notificações para o banco local
  */
 export async function importarDadosDB(dados) {
   if (!dados || typeof dados !== "object") return false;
@@ -188,12 +291,7 @@ export async function importarDadosDB(dados) {
     const db = await abrirBanco();
     const perfilLocalAtual = await buscarPerfilDB();
 
-    let listaPerfil = [];
-    if (Array.isArray(dados.perfil)) {
-      listaPerfil = dados.perfil;
-    } else if (dados.perfil && typeof dados.perfil === "object") {
-      listaPerfil = [dados.perfil];
-    }
+    let listaPerfil = Array.isArray(dados.perfil) ? dados.perfil : (dados.perfil ? [dados.perfil] : []);
 
     if (listaPerfil.length > 0) {
       await new Promise((resolve, reject) => {
@@ -202,16 +300,14 @@ export async function importarDadosDB(dados) {
         store.clear();
 
         listaPerfil.forEach((item) => {
-          const registro = {
+          store.put({
             ...perfilPadrao,
             ...item,
-            // Mantém as chaves locais intactas durante a restauração
             githubToken: perfilLocalAtual.githubToken || item.githubToken || "",
             gistId: perfilLocalAtual.gistId || item.gistId || "",
             id: PERFIL_KEY,
-            atualizadoEm: Date.now()
-          };
-          store.put(registro);
+            atualizadoEm: item.atualizadoEm || Date.now()
+          });
         });
 
         tx.oncomplete = () => resolve(true);
@@ -230,6 +326,17 @@ export async function importarDadosDB(dados) {
       });
     }
 
+    if (Array.isArray(dados.notificacoes)) {
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(STORES.NOTIFICACOES, "readwrite");
+        const store = tx.objectStore(STORES.NOTIFICACOES);
+        store.clear();
+        dados.notificacoes.forEach((item) => store.put(item));
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = (e) => reject(e.target.error);
+      });
+    }
+
     return true;
   } catch (erro) {
     console.error("❌ [DB] Erro ao importar dados:", erro);
@@ -238,12 +345,9 @@ export async function importarDadosDB(dados) {
 }
 
 /* ==========================================================================
-   SINCRONIZAÇÃO VIA GITHUB GIST (API REST)
+   SINCRONIZAÇÃO INTELIGENTE (PRIORIDADE BANCO LOCAL + RE-TRY EM 5 MIN)
    ========================================================================== */
 
-/**
- * Busca ou cria o Gist de backup no GitHub
- */
 async function obterOuCriarGistId(token) {
   const headers = {
     'Authorization': `Bearer ${token}`,
@@ -251,14 +355,15 @@ async function obterOuCriarGistId(token) {
   };
 
   const responseList = await fetch('https://api.github.com/gists', { headers });
-  if (!responseList.ok) throw new Error('Chave Token inválida ou sem permissão de Gist.');
+  if (responseList.status === 403 || responseList.status === 429) {
+    throw new Error('RATE_LIMIT');
+  }
+  if (!responseList.ok) throw new Error('Token do GitHub inválido ou sem acesso.');
 
   const gists = await responseList.json();
   const gistExistente = gists.find(g => g.description === GIST_DESCRIPTION || g.files[GIST_FILENAME]);
 
-  if (gistExistente) {
-    return gistExistente.id;
-  }
+  if (gistExistente) return gistExistente.id;
 
   const dadosIniciais = await exportarDadosDB();
   const responseCreate = await fetch('https://api.github.com/gists', {
@@ -267,21 +372,31 @@ async function obterOuCriarGistId(token) {
     body: JSON.stringify({
       description: GIST_DESCRIPTION,
       public: false,
-      files: {
-        [GIST_FILENAME]: {
-          content: JSON.stringify(dadosIniciais, null, 2)
-        }
-      }
+      files: { [GIST_FILENAME]: { content: JSON.stringify(dadosIniciais, null, 2) } }
     })
   });
 
-  if (!responseCreate.ok) throw new Error('Erro ao criar arquivo Gist de sincronização.');
+  if (!responseCreate.ok) throw new Error('Falha ao criar Gist de backup no GitHub.');
   const novoGist = await responseCreate.json();
   return novoGist.id;
 }
 
 /**
- * Envia o backup local atual para o GitHub (Upload)
+ * Agenda uma nova tentativa de sincronização em 5 minutos (300.000 ms)
+ */
+export function agendarReSincronizacaoCincoMinutos() {
+  if (timerReSincronizacao) clearTimeout(timerReSincronizacao);
+
+  console.warn("⏳ [Sync Engine] Re-sincronização agendada para daqui a 5 minutos...");
+
+  timerReSincronizacao = setTimeout(async () => {
+    console.log("🔄 [Sync Engine] Executando tentativa automática de re-sincronização...");
+    await sincronizarUploadGithub();
+  }, 5 * 60 * 1000); // 5 minutos
+}
+
+/**
+ * Envia os dados do banco local para a Nuvem
  */
 export async function sincronizarUploadGithub() {
   const perfil = await buscarPerfilDB();
@@ -305,24 +420,45 @@ export async function sincronizarUploadGithub() {
         'Accept': 'application/vnd.github+json'
       },
       body: JSON.stringify({
-        files: {
-          [GIST_FILENAME]: {
-            content: JSON.stringify(dadosLocais, null, 2)
-          }
-        }
+        files: { [GIST_FILENAME]: { content: JSON.stringify(dadosLocais, null, 2) } }
       })
     });
 
-    if (!response.ok) throw new Error('Falha ao enviar backup para o GitHub.');
+    if (response.status === 403 || response.status === 429) {
+      await adicionarNotificacao({
+        titulo: 'Limite de Requisições do GitHub',
+        mensagem: 'O GitHub bloqueou o envio por limite de taxa. Nova tentativa agendada para 5 minutos.',
+        tipo: 'alerta'
+      });
+      agendarReSincronizacaoCincoMinutos();
+      return { sucesso: false, erro: 'Rate Limit' };
+    }
+
+    if (!response.ok) throw new Error('Não foi possível atualizar o Gist no GitHub.');
+
+    await adicionarNotificacao({
+      titulo: 'Sincronizado com a Nuvem',
+      mensagem: 'Seu histórico local mais recente foi salvo na sua conta do GitHub com sucesso.',
+      tipo: 'sucesso'
+    });
+
     return { sucesso: true };
   } catch (erro) {
-    console.error('❌ [Sync] Erro de Upload:', erro);
+    console.error('❌ [Sync Upload Error]:', erro);
+
+    await adicionarNotificacao({
+      titulo: 'Sincronização em Espera',
+      mensagem: `Sincronização pendente. Mantendo banco local intacto. Tentando novamente em 5 minutos.`,
+      tipo: 'alerta'
+    });
+
+    agendarReSincronizacaoCincoMinutos();
     return { sucesso: false, erro: erro.message };
   }
 }
 
 /**
- * Baixa o backup do GitHub e restaura localmente (Download)
+ * Executa a sincronização comparando local vs nuvem com PRIORIDADE AO BANCO LOCAL
  */
 export async function sincronizarDownloadGithub() {
   const perfil = await buscarPerfilDB();
@@ -343,52 +479,89 @@ export async function sincronizarDownloadGithub() {
       }
     });
 
-    if (!response.ok) throw new Error('Erro ao buscar arquivo no GitHub.');
+    if (response.status === 403 || response.status === 429) {
+      await adicionarNotificacao({
+        titulo: 'Aviso de Rate Limit',
+        mensagem: 'Não foi possível verificar a nuvem devido a limites do GitHub. Banco local mantido. Tentando em 5min.',
+        tipo: 'alerta'
+      });
+      agendarReSincronizacaoCincoMinutos();
+      return { sucesso: false, erro: 'Rate Limit' };
+    }
+
+    if (!response.ok) throw new Error('Erro ao buscar backup na nuvem.');
 
     const gist = await response.json();
     const conteudoTexto = gist.files[GIST_FILENAME]?.content;
 
-    if (conteudoTexto) {
-      const dadosRemotos = JSON.parse(conteudoTexto);
-      await importarDadosDB(dadosRemotos);
-      return { sucesso: true, dados: dadosRemotos };
+    if (!conteudoTexto) {
+      // Nuvem vazia -> Envia local
+      return await sincronizarUploadGithub();
     }
 
-    return { sucesso: false, erro: 'Conteúdo vazio' };
+    const dadosRemotos = JSON.parse(conteudoTexto);
+    const timestampRemoto = dadosRemotos.timestampModificacao || (dadosRemotos.exportadoEm ? new Date(dadosRemotos.exportadoEm).getTime() : 0);
+    const timestampLocal = await obterMaiorTimestampLocal();
+
+    // COMPARAÇÃO SEVERA DE TIMESTAMPS:
+    // Se o banco local for MAIS RECENTE ou IGUAL ao da nuvem:
+    if (timestampLocal >= timestampRemoto) {
+      console.log("🛡️ [Sync Engine] Banco local é mais recente ou igual. Enviando atualização local para a nuvem...");
+      return await sincronizarUploadGithub();
+    }
+
+    // Se o banco remoto for estritamente mais recente que o local:
+    console.log("☁️ [Sync Engine] Backup na nuvem é mais recente. Atualizando banco de dados local...");
+    await importarDadosDB(dadosRemotos);
+
+    await adicionarNotificacao({
+      titulo: 'Conta Atualizada da Nuvem',
+      mensagem: 'Os dados mais recentes salvos na nuvem foram sincronizados neste dispositivo.',
+      tipo: 'sucesso'
+    });
+
+    return { sucesso: true, dados: dadosRemotos };
   } catch (erro) {
-    console.error('❌ [Sync] Erro de Download:', erro);
+    console.error('❌ [Sync Download Error]:', erro);
+
+    await adicionarNotificacao({
+      titulo: 'Falha na Conexão',
+      mensagem: 'Erro ao conectar à nuvem. Seus dados locais estão seguros. Re-sincronizando em 5min.',
+      tipo: 'alerta'
+    });
+
+    agendarReSincronizacaoCincoMinutos();
     return { sucesso: false, erro: erro.message };
   }
 }
 
 /* ==========================================================================
-   MÉTODOS DE PROGRESSO DOS EPISÓDIOS
+   PROGRESSO DOS EPISÓDIOS
    ========================================================================== */
 
 export async function salvarProgressoDB(epId, tempo, total) {
   try {
     const db = await abrirBanco();
-    const result = await new Promise((resolve, reject) => {
-      const transaction = db.transaction(STORES.PROGRESSO, "readwrite");
-      const store = transaction.objectStore(STORES.PROGRESSO);
+    const concluido = total > 0 ? (tempo / total) >= 0.85 : false;
 
-      const concluido = total > 0 ? (tempo / total) >= 0.85 : false;
+    const registro = {
+      id: epId,
+      tempo,
+      total,
+      concluido,
+      atualizadoEm: Date.now()
+    };
 
-      const registro = {
-        id: epId,
-        tempo,
-        total,
-        concluido,
-        atualizadoEm: Date.now()
-      };
-
-      const request = store.put(registro);
-      request.onsuccess = () => resolve(true);
-      request.onerror = (e) => reject(e.target.error);
+    await new Promise((resolve, reject) => {
+      const tx = db.transaction(STORES.PROGRESSO, "readwrite");
+      const req = tx.objectStore(STORES.PROGRESSO).put(registro);
+      req.onsuccess = () => resolve(true);
+      req.onerror = (e) => reject(e.target.error);
     });
 
+    // Dispara envio silencioso do novo progresso local para a nuvem
     sincronizarUploadGithub().catch(() => {});
-    return result;
+    return true;
   } catch (erro) {
     console.error("❌ [DB] Falha ao salvar progresso:", erro);
   }
@@ -397,9 +570,9 @@ export async function salvarProgressoDB(epId, tempo, total) {
 export async function alternarConcluidoDB(epId, concluido = true) {
   try {
     const db = await abrirBanco();
-    const result = await new Promise((resolve, reject) => {
-      const transaction = db.transaction(STORES.PROGRESSO, "readwrite");
-      const store = transaction.objectStore(STORES.PROGRESSO);
+    await new Promise((resolve, reject) => {
+      const tx = db.transaction(STORES.PROGRESSO, "readwrite");
+      const store = tx.objectStore(STORES.PROGRESSO);
 
       const requestGet = store.get(epId);
 
@@ -425,7 +598,7 @@ export async function alternarConcluidoDB(epId, concluido = true) {
     });
 
     sincronizarUploadGithub().catch(() => {});
-    return result;
+    return true;
   } catch (erro) {
     console.error("❌ [DB] Falha ao alterar status de concluído:", erro);
   }
@@ -435,39 +608,33 @@ export async function buscarProgressoDB(epId) {
   try {
     const db = await abrirBanco();
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(STORES.PROGRESSO, "readonly");
-      const store = transaction.objectStore(STORES.PROGRESSO);
-      const request = store.get(epId);
-
-      request.onsuccess = (e) => resolve(e.target.result || null);
-      request.onerror = (e) => reject(e.target.error);
+      const tx = db.transaction(STORES.PROGRESSO, "readonly");
+      const req = tx.objectStore(STORES.PROGRESSO).get(epId);
+      req.onsuccess = (e) => resolve(e.target.result || null);
+      req.onerror = (e) => reject(e.target.error);
     });
-  } catch (erro) {
-    console.error("❌ [DB] Falha ao buscar progresso:", erro);
+  } catch {
     return null;
   }
 }
 
-export async function buscarTodoProgressoDB() {
+async function buscarTodoProgressoListaDB() {
   try {
     const db = await abrirBanco();
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(STORES.PROGRESSO, "readonly");
-      const store = transaction.objectStore(STORES.PROGRESSO);
-      const request = store.getAll();
-
-      request.onsuccess = (e) => {
-        const mapa = {};
-        const resultados = e.target.result || [];
-        resultados.forEach(item => {
-          mapa[item.id] = item;
-        });
-        resolve(mapa);
-      };
-      request.onerror = (e) => reject(e.target.error);
+      const tx = db.transaction(STORES.PROGRESSO, "readonly");
+      const req = tx.objectStore(STORES.PROGRESSO).getAll();
+      req.onsuccess = (e) => resolve(e.target.result || []);
+      req.onerror = (e) => reject(e.target.error);
     });
-  } catch (erro) {
-    console.error("❌ [DB] Falha ao listar progressos:", erro);
-    return {};
+  } catch {
+    return [];
   }
+}
+
+export async function buscarTodoProgressoDB() {
+  const lista = await buscarTodoProgressoListaDB();
+  const mapa = {};
+  lista.forEach(item => { mapa[item.id] = item; });
+  return mapa;
 }

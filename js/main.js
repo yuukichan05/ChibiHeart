@@ -13,6 +13,7 @@ import { inicializarPesquisa } from './modules/pesquisa.js';
 import { gerenciarTelaHistorico } from './modules/historico.js';
 import { renderizarContinuarAssistindo } from './modules/continuarAssistindo.js';
 import { inicializarPerfil, gerenciarTelaPerfil } from './modules/perfil.js';
+import { gerenciarTelaNotificacoes } from './modules/notificacoes.js';
 
 /* ==========================================================================
    CAPTURA GLOBAL DE IMAGENS
@@ -65,6 +66,7 @@ async function processarRota() {
   await gerenciarTelaPlayer();
   await gerenciarTelaHistorico();
   await gerenciarTelaPerfil();
+  await gerenciarTelaNotificacoes();
 
   window.scrollTo(0, 0);
 }

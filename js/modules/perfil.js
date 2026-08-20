@@ -11,8 +11,13 @@ import {
   sincronizarUploadGithub
 } from './db.js';
 
+import {
+  adicionarNotificacao,
+  atualizarBadgeNotificacao
+} from './notificacoes.js';
+
 /**
- * Redimensiona e comprime imagens de perfil para evitar ultrapassar o limite do GitHub Gist
+ * Redimensiona e comprime imagens de perfil para evitar ultrapassar limites
  */
 function comprimirImagemBase64(arquivo, maxLargura = 300, maxAltura = 300, qualidade = 0.85) {
   return new Promise((resolve, reject) => {
@@ -53,8 +58,6 @@ function comprimirImagemBase64(arquivo, maxLargura = 300, maxAltura = 300, quali
 
 /**
  * Atualiza o indicador visual do ponto de status do GitHub
- * @param {'off' | 'error' | 'syncing' | 'online'} status 
- * @param {string} mensagem 
  */
 export function atualizarStatusDotGithub(status, mensagem = '') {
   const dot = document.getElementById('github-status-dot');
@@ -98,11 +101,9 @@ export async function atualizarInterfacePerfil() {
   } else {
     atualizarStatusDotGithub('off', 'Desconectado (Nenhuma chave configurada)');
   }
-}
 
-/* ==========================================================================
-   FUNÇÕES AUXILIARES DE MODAIS E BACKUP
-   ========================================================================== */
+  await atualizarBadgeNotificacao();
+}
 
 async function executarExportacao() {
   try {
@@ -118,7 +119,13 @@ async function executarExportacao() {
     linkDownload.click();
 
     URL.revokeObjectURL(url);
-    
+
+    await adicionarNotificacao({
+      titulo: 'Backup Local Exportado',
+      mensagem: `Arquivo JSON baixado com sucesso (${dataHora}).`,
+      tipo: 'sucesso'
+    });
+
     sincronizarUploadGithub().catch(() => {});
     return true;
   } catch (erro) {
@@ -138,9 +145,6 @@ function fecharModal(id) {
   if (modal) modal.classList.remove('active');
 }
 
-/**
- * Executa a sincronização automática ao carregar
- */
 export async function autoSincronizarGithub() {
   const perfil = await buscarPerfilDB();
   if (!perfil.githubToken) {
@@ -148,7 +152,7 @@ export async function autoSincronizarGithub() {
     return;
   }
 
-  atualizarStatusDotGithub('syncing', 'Baixando atualização...');
+  atualizarStatusDotGithub('syncing', 'Verificando atualizações...');
   const resDownload = await sincronizarDownloadGithub();
 
   if (resDownload.sucesso) {
@@ -159,14 +163,11 @@ export async function autoSincronizarGithub() {
   }
 }
 
-/**
- * Configura os ouvintes de eventos do perfil
- */
 export function inicializarPerfil() {
   atualizarInterfacePerfil();
   autoSincronizarGithub();
 
-  // 1. Alterar Foto de Perfil (Com Compressão e Upload Imediato)
+  // 1. Alterar Foto de Perfil
   const inputFoto = document.getElementById('input-foto-perfil');
   if (inputFoto) {
     inputFoto.addEventListener('change', async (event) => {
@@ -175,23 +176,27 @@ export function inicializarPerfil() {
 
       try {
         atualizarStatusDotGithub('syncing', 'Otimizando e salvando foto...');
-        
-        // Comprime a imagem para caber sem erros na API do Gist
         const fotoBase64 = await comprimirImagemBase64(arquivo);
 
         const perfil = await buscarPerfilDB();
         perfil.foto = fotoBase64;
         await salvarPerfilDB(perfil);
+
+        await adicionarNotificacao({
+          titulo: 'Foto Atualizada',
+          mensagem: 'Foto de perfil alterada com sucesso.',
+          tipo: 'sucesso'
+        });
+
         await atualizarInterfacePerfil();
 
-        // Envia na hora para o Gist no GitHub
-        atualizarStatusDotGithub('syncing', 'Sincronizando foto no GitHub...');
+        atualizarStatusDotGithub('syncing', 'Sincronizando no GitHub...');
         const resUpload = await sincronizarUploadGithub();
 
         if (resUpload.sucesso) {
-          atualizarStatusDotGithub('online', 'Foto sincronizada com sucesso!');
+          atualizarStatusDotGithub('online', 'Foto sincronizada com a nuvem!');
         } else {
-          atualizarStatusDotGithub('error', 'Erro ao subir foto para o Gist');
+          atualizarStatusDotGithub('error', 'Armazenada localmente (Erro ao subir nuvem)');
         }
       } catch (erro) {
         console.error('Erro ao processar foto:', erro);
@@ -208,7 +213,7 @@ export function inicializarPerfil() {
     btnExportar.addEventListener('click', () => executarExportacao());
   }
 
-  // 3. Restaurar Dados
+  // 3. Restaurar Dados de arquivo local
   const btnRestaurar = document.getElementById('btn-restaurar-dados');
   const inputRestaurar = document.getElementById('input-restaurar-dados');
 
@@ -231,6 +236,12 @@ export function inicializarPerfil() {
           const sucesso = await importarDadosDB(conteudo);
 
           if (sucesso) {
+            await adicionarNotificacao({
+              titulo: 'Backup Restaurado',
+              mensagem: 'Dados da conta e histórico importados do arquivo local.',
+              tipo: 'sucesso'
+            });
+
             await atualizarInterfacePerfil();
             await sincronizarUploadGithub();
             alert('Dados da conta e histórico restaurados com sucesso!');
@@ -246,7 +257,7 @@ export function inicializarPerfil() {
     });
   }
 
-  // 4. Modal Editar Nome (Com Upload Imediato)
+  // 4. Modal Editar Nome
   const btnEditarNome = document.getElementById('btn-editar-nome');
   const btnFecharModalNome = document.getElementById('btn-fechar-modal-nome');
   const btnCancelarModalNome = document.getElementById('btn-cancelar-nome');
@@ -273,17 +284,23 @@ export function inicializarPerfil() {
         const perfil = await buscarPerfilDB();
         perfil.nome = novoNome;
         await salvarPerfilDB(perfil);
+
+        await adicionarNotificacao({
+          titulo: 'Nome de Perfil Alterado',
+          mensagem: `Seu nome de usuário foi atualizado para "${novoNome}".`,
+          tipo: 'sucesso'
+        });
+
         await atualizarInterfacePerfil();
         fecharModal('modal-editar-nome');
 
-        // Envia na hora para o Gist no GitHub
         atualizarStatusDotGithub('syncing', 'Sincronizando nome no GitHub...');
         const resUpload = await sincronizarUploadGithub();
 
         if (resUpload.sucesso) {
-          atualizarStatusDotGithub('online', 'Nome sincronizado com sucesso!');
+          atualizarStatusDotGithub('online', 'Nome sincronizado!');
         } else {
-          atualizarStatusDotGithub('error', 'Erro ao subir nome para o Gist');
+          atualizarStatusDotGithub('error', 'Salvo apenas localmente');
         }
       }
     });
@@ -302,12 +319,8 @@ export function inicializarPerfil() {
     btnConfigGithub.addEventListener('click', async () => {
       const perfil = await buscarPerfilDB();
       if (inputGithubToken) inputGithubToken.value = perfil.githubToken || '';
-      
       if (msgStatusGithub) msgStatusGithub.textContent = '';
-
-      if (btnRemoverGithub) {
-        btnRemoverGithub.style.display = perfil.githubToken ? 'block' : 'none';
-      }
+      if (btnRemoverGithub) btnRemoverGithub.style.display = perfil.githubToken ? 'block' : 'none';
 
       abrirModal('modal-github-token');
     });
@@ -337,12 +350,18 @@ export function inicializarPerfil() {
 
       const perfil = await buscarPerfilDB();
       perfil.githubToken = token;
-      perfil.gistId = ''; 
+      perfil.gistId = '';
       await salvarPerfilDB(perfil);
 
       const resDownload = await sincronizarDownloadGithub();
 
       if (resDownload.sucesso) {
+        await adicionarNotificacao({
+          titulo: 'GitHub Conectado',
+          mensagem: 'Sua conta foi associada com sucesso ao GitHub Gist.',
+          tipo: 'sucesso'
+        });
+
         await atualizarInterfacePerfil();
         atualizarStatusDotGithub('online', 'Sincronizado');
         fecharModal('modal-github-token');
@@ -362,6 +381,12 @@ export function inicializarPerfil() {
       perfil.githubToken = '';
       perfil.gistId = '';
       await salvarPerfilDB(perfil);
+
+      await adicionarNotificacao({
+        titulo: 'GitHub Desconectado',
+        mensagem: 'A chave de sincronização do GitHub foi removida.',
+        tipo: 'alerta'
+      });
 
       await atualizarInterfacePerfil();
       atualizarStatusDotGithub('off');
@@ -407,9 +432,6 @@ export function inicializarPerfil() {
   }
 }
 
-/**
- * Executado quando a rota #perfil é aberta
- */
 export async function gerenciarTelaPerfil() {
   await atualizarInterfacePerfil();
   await autoSincronizarGithub();
