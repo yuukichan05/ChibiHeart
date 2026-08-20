@@ -12,6 +12,46 @@ import {
 } from './db.js';
 
 /**
+ * Redimensiona e comprime imagens de perfil para evitar ultrapassar o limite do GitHub Gist
+ */
+function comprimirImagemBase64(arquivo, maxLargura = 300, maxAltura = 300, qualidade = 0.85) {
+  return new Promise((resolve, reject) => {
+    const leitor = new FileReader();
+    leitor.readAsDataURL(arquivo);
+    leitor.onload = (evento) => {
+      const img = new Image();
+      img.src = evento.target?.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let largura = img.width;
+        let altura = img.height;
+
+        if (largura > altura) {
+          if (largura > maxLargura) {
+            altura = Math.round((altura * maxLargura) / largura);
+            largura = maxLargura;
+          }
+        } else {
+          if (altura > maxAltura) {
+            largura = Math.round((largura * maxAltura) / altura);
+            altura = maxAltura;
+          }
+        }
+
+        canvas.width = largura;
+        canvas.height = altura;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, largura, altura);
+
+        resolve(canvas.toDataURL('image/jpeg', qualidade));
+      };
+      img.onerror = (erro) => reject(erro);
+    };
+    leitor.onerror = (erro) => reject(erro);
+  });
+}
+
+/**
  * Atualiza o indicador visual do ponto de status do GitHub
  * @param {'off' | 'error' | 'syncing' | 'online'} status 
  * @param {string} mensagem 
@@ -53,7 +93,6 @@ export async function atualizarInterfacePerfil() {
     elHeaderAvatar.classList.add('loaded');
   }
 
-  // Atualiza o estado inicial do indicador visual do GitHub
   if (perfil.githubToken) {
     atualizarStatusDotGithub('online', 'Conectado e Sincronizado');
   } else {
@@ -72,7 +111,6 @@ async function executarExportacao() {
     const blob = new Blob([jsonString], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
 
-    // Nome com DATA e HORA EXATAS
     const dataHora = obterDataHoraFormatada();
     const linkDownload = document.createElement('a');
     linkDownload.href = url;
@@ -81,7 +119,6 @@ async function executarExportacao() {
 
     URL.revokeObjectURL(url);
     
-    // Tenta enviar o backup para o Github também
     sincronizarUploadGithub().catch(() => {});
     return true;
   } catch (erro) {
@@ -129,29 +166,43 @@ export function inicializarPerfil() {
   atualizarInterfacePerfil();
   autoSincronizarGithub();
 
-  // 1. Alterar Foto de Perfil
+  // 1. Alterar Foto de Perfil (Com Compressão e Upload Imediato)
   const inputFoto = document.getElementById('input-foto-perfil');
   if (inputFoto) {
-    inputFoto.addEventListener('change', (event) => {
+    inputFoto.addEventListener('change', async (event) => {
       const arquivo = event.target.files?.[0];
       if (!arquivo) return;
 
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        const fotoBase64 = e.target?.result;
-        if (fotoBase64) {
-          const perfil = await buscarPerfilDB();
-          perfil.foto = fotoBase64;
-          await salvarPerfilDB(perfil);
-          await atualizarInterfacePerfil();
-          await sincronizarUploadGithub();
+      try {
+        atualizarStatusDotGithub('syncing', 'Otimizando e salvando foto...');
+        
+        // Comprime a imagem para caber sem erros na API do Gist
+        const fotoBase64 = await comprimirImagemBase64(arquivo);
+
+        const perfil = await buscarPerfilDB();
+        perfil.foto = fotoBase64;
+        await salvarPerfilDB(perfil);
+        await atualizarInterfacePerfil();
+
+        // Envia na hora para o Gist no GitHub
+        atualizarStatusDotGithub('syncing', 'Sincronizando foto no GitHub...');
+        const resUpload = await sincronizarUploadGithub();
+
+        if (resUpload.sucesso) {
+          atualizarStatusDotGithub('online', 'Foto sincronizada com sucesso!');
+        } else {
+          atualizarStatusDotGithub('error', 'Erro ao subir foto para o Gist');
         }
-      };
-      reader.readAsDataURL(arquivo);
+      } catch (erro) {
+        console.error('Erro ao processar foto:', erro);
+        atualizarStatusDotGithub('error', 'Falha ao processar imagem');
+      } finally {
+        inputFoto.value = '';
+      }
     });
   }
 
-  // 2. Exportar Dados (Com Data e Hora)
+  // 2. Exportar Dados
   const btnExportar = document.getElementById('btn-exportar-dados');
   if (btnExportar) {
     btnExportar.addEventListener('click', () => executarExportacao());
@@ -195,7 +246,7 @@ export function inicializarPerfil() {
     });
   }
 
-  // 4. Modal Editar Nome
+  // 4. Modal Editar Nome (Com Upload Imediato)
   const btnEditarNome = document.getElementById('btn-editar-nome');
   const btnFecharModalNome = document.getElementById('btn-fechar-modal-nome');
   const btnCancelarModalNome = document.getElementById('btn-cancelar-nome');
@@ -218,17 +269,27 @@ export function inicializarPerfil() {
     btnSalvarModalNome.addEventListener('click', async () => {
       const novoNome = inputNovoNome?.value.trim();
       if (novoNome) {
+        atualizarStatusDotGithub('syncing', 'Salvando nome...');
         const perfil = await buscarPerfilDB();
         perfil.nome = novoNome;
         await salvarPerfilDB(perfil);
         await atualizarInterfacePerfil();
         fecharModal('modal-editar-nome');
-        await sincronizarUploadGithub();
+
+        // Envia na hora para o Gist no GitHub
+        atualizarStatusDotGithub('syncing', 'Sincronizando nome no GitHub...');
+        const resUpload = await sincronizarUploadGithub();
+
+        if (resUpload.sucesso) {
+          atualizarStatusDotGithub('online', 'Nome sincronizado com sucesso!');
+        } else {
+          atualizarStatusDotGithub('error', 'Erro ao subir nome para o Gist');
+        }
       }
     });
   }
 
-  // 5. MODAL CONFIGURAR CHAVE GITHUB
+  // 5. Configurar Chave GitHub
   const btnConfigGithub = document.getElementById('btn-config-github');
   const btnFecharModalGithub = document.getElementById('btn-fechar-modal-github');
   const btnCancelarGithub = document.getElementById('btn-cancelar-github');
@@ -274,13 +335,11 @@ export function inicializarPerfil() {
 
       atualizarStatusDotGithub('syncing', 'Conectando...');
 
-      // Salva o token no db.js para ficar guardado para as próximas vezes
       const perfil = await buscarPerfilDB();
       perfil.githubToken = token;
-      perfil.gistId = ''; // Reseta ID do gist para re-buscar/criar
+      perfil.gistId = ''; 
       await salvarPerfilDB(perfil);
 
-      // Tenta baixar/subir dados do Github
       const resDownload = await sincronizarDownloadGithub();
 
       if (resDownload.sucesso) {
