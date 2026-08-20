@@ -1,5 +1,3 @@
-// js/modules/db.js
-
 import { adicionarNotificacao } from './notificacoes.js';
 
 const DB_NAME = "ChibiHeartDB";
@@ -15,9 +13,7 @@ const GIST_DESCRIPTION = "[ChibiHeart Streaming] Backup Automático de Conta";
 
 let timerReSincronizacao = null;
 
-// ==========================================================================
-// CONTROLE DE TRAVA/BLOQUEIO DE SINCRONIZAÇÃO (3 SEGUNDOS)
-// ==========================================================================
+// CONTROLE DE TRAVA DE SINCRONIZAÇÃO (30 SEGUNDOS)
 let ultimoSyncTimestamp = 0;
 const SYNC_LOCK_MS = 30 * 1000;
 
@@ -75,7 +71,7 @@ const perfilPadrao = {
   foto: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSP-d8FnyUc7-qF7238NfPxfjaILuYofuXX40GH3RCUFJES5zDqFP3ptKs&s=10",
   githubToken: "",
   gistId: "",
-  atualizadoEm: Date.now()
+  atualizadoEm: 0
 };
 
 export async function buscarPerfilDB() {
@@ -98,7 +94,12 @@ export async function buscarPerfilDB() {
   }
 }
 
-export async function salvarPerfilDB(perfil) {
+/**
+ * Salva o perfil no IndexedDB.
+ * @param {Object} perfil
+ * @param {boolean} atualizarTimestamp Se true, força atualizadoEm = Date.now(). Caso contrário, mantém a data existente.
+ */
+export async function salvarPerfilDB(perfil, atualizarTimestamp = true) {
   try {
     const db = await abrirBanco();
     return new Promise((resolve, reject) => {
@@ -109,7 +110,7 @@ export async function salvarPerfilDB(perfil) {
         ...perfilPadrao,
         ...perfil,
         id: PERFIL_KEY,
-        atualizadoEm: Date.now()
+        atualizadoEm: atualizarTimestamp ? Date.now() : (perfil.atualizadoEm || 0)
       };
 
       const request = store.put(registro);
@@ -122,7 +123,7 @@ export async function salvarPerfilDB(perfil) {
 }
 
 /* ==========================================================================
-   MÉTODOS DA STORE DE NOTIFICAÇÕES (IndexedDB)
+   MÉTODOS DA STORE DE NOTIFICAÇÕES
    ========================================================================== */
 
 export async function buscarNotificacoesDB() {
@@ -228,7 +229,7 @@ export async function limparTudoDB() {
 }
 
 /* ==========================================================================
-   EXPORTAÇÃO E IMPORTAÇÃO COMPLETA DE DADOS
+   EXPORTAÇÃO, MESCLAGEM E IMPORTAÇÃO DE DADOS
    ========================================================================== */
 
 export function obterDataHoraFormatada() {
@@ -253,7 +254,7 @@ export async function obterMaiorTimestampLocal() {
     if (n.timestamp && n.timestamp > maxTs) maxTs = n.timestamp;
   });
 
-  return maxTs || Date.now();
+  return maxTs;
 }
 
 export async function exportarDadosDB() {
@@ -279,7 +280,7 @@ export async function exportarDadosDB() {
 
     return {
       versao: 2,
-      exportadoEm: new Date(timestampLocal).toISOString(),
+      exportadoEm: new Date(timestampLocal || Date.now()).toISOString(),
       timestampModificacao: timestampLocal,
       perfil: [perfilSeguro],
       progresso: progressoData,
@@ -291,68 +292,169 @@ export async function exportarDadosDB() {
   }
 }
 
-export async function importarDadosDB(dados) {
+/**
+ * Mescla o progresso remoto com o local de forma não destrutiva.
+ */
+async function mesclarProgressoDB(progressoRemoto = []) {
+  const db = await abrirBanco();
+  const progressosLocais = await buscarTodoProgressoListaDB();
+  const mapa = new Map(progressosLocais.map(p => [p.id, p]));
+
+  progressoRemoto.forEach(itemRemoto => {
+    if (!itemRemoto || !itemRemoto.id) return;
+    const itemLocal = mapa.get(itemRemoto.id);
+
+    if (!itemLocal) {
+      mapa.set(itemRemoto.id, itemRemoto);
+    } else {
+      const tsRemoto = itemRemoto.atualizadoEm || 0;
+      const tsLocal = itemLocal.atualizadoEm || 0;
+
+      if (tsRemoto > tsLocal || (itemRemoto.tempo || 0) > (itemLocal.tempo || 0)) {
+        mapa.set(itemRemoto.id, itemRemoto);
+      }
+    }
+  });
+
+  const listaMesclada = Array.from(mapa.values());
+
+  await new Promise((resolve, reject) => {
+    const tx = db.transaction(STORES.PROGRESSO, "readwrite");
+    const store = tx.objectStore(STORES.PROGRESSO);
+    store.clear();
+    listaMesclada.forEach(item => store.put(item));
+    tx.oncomplete = () => resolve(true);
+    tx.onerror = (e) => reject(e.target.error);
+  });
+
+  return listaMesclada;
+}
+
+/**
+ * Mescla as notificações remotas com as locais.
+ */
+async function mesclarNotificacoesDB(notificacoesRemotas = []) {
+  const notificacoesLocais = await buscarNotificacoesDB();
+  const mapa = new Map();
+
+  notificacoesLocais.forEach(n => { if (n.id) mapa.set(n.id, n); });
+  notificacoesRemotas.forEach(n => { if (n.id && !mapa.has(n.id)) mapa.set(n.id, n); });
+
+  const listaMesclada = Array.from(mapa.values())
+    .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
+    .slice(0, 50);
+
+  const db = await abrirBanco();
+  await new Promise((resolve, reject) => {
+    const tx = db.transaction(STORES.NOTIFICACOES, "readwrite");
+    const store = tx.objectStore(STORES.NOTIFICACOES);
+    store.clear();
+    listaMesclada.forEach(item => store.put(item));
+    tx.oncomplete = () => resolve(true);
+    tx.onerror = (e) => reject(e.target.error);
+  });
+
+  return listaMesclada;
+}
+
+/**
+ * Mescla perfil mantendo tokens locais e a versão mais atualizada dos campos do usuário.
+ */
+async function mesclarPerfilDB(perfilRemotoArr = []) {
+  const perfilRemoto = Array.isArray(perfilRemotoArr) ? perfilRemotoArr[0] : perfilRemotoArr;
+  const perfilLocal = await buscarPerfilDB();
+
+  if (!perfilRemoto) return perfilLocal;
+
+  const tsRemoto = perfilRemoto.atualizadoEm || 0;
+  const tsLocal = perfilLocal.atualizadoEm || 0;
+
+  const usarRemoto = tsRemoto > tsLocal || (perfilLocal.nome === perfilPadrao.nome && perfilRemoto.nome !== perfilPadrao.nome);
+
+  const perfilMesclado = {
+    ...perfilPadrao,
+    ...(usarRemoto ? perfilRemoto : perfilLocal),
+    githubToken: perfilLocal.githubToken || perfilRemoto.githubToken || "",
+    gistId: perfilLocal.gistId || perfilRemoto.gistId || "",
+    id: PERFIL_KEY,
+    atualizadoEm: Math.max(tsRemoto, tsLocal)
+  };
+
+  await salvarPerfilDB(perfilMesclado, false);
+  return perfilMesclado;
+}
+
+/**
+ * Importa e mescla dados (modo mesclagem por padrão para evitar perda de dados).
+ */
+export async function importarDadosDB(dados, mesclar = true) {
   if (!dados || typeof dados !== "object") return false;
 
   try {
-    const db = await abrirBanco();
-    const perfilLocalAtual = await buscarPerfilDB();
+    if (mesclar) {
+      await mesclarPerfilDB(dados.perfil);
+      await mesclarProgressoDB(dados.progresso);
+      await mesclarNotificacoesDB(dados.notificacoes);
+    } else {
+      const db = await abrirBanco();
+      const perfilLocalAtual = await buscarPerfilDB();
 
-    let listaPerfil = Array.isArray(dados.perfil) ? dados.perfil : (dados.perfil ? [dados.perfil] : []);
+      let listaPerfil = Array.isArray(dados.perfil) ? dados.perfil : (dados.perfil ? [dados.perfil] : []);
 
-    if (listaPerfil.length > 0) {
-      await new Promise((resolve, reject) => {
-        const tx = db.transaction(STORES.PERFIL, "readwrite");
-        const store = tx.objectStore(STORES.PERFIL);
-        store.clear();
+      if (listaPerfil.length > 0) {
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(STORES.PERFIL, "readwrite");
+          const store = tx.objectStore(STORES.PERFIL);
+          store.clear();
 
-        listaPerfil.forEach((item) => {
-          store.put({
-            ...perfilPadrao,
-            ...item,
-            githubToken: perfilLocalAtual.githubToken || item.githubToken || "",
-            gistId: perfilLocalAtual.gistId || item.gistId || "",
-            id: PERFIL_KEY,
-            atualizadoEm: item.atualizadoEm || Date.now()
+          listaPerfil.forEach((item) => {
+            store.put({
+              ...perfilPadrao,
+              ...item,
+              githubToken: perfilLocalAtual.githubToken || item.githubToken || "",
+              gistId: perfilLocalAtual.gistId || item.gistId || "",
+              id: PERFIL_KEY,
+              atualizadoEm: item.atualizadoEm || Date.now()
+            });
           });
+
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = (e) => reject(e.target.error);
         });
+      }
 
-        tx.oncomplete = () => resolve(true);
-        tx.onerror = (e) => reject(e.target.error);
-      });
-    }
+      if (Array.isArray(dados.progresso)) {
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(STORES.PROGRESSO, "readwrite");
+          const store = tx.objectStore(STORES.PROGRESSO);
+          store.clear();
+          dados.progresso.forEach((item) => store.put(item));
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = (e) => reject(e.target.error);
+        });
+      }
 
-    if (Array.isArray(dados.progresso)) {
-      await new Promise((resolve, reject) => {
-        const tx = db.transaction(STORES.PROGRESSO, "readwrite");
-        const store = tx.objectStore(STORES.PROGRESSO);
-        store.clear();
-        dados.progresso.forEach((item) => store.put(item));
-        tx.oncomplete = () => resolve(true);
-        tx.onerror = (e) => reject(e.target.error);
-      });
-    }
-
-    if (Array.isArray(dados.notificacoes)) {
-      await new Promise((resolve, reject) => {
-        const tx = db.transaction(STORES.NOTIFICACOES, "readwrite");
-        const store = tx.objectStore(STORES.NOTIFICACOES);
-        store.clear();
-        dados.notificacoes.forEach((item) => store.put(item));
-        tx.oncomplete = () => resolve(true);
-        tx.onerror = (e) => reject(e.target.error);
-      });
+      if (Array.isArray(dados.notificacoes)) {
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(STORES.NOTIFICACOES, "readwrite");
+          const store = tx.objectStore(STORES.NOTIFICACOES);
+          store.clear();
+          dados.notificacoes.forEach((item) => store.put(item));
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = (e) => reject(e.target.error);
+        });
+      }
     }
 
     return true;
   } catch (erro) {
-    console.error("❌ [DB] Erro ao importar dados:", erro);
+    console.error("❌ [DB] Erro ao importar/mesclar dados:", erro);
     return false;
   }
 }
 
 /* ==========================================================================
-   SINCRONIZAÇÃO INTELIGENTE COM BLOQUEIO DE 3 SEGUNDOS
+   SINCRONIZAÇÃO INTELIGENTE COM O GITHUB GIST
    ========================================================================== */
 
 async function obterOuCriarGistId(token) {
@@ -395,7 +497,7 @@ export function agendarReSincronizacaoCincoMinutos() {
 
   timerReSincronizacao = setTimeout(async () => {
     console.log("🔄 [Sync Engine] Executando tentativa automática de re-sincronização...");
-    await sincronizarUploadGithub(true);
+    await sincronizarDownloadGithub(true);
   }, 5 * 60 * 1000);
 }
 
@@ -403,7 +505,6 @@ export async function sincronizarUploadGithub(forcar = false) {
   const perfil = await buscarPerfilDB();
   if (!perfil.githubToken) return { sucesso: false, motivo: 'no_token' };
 
-  // Aplica o bloqueio de 3 segundos se não for uma ação forçada
   if (!forcar && sincronizacaoBloqueada()) {
     return { sucesso: false, motivo: 'bloqueado_tempo' };
   }
@@ -415,7 +516,7 @@ export async function sincronizarUploadGithub(forcar = false) {
     if (!gistId) {
       gistId = await obterOuCriarGistId(perfil.githubToken);
       perfil.gistId = gistId;
-      await salvarPerfilDB(perfil);
+      await salvarPerfilDB(perfil, false);
     }
 
     const dadosLocais = await exportarDadosDB();
@@ -435,7 +536,7 @@ export async function sincronizarUploadGithub(forcar = false) {
     if (response.status === 403 || response.status === 429) {
       await adicionarNotificacao({
         titulo: 'Limite de Requisições do GitHub',
-        mensagem: 'O GitHub bloqueou o envio por limite de taxa. Nova tentativa agendada para 5 minutos.',
+        mensagem: 'O GitHub bloqueou o envio por limite de taxa. Nova tentativa em 5 minutos.',
         tipo: 'alerta'
       });
       agendarReSincronizacaoCincoMinutos();
@@ -446,7 +547,7 @@ export async function sincronizarUploadGithub(forcar = false) {
 
     await adicionarNotificacao({
       titulo: 'Sincronizado com a Nuvem',
-      mensagem: 'Seu histórico local mais recente foi salvo na sua conta do GitHub com sucesso.',
+      mensagem: 'Seus dados foram atualizados e salvos com sucesso na nuvem.',
       tipo: 'sucesso'
     });
 
@@ -480,7 +581,7 @@ export async function sincronizarDownloadGithub(forcar = false) {
     if (!gistId) {
       gistId = await obterOuCriarGistId(perfil.githubToken);
       perfil.gistId = gistId;
-      await salvarPerfilDB(perfil);
+      await salvarPerfilDB(perfil, false);
     }
 
     const response = await fetch(`https://api.github.com/gists/${gistId}`, {
@@ -493,7 +594,7 @@ export async function sincronizarDownloadGithub(forcar = false) {
     if (response.status === 403 || response.status === 429) {
       await adicionarNotificacao({
         titulo: 'Aviso de Rate Limit',
-        mensagem: 'Não foi possível verificar a nuvem devido a limites do GitHub. Banco local mantido. Tentando em 5min.',
+        mensagem: 'Limites do GitHub atingidos. Mantendo dados locais. Tentando em 5 minutos.',
         tipo: 'alerta'
       });
       agendarReSincronizacaoCincoMinutos();
@@ -510,20 +611,16 @@ export async function sincronizarDownloadGithub(forcar = false) {
     }
 
     const dadosRemotos = JSON.parse(conteudoTexto);
-    const timestampRemoto = dadosRemotos.timestampModificacao || (dadosRemotos.exportadoEm ? new Date(dadosRemotos.exportadoEm).getTime() : 0);
-    const timestampLocal = await obterMaiorTimestampLocal();
 
-    if (timestampLocal >= timestampRemoto) {
-      console.log("🛡️ [Sync Engine] Banco local é mais recente ou igual. Enviando atualização local para a nuvem...");
-      return await sincronizarUploadGithub(true);
-    }
+    // REALIZA A MESCLAGEM INTELIGENTE (UNINDO NUVEM + LOCAL)
+    await importarDadosDB(dadosRemotos, true);
 
-    console.log("☁️ [Sync Engine] Backup na nuvem é mais recente. Atualizando banco de dados local...");
-    await importarDadosDB(dadosRemotos);
+    // APÓS UNIR OS DADOS, ATUALIZA A NUVEM COM A VERSÃO CONSOLIDADA
+    await sincronizarUploadGithub(true);
 
     await adicionarNotificacao({
-      titulo: 'Conta Atualizada da Nuvem',
-      mensagem: 'Os dados mais recentes salvos na nuvem foram sincronizados neste dispositivo.',
+      titulo: 'Sincronização Concluída',
+      mensagem: 'Histórico mesclado com sucesso com a nuvem.',
       tipo: 'sucesso'
     });
 
@@ -533,7 +630,7 @@ export async function sincronizarDownloadGithub(forcar = false) {
 
     await adicionarNotificacao({
       titulo: 'Falha na Conexão',
-      mensagem: 'Erro ao conectar à nuvem. Seus dados locais estão seguros. Re-sincronizando em 5min.',
+      mensagem: 'Erro ao conectar à nuvem. Dados locais mantidos em segurança.',
       tipo: 'alerta'
     });
 
@@ -566,7 +663,6 @@ export async function salvarProgressoDB(epId, tempo, total, dispararSync = false
       req.onerror = (e) => reject(e.target.error);
     });
 
-    // Sincronização condicional (pode ser chamada diretamente pelo Player nos intervalos específicos)
     if (dispararSync) {
       sincronizarUploadGithub().catch(() => {});
     }

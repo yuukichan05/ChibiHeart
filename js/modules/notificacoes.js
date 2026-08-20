@@ -1,4 +1,3 @@
-// js/modules/notificacoes.js
 import {
   buscarNotificacoesDB,
   salvarNotificacaoDB,
@@ -78,7 +77,6 @@ function agruparPorData(listaItens) {
 
 /**
  * Adiciona uma nova notificação diretamente no IndexedDB
- * @param {{ titulo: string, mensagem: string, tipo?: 'sucesso' | 'erro' | 'alerta' | 'info' }} notif 
  */
 export async function adicionarNotificacao({ titulo, mensagem, tipo = 'info' }) {
   const novaNotificacao = {
@@ -205,6 +203,5 @@ export async function gerenciarTelaNotificacoes() {
 
   container.appendChild(frag);
 
-  // Marca todas como lidas ao visualizar a tela
   await marcarTodasComoLidas();
 }

@@ -1,5 +1,3 @@
-// js/modules/perfil.js
-
 import {
   buscarPerfilDB,
   salvarPerfilDB,
@@ -73,7 +71,7 @@ export function atualizarStatusDotGithub(status, mensagem = '') {
 }
 
 /**
- * Sincroniza a interface (Header e Tela de Perfil) com o banco IndexedDB
+ * Sincroniza a interface com o banco IndexedDB
  */
 export async function atualizarInterfacePerfil() {
   const perfil = await buscarPerfilDB();
@@ -153,7 +151,7 @@ export async function autoSincronizarGithub() {
   }
 
   atualizarStatusDotGithub('syncing', 'Verificando atualizações...');
-  const resDownload = await sincronizarDownloadGithub();
+  const resDownload = await sincronizarDownloadGithub(true);
 
   if (resDownload.sucesso) {
     await atualizarInterfacePerfil();
@@ -180,7 +178,7 @@ export function inicializarPerfil() {
 
         const perfil = await buscarPerfilDB();
         perfil.foto = fotoBase64;
-        await salvarPerfilDB(perfil);
+        await salvarPerfilDB(perfil, true);
 
         await adicionarNotificacao({
           titulo: 'Foto Atualizada',
@@ -191,7 +189,7 @@ export function inicializarPerfil() {
         await atualizarInterfacePerfil();
 
         atualizarStatusDotGithub('syncing', 'Sincronizando no GitHub...');
-        const resUpload = await sincronizarUploadGithub();
+        const resUpload = await sincronizarUploadGithub(true);
 
         if (resUpload.sucesso) {
           atualizarStatusDotGithub('online', 'Foto sincronizada com a nuvem!');
@@ -233,17 +231,17 @@ export function inicializarPerfil() {
             throw new Error("Arquivo inválido.");
           }
 
-          const sucesso = await importarDadosDB(conteudo);
+          const sucesso = await importarDadosDB(conteudo, true);
 
           if (sucesso) {
             await adicionarNotificacao({
               titulo: 'Backup Restaurado',
-              mensagem: 'Dados da conta e histórico importados do arquivo local.',
+              mensagem: 'Dados da conta e histórico importados e mesclados com sucesso.',
               tipo: 'sucesso'
             });
 
             await atualizarInterfacePerfil();
-            await sincronizarUploadGithub();
+            await sincronizarUploadGithub(true);
             alert('Dados da conta e histórico restaurados com sucesso!');
           }
         } catch (erro) {
@@ -283,7 +281,7 @@ export function inicializarPerfil() {
         atualizarStatusDotGithub('syncing', 'Salvando nome...');
         const perfil = await buscarPerfilDB();
         perfil.nome = novoNome;
-        await salvarPerfilDB(perfil);
+        await salvarPerfilDB(perfil, true);
 
         await adicionarNotificacao({
           titulo: 'Nome de Perfil Alterado',
@@ -295,7 +293,7 @@ export function inicializarPerfil() {
         fecharModal('modal-editar-nome');
 
         atualizarStatusDotGithub('syncing', 'Sincronizando nome no GitHub...');
-        const resUpload = await sincronizarUploadGithub();
+        const resUpload = await sincronizarUploadGithub(true);
 
         if (resUpload.sucesso) {
           atualizarStatusDotGithub('online', 'Nome sincronizado!');
@@ -351,14 +349,16 @@ export function inicializarPerfil() {
       const perfil = await buscarPerfilDB();
       perfil.githubToken = token;
       perfil.gistId = '';
-      await salvarPerfilDB(perfil);
+      
+      // Salva sem alterar atualizadoEm artificialmente
+      await salvarPerfilDB(perfil, false);
 
-      const resDownload = await sincronizarDownloadGithub();
+      const resDownload = await sincronizarDownloadGithub(true);
 
       if (resDownload.sucesso) {
         await adicionarNotificacao({
           titulo: 'GitHub Conectado',
-          mensagem: 'Sua conta foi associada com sucesso ao GitHub Gist.',
+          mensagem: 'Sua conta foi associada e o histórico sincronizado com sucesso.',
           tipo: 'sucesso'
         });
 
@@ -380,7 +380,7 @@ export function inicializarPerfil() {
       const perfil = await buscarPerfilDB();
       perfil.githubToken = '';
       perfil.gistId = '';
-      await salvarPerfilDB(perfil);
+      await salvarPerfilDB(perfil, false);
 
       await adicionarNotificacao({
         titulo: 'GitHub Desconectado',
