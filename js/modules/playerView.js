@@ -84,7 +84,27 @@ function agendarSyncPausaCincoSegundos(videoElement) {
       await salvarProgressoDB(epIdAtual, tempoAtual, duracaoTotal);
       await sincronizarUploadGithub();
     }
-  }, 10000); // 5 segundos
+  }, 5000); // 5 segundos
+}
+
+// OTIMIZAÇÃO SPA: Limpeza profunda para liberar GPU/RAM ao trocar de tela
+export function limparPlayer() {
+  limparTimersSync();
+
+  const videoElement = document.getElementById("player-video");
+  if (videoElement) {
+    videoElement.pause();
+    videoElement.removeAttribute("src");
+    videoElement.load(); // Desaloca os buffers de vídeo da memória RAM/GPU
+  }
+  if (hideControlsTimeout) {
+    clearTimeout(hideControlsTimeout);
+    hideControlsTimeout = null;
+  }
+
+  epIdAtual = null;
+  animeIdAtual = null;
+  ultimoTempoSalvoDB = 0;
 }
 
 // Chamado pela main.js ao trocar de rota para verificar se algo foi assistido
@@ -103,28 +123,15 @@ export async function verificarESincronizarAoSairDoPlayer() {
         await salvarProgressoDB(epIdAtual, tempoAtual, duracaoTotal);
       }
     }
+
+    // CORREÇÃO: Força o corte imediato do player antes de aguardar a API externa
+    limparPlayer();
+
     await sincronizarUploadGithub();
+  } else {
+    // Garante que o player seja desligado se nada tiver sido assistido
+    limparPlayer();
   }
-}
-
-// OTIMIZAÇÃO SPA: Limpeza profunda para liberar GPU/RAM ao trocar de tela
-export function limparPlayer() {
-  limparTimersSync();
-
-  const videoElement = document.getElementById("player-video");
-  if (videoElement) {
-    videoElement.pause();
-    videoElement.removeAttribute("src");
-    videoElement.load();
-  }
-  if (hideControlsTimeout) {
-    clearTimeout(hideControlsTimeout);
-    hideControlsTimeout = null;
-  }
-
-  epIdAtual = null;
-  animeIdAtual = null;
-  ultimoTempoSalvoDB = 0;
 }
 
 export async function gerenciarTelaPlayer() {
