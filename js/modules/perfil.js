@@ -162,8 +162,8 @@ export async function autoSincronizarGithub() {
 }
 
 export function inicializarPerfil() {
+  // Apenas atualiza a interface visual com os dados locais
   atualizarInterfacePerfil();
-  autoSincronizarGithub();
 
   // 1. Alterar Foto de Perfil
   const inputFoto = document.getElementById('input-foto-perfil');
@@ -433,6 +433,6 @@ export function inicializarPerfil() {
 }
 
 export async function gerenciarTelaPerfil() {
+  // Apenas renderiza os dados da tela localmente ao abrir a página de perfil
   await atualizarInterfacePerfil();
-  await autoSincronizarGithub();
 }
