@@ -157,12 +157,13 @@ export async function autoSincronizarGithub() {
     await atualizarInterfacePerfil();
     atualizarStatusDotGithub('online', 'Conectado e Sincronizado');
   } else {
-    atualizarStatusDotGithub('error', resDownload.erro || 'Erro ao sincronizar');
+    // CAPTURA E EXIBE O ERRO REAL NO STATUS DOT
+    const detalheErro = resDownload.erro || 'Erro ao sincronizar';
+    atualizarStatusDotGithub('error', detalheErro);
   }
 }
 
 export function inicializarPerfil() {
-  // Apenas atualiza a interface visual com os dados locais
   atualizarInterfacePerfil();
 
   // 1. Alterar Foto de Perfil
@@ -194,7 +195,7 @@ export function inicializarPerfil() {
         if (resUpload.sucesso) {
           atualizarStatusDotGithub('online', 'Foto sincronizada com a nuvem!');
         } else {
-          atualizarStatusDotGithub('error', 'Armazenada localmente (Erro ao subir nuvem)');
+          atualizarStatusDotGithub('error', resUpload.erro || 'Armazenada localmente (Erro na nuvem)');
         }
       } catch (erro) {
         console.error('Erro ao processar foto:', erro);
@@ -211,7 +212,7 @@ export function inicializarPerfil() {
     btnExportar.addEventListener('click', () => executarExportacao());
   }
 
-  // 3. Restaurar Dados de arquivo local
+  // 3. Restaurar Dados
   const btnRestaurar = document.getElementById('btn-restaurar-dados');
   const inputRestaurar = document.getElementById('input-restaurar-dados');
 
@@ -298,13 +299,13 @@ export function inicializarPerfil() {
         if (resUpload.sucesso) {
           atualizarStatusDotGithub('online', 'Nome sincronizado!');
         } else {
-          atualizarStatusDotGithub('error', 'Salvo apenas localmente');
+          atualizarStatusDotGithub('error', resUpload.erro || 'Salvo apenas localmente');
         }
       }
     });
   }
 
-  // 5. Configurar Chave GitHub
+  // 5. Configurar Chave GitHub (EXIBIÇÃO DO ERRO REAL DA API/REDE)
   const btnConfigGithub = document.getElementById('btn-config-github');
   const btnFecharModalGithub = document.getElementById('btn-fechar-modal-github');
   const btnCancelarGithub = document.getElementById('btn-cancelar-github');
@@ -350,7 +351,6 @@ export function inicializarPerfil() {
       perfil.githubToken = token;
       perfil.gistId = '';
       
-      // Salva sem alterar atualizadoEm artificialmente
       await salvarPerfilDB(perfil, false);
 
       const resDownload = await sincronizarDownloadGithub(true);
@@ -366,9 +366,12 @@ export function inicializarPerfil() {
         atualizarStatusDotGithub('online', 'Sincronizado');
         fecharModal('modal-github-token');
       } else {
-        atualizarStatusDotGithub('error', 'Token inválido');
+        // EXIBE O ERRO NATIVO EXATO RETORNADO PELA REQUISIÇÃO
+        const detalheErro = resDownload.erro || 'Falha ao comunicar com a API';
+        atualizarStatusDotGithub('error', detalheErro);
+        
         if (msgStatusGithub) {
-          msgStatusGithub.textContent = 'Falha ao conectar. Verifique se o token tem permissão de "gist".';
+          msgStatusGithub.textContent = `Erro do sistema: ${detalheErro}`;
           msgStatusGithub.className = 'modal-msg-status erro';
         }
       }
@@ -433,6 +436,5 @@ export function inicializarPerfil() {
 }
 
 export async function gerenciarTelaPerfil() {
-  // Apenas renderiza os dados da tela localmente ao abrir a página de perfil
   await atualizarInterfacePerfil();
 }
