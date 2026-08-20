@@ -559,3 +559,20 @@ body.overlay-open .main-content { filter: blur(3px) brightness(0.92); pointer-ev
     text-overflow: ellipsis;
     margin: 0;
 }
+
+/* Card Continuar Assistindo (Horizontal 16:9) */
+.card-continuar {
+    width: 195px;
+    min-width: 195px;
+    max-width: 195px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-decoration: none;
+    color: inherit;
+
+    /* Aceleração gráfica para animação FLIP sem lag ou flicker */
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+}

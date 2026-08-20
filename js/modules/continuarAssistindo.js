@@ -95,6 +95,17 @@ export async function renderizarContinuarAssistindo() {
     const itensContinuar = Object.values(animesInteragidos);
     itensContinuar.sort((a, b) => (b.registro.atualizadoEm || 0) - (a.registro.atualizadoEm || 0));
 
+    // =========================================================================
+    // 1. PASSO FLIP (FIRST): Grava posições dos cards no DOM antes de atualizar
+    // =========================================================================
+    const cardsAntigos = Array.from(gradeContainer.querySelectorAll('.card-continuar'));
+    const posicoesAntigas = new Map();
+
+    cardsAntigos.forEach(card => {
+      const id = card.dataset.id;
+      if (id) posicoesAntigas.set(id, card.getBoundingClientRect());
+    });
+
     gradeContainer.replaceChildren();
     const fragment = document.createDocumentFragment();
     let contadorExibidos = 0;
@@ -140,7 +151,9 @@ export async function renderizarContinuarAssistindo() {
       const elTituloAnime = clone.querySelector(".continuar-titulo-anime");
       const elSubtituloEp = clone.querySelector(".continuar-subtitulo-ep");
 
+      // Identificador único no dataset para calcular o deslocamento FLIP
       if (link) {
+        link.dataset.id = animeId;
         link.href = `#player?anime=${encodeURIComponent(animeId)}&ep=${encodeURIComponent(epAlvo.epId)}`;
       }
 
@@ -175,6 +188,56 @@ export async function renderizarContinuarAssistindo() {
     if (contadorExibidos > 0) {
       gradeContainer.appendChild(fragment);
       secaoContainer.style.display = "block";
+
+      // =========================================================================
+      // 2. PASSO FLIP (LAST, INVERT & PLAY): Anima o deslocamento ou o fade
+      // =========================================================================
+      const cardsNovos = Array.from(gradeContainer.querySelectorAll('.card-continuar'));
+
+      cardsNovos.forEach((cardNovo, indice) => {
+        const id = cardNovo.dataset.id;
+        const posAntiga = posicoesAntigas.get(id);
+
+        if (posAntiga) {
+          const posNova = cardNovo.getBoundingClientRect();
+          const deltaX = posAntiga.left - posNova.left;
+          const deltaY = posAntiga.top - posNova.top;
+
+          const mudouDePosicao = Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2;
+
+          if (mudouDePosicao) {
+            // CASO A: O card mudou de posição na fila (Desliza para a posição nova)
+            cardNovo.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+            cardNovo.style.transition = 'transform 0s';
+
+            requestAnimationFrame(() => {
+              cardNovo.style.transition = 'transform 0.4s cubic-bezier(0.2, 0, 0.2, 1)';
+              cardNovo.style.transform = 'translate(0, 0)';
+            });
+          } else if (indice === 0) {
+            // CASO B: Permaneceu no mesmo lugar no topo (Fade suave das informações atualizadas)
+            cardNovo.style.opacity = '0';
+            cardNovo.style.transition = 'opacity 0s';
+
+            requestAnimationFrame(() => {
+              cardNovo.style.transition = 'opacity 0.35s ease-in-out';
+              cardNovo.style.opacity = '1';
+            });
+          }
+        } else {
+          // CASO C: Card totalmente novo na seção
+          cardNovo.style.opacity = '0';
+          cardNovo.style.transform = 'translateY(10px)';
+          cardNovo.style.transition = 'opacity 0s, transform 0s';
+
+          requestAnimationFrame(() => {
+            cardNovo.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            cardNovo.style.opacity = '1';
+            cardNovo.style.transform = 'translateY(0)';
+          });
+        }
+      });
+
     } else {
       secaoContainer.style.display = "none";
     }
