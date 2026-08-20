@@ -180,3 +180,34 @@
     color: var(--text-secondary, #888888);
     font-size: 0.9rem;
 }
+
+/* ==========================================================================
+   GRUPOS DE DATA NO HISTÓRICO
+   ========================================================================== */
+
+.historico-grupo-data {
+    margin-bottom: 22px;
+}
+
+.data-grupo-titulo {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #a855f7; /* Cor roxa de destaque do seu tema */
+    margin: 0 0 10px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: capitalize;
+}
+
+/* Indicador visual ao lado da data */
+.data-grupo-titulo::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: #ff4081;
+    border-radius: 50%;
+}

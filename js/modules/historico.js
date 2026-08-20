@@ -17,7 +17,100 @@ function formatarTempo(segundos) {
 }
 
 /**
- * Busca um episódio no catálogo universalmente, sem depender de um padrão de ID engessado.
+ * Retorna o título da seção de data.
+ * Exemplo: "20 de Agosto de 2026"
+ */
+function obterTituloDataGrupo(timestamp) {
+  if (!timestamp) return "Data desconhecida";
+  const data = new Date(timestamp);
+
+  const dia = data.getDate();
+  const meses = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+  ];
+  const mes = meses[data.getMonth()];
+  const ano = data.getFullYear();
+
+  return `${dia} de ${mes} de ${ano}`;
+}
+
+/**
+ * Retorna o texto dinâmico exibido no card do anime.
+ * Ex: "hoje às 14:30", "ontem às 20:15", "última terça-feira às 18:00"
+ */
+function formatarDataStatus(timestamp) {
+  if (!timestamp) return "";
+
+  const agora = new Date();
+  const data = new Date(timestamp);
+
+  const hora = String(data.getHours()).padStart(2, "0");
+  const min = String(data.getMinutes()).padStart(2, "0");
+  const horaFormatada = `${hora}:${min}`;
+
+  // Compara os dias civis zera-se a hora (meia-noite)
+  const hojeMeiaNoite = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+  const dataMeiaNoite = new Date(data.getFullYear(), data.getMonth(), data.getDate());
+
+  const diffMs = hojeMeiaNoite - dataMeiaNoite;
+  const diffDias = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDias === 0) {
+    return `hoje às ${horaFormatada}`;
+  }
+  if (diffDias === 1) {
+    return `ontem às ${horaFormatada}`;
+  }
+  if (diffDias > 1 && diffDias < 7) {
+    const diaSemanaIdx = data.getDay();
+    const diasSemana = [
+      "domingo",
+      "segunda-feira",
+      "terça-feira",
+      "quarta-feira",
+      "quinta-feira",
+      "sexta-feira",
+      "sábado"
+    ];
+    const prefixo = (diaSemanaIdx === 0 || diaSemanaIdx === 6) ? "último" : "última";
+    return `${prefixo} ${diasSemana[diaSemanaIdx]} às ${horaFormatada}`;
+  }
+
+  // Para 7 dias ou mais
+  const dia = String(data.getDate()).padStart(2, "0");
+  const mes = String(data.getMonth() + 1).padStart(2, "0");
+  const ano = data.getFullYear();
+  return `${dia}/${mes}/${ano} às ${horaFormatada}`;
+}
+
+/**
+ * Agrupa os registros resolvidos por Dia Civil (YYYY-MM-DD)
+ */
+function agruparPorData(listaItens) {
+  const gruposMap = new Map();
+
+  listaItens.forEach((item) => {
+    const timestamp = item.registro.atualizadoEm || Date.now();
+    const dataObj = new Date(timestamp);
+    
+    // Chave única para agrupar o mesmo dia
+    const chaveData = `${dataObj.getFullYear()}-${String(dataObj.getMonth() + 1).padStart(2, '0')}-${String(dataObj.getDate()).padStart(2, '0')}`;
+
+    if (!gruposMap.has(chaveData)) {
+      gruposMap.set(chaveData, {
+        tituloData: obterTituloDataGrupo(timestamp),
+        itens: []
+      });
+    }
+    gruposMap.get(chaveData).itens.push(item);
+  });
+
+  return Array.from(gruposMap.values());
+}
+
+/**
+ * Busca um episódio no catálogo universalmente
  */
 function encontrarEpisodioNoCatalogo(idBuscado, infoCompleta) {
   if (!infoCompleta || !idBuscado) return null;
@@ -57,7 +150,7 @@ function encontrarEpisodioNoCatalogo(idBuscado, infoCompleta) {
 }
 
 /**
- * Configura os ouvintes de clique nos botões de filtro.
+ * Configura os ouvintes de clique nos botões de filtro
  */
 function inicializarFiltros() {
   const botoes = document.querySelectorAll(".btn-filtro-historico");
@@ -90,7 +183,7 @@ export async function gerenciarTelaHistorico() {
   const containerAssistindo = document.getElementById("grade-historico-assistindo");
   const containerConcluidos = document.getElementById("grade-historico-concluidos");
   const template = document.getElementById("modelo-card-historico");
-  
+
   const vazioAssistindo = document.getElementById("historico-vazio-assistindo");
   const vazioConcluidos = document.getElementById("historico-vazio-concluidos");
 
@@ -99,7 +192,6 @@ export async function gerenciarTelaHistorico() {
 
   if (!containerAssistindo || !containerConcluidos || !template) return;
 
-  // Garante que os eventos de clique dos filtros estejam configurados
   inicializarFiltros();
 
   try {
@@ -110,7 +202,6 @@ export async function gerenciarTelaHistorico() {
 
     const listaRegistros = Object.values(mapaProgresso || {});
 
-    // Limpa as duas listas antes de renderizar
     containerAssistindo.replaceChildren();
     containerConcluidos.replaceChildren();
 
@@ -125,83 +216,114 @@ export async function gerenciarTelaHistorico() {
     // Ordena do progresso mais recente para o mais antigo
     listaRegistros.sort((a, b) => (b.atualizadoEm || 0) - (a.atualizadoEm || 0));
 
-    const fragAssistindo = document.createDocumentFragment();
-    const fragConcluidos = document.createDocumentFragment();
+    const listaAssistindo = [];
+    const listaConcluidos = [];
 
-    let countAssistindo = 0;
-    let countConcluidos = 0;
-
+    // Resolve as informações do catálogo para cada item
     listaRegistros.forEach((registro) => {
       if (!registro || !registro.id) return;
 
       const achado = encontrarEpisodioNoCatalogo(registro.id, infoCompleta);
       if (!achado) return;
 
-      const { anime, animeId, ep, temporadaNome } = achado;
-
-      const clone = template.content.cloneNode(true);
-      const link = clone.querySelector("a");
-      const img = clone.querySelector(".historico-thumb");
-      const barraContainer = clone.querySelector(".barra-progresso-container");
-      const barraPreenchimento = clone.querySelector(".barra-progresso-preenchimento");
-      const elDuracao = clone.querySelector(".historico-duracao");
-      const elMeta = clone.querySelector(".historico-anime-meta");
-      const elTitulo = clone.querySelector(".historico-titulo-ep");
-      const elStatus = clone.querySelector(".historico-status");
-
-      if (link) {
-        link.href = `#player?anime=${encodeURIComponent(animeId)}&ep=${encodeURIComponent(registro.id)}`;
-      }
-
-      if (img) {
-        img.src = ep.thumb || anime.poster || anime.banner || "";
-        img.alt = ep.titulo || anime.titulo || "Episódio";
-      }
-
-      if (elMeta) elMeta.textContent = `${anime.titulo || "Anime"} • ${temporadaNome}`;
-      if (elTitulo) elTitulo.textContent = ep.titulo || `Episódio ${ep.index || ""}`;
-
-      if (elDuracao) {
-        elDuracao.textContent = ep.duracao || formatarTempo(registro.total);
-      }
-
-      // Barra de progresso visual
-      if (registro.total > 0 && registro.tempo > 0) {
-        const porcentagem = (registro.tempo / registro.total) * 100;
-        if (barraContainer && barraPreenchimento) {
-          barraContainer.style.display = "block";
-          barraPreenchimento.style.width = `${Math.min(porcentagem, 100)}%`;
-        }
-      }
-
-      // Separa entre Concluído e Assistindo
       if (registro.concluido) {
-        countConcluidos++;
-        if (elStatus) {
-          elStatus.textContent = "Concluído";
-          elStatus.style.color = "#4caf50";
-        }
-        fragConcluidos.appendChild(clone);
+        listaConcluidos.push({ registro, achado });
       } else {
-        countAssistindo++;
-        if (elStatus) {
-          elStatus.textContent = `Resume ${formatarTempo(registro.tempo)}`;
-        }
-        fragAssistindo.appendChild(clone);
+        listaAssistindo.push({ registro, achado });
       }
     });
 
-    // Anexa nas respectivas grades
-    containerAssistindo.appendChild(fragAssistindo);
-    containerConcluidos.appendChild(fragConcluidos);
+    // Função interna para construir a estrutura de grupos de datas e cards
+    const renderizarGrupos = (listaItens, containerPai) => {
+      const grupos = agruparPorData(listaItens);
+      const frag = document.createDocumentFragment();
+
+      grupos.forEach((grupo) => {
+        // Container do Grupo de Data
+        const grupoDiv = document.createElement("div");
+        grupoDiv.className = "historico-grupo-data";
+
+        // Cabeçalho da Data (ex: 20 de Agosto de 2026)
+        const tituloHeader = document.createElement("h3");
+        tituloHeader.className = "data-grupo-titulo";
+        tituloHeader.textContent = grupo.tituloData;
+        grupoDiv.appendChild(tituloHeader);
+
+        // Sub-container dos cards do dia
+        const subLista = document.createElement("div");
+        subLista.className = "episodes-list";
+
+        grupo.itens.forEach(({ registro, achado }) => {
+          const { anime, animeId, ep, temporadaNome } = achado;
+
+          const clone = template.content.cloneNode(true);
+          const link = clone.querySelector("a");
+          const img = clone.querySelector(".historico-thumb");
+          const barraContainer = clone.querySelector(".barra-progresso-container");
+          const barraPreenchimento = clone.querySelector(".barra-progresso-preenchimento");
+          const elDuracao = clone.querySelector(".historico-duracao");
+          const elMeta = clone.querySelector(".historico-anime-meta");
+          const elTitulo = clone.querySelector(".historico-titulo-ep");
+          const elStatus = clone.querySelector(".historico-status");
+
+          if (link) {
+            link.href = `#player?anime=${encodeURIComponent(animeId)}&ep=${encodeURIComponent(registro.id)}`;
+          }
+
+          if (img) {
+            img.src = ep.thumb || anime.poster || anime.banner || "";
+            img.alt = ep.titulo || anime.titulo || "Episódio";
+          }
+
+          if (elMeta) elMeta.textContent = `${anime.titulo || "Anime"} • ${temporadaNome}`;
+          if (elTitulo) elTitulo.textContent = ep.titulo || `Episódio ${ep.index || ""}`;
+
+          if (elDuracao) {
+            elDuracao.textContent = ep.duracao || formatarTempo(registro.total);
+          }
+
+          // Barra de progresso visual
+          if (registro.total > 0 && registro.tempo > 0) {
+            const porcentagem = (registro.tempo / registro.total) * 100;
+            if (barraContainer && barraPreenchimento) {
+              barraContainer.style.display = "block";
+              barraPreenchimento.style.width = `${Math.min(porcentagem, 100)}%`;
+            }
+          }
+
+          // Formatação do status + Texto dinâmico de data
+          const textoDataDinamica = formatarDataStatus(registro.atualizadoEm);
+
+          if (elStatus) {
+            if (registro.concluido) {
+              elStatus.textContent = `Concluído • ${textoDataDinamica}`;
+              elStatus.style.color = "#4caf50";
+            } else {
+              elStatus.textContent = `Resume ${formatarTempo(registro.tempo)} • ${textoDataDinamica}`;
+            }
+          }
+
+          subLista.appendChild(clone);
+        });
+
+        grupoDiv.appendChild(subLista);
+        frag.appendChild(grupoDiv);
+      });
+
+      containerPai.appendChild(frag);
+    };
+
+    // Renderiza as duas abas
+    renderizarGrupos(listaAssistindo, containerAssistindo);
+    renderizarGrupos(listaConcluidos, containerConcluidos);
 
     // Atualiza contadores dos filtros
-    if (badgeAssistindo) badgeAssistindo.textContent = String(countAssistindo);
-    if (badgeConcluidos) badgeConcluidos.textContent = String(countConcluidos);
+    if (badgeAssistindo) badgeAssistindo.textContent = String(listaAssistindo.length);
+    if (badgeConcluidos) badgeConcluidos.textContent = String(listaConcluidos.length);
 
-    // Trata visibilidade das mensagens de estado vazio por aba
-    if (vazioAssistindo) vazioAssistindo.style.display = countAssistindo === 0 ? "block" : "none";
-    if (vazioConcluidos) vazioConcluidos.style.display = countConcluidos === 0 ? "block" : "none";
+    // Exibe mensagens de estado vazio se necessário
+    if (vazioAssistindo) vazioAssistindo.style.display = listaAssistindo.length === 0 ? "block" : "none";
+    if (vazioConcluidos) vazioConcluidos.style.display = listaConcluidos.length === 0 ? "block" : "none";
 
   } catch (erro) {
     console.error("❌ [Histórico] Falha ao carregar a tela de histórico:", erro);
