@@ -197,7 +197,7 @@ body:has(#inicio.active) .main-header {
     left: 0;
     transform: translateZ(0);
     width: 100%;
-    height: calc(60px + env(safe-area-inset-bottom, 0px)); 
+    height: calc(45px + env(safe-area-inset-bottom, 0px)); 
     padding-bottom: env(safe-area-inset-bottom, 0px);
     display: flex; 
     justify-content: space-around; 
