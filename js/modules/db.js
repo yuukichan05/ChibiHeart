@@ -13,9 +13,18 @@ const GIST_DESCRIPTION = "[ChibiHeart Streaming] Backup Automático de Conta";
 
 let timerReSincronizacao = null;
 
-// CONTROLE DE TRAVA DE SINCRONIZAÇÃO (30 SEGUNDOS)
+// CONTROLE DE TRAVA DE SINCRONIZAÇÃO (30 SEGUNDOS E EXECUÇÃO ATIVA)
 let ultimoSyncTimestamp = 0;
+let syncEmAndamento = false;
 const SYNC_LOCK_MS = 30 * 1000;
+
+/**
+ * Notifica a aplicação de que os dados locais mudaram para re-renderizar a tela ativa.
+ * Disparado APENAS quando todas as operações de banco/nuvem estão 100% concluídas.
+ */
+export function notificarAtualizacaoDados() {
+  window.dispatchEvent(new CustomEvent('dadosAtualizados'));
+}
 
 function sincronizacaoBloqueada() {
   const agora = Date.now();
@@ -94,11 +103,6 @@ export async function buscarPerfilDB() {
   }
 }
 
-/**
- * Salva o perfil no IndexedDB.
- * @param {Object} perfil
- * @param {boolean} atualizarTimestamp Se true, força atualizadoEm = Date.now(). Caso contrário, mantém a data existente.
- */
 export async function salvarPerfilDB(perfil, atualizarTimestamp = true) {
   try {
     const db = await abrirBanco();
@@ -220,7 +224,10 @@ export async function limparTudoDB() {
       tx.objectStore(STORES.PROGRESSO).clear();
       tx.objectStore(STORES.NOTIFICACOES).clear();
 
-      tx.oncomplete = () => resolve(true);
+      tx.oncomplete = () => {
+        notificarAtualizacaoDados();
+        resolve(true);
+      };
       tx.onerror = (e) => reject(e.target.error);
     });
   } catch (erro) {
@@ -292,9 +299,6 @@ export async function exportarDadosDB() {
   }
 }
 
-/**
- * Mescla o progresso remoto com o local de forma não destrutiva.
- */
 async function mesclarProgressoDB(progressoRemoto = []) {
   const db = await abrirBanco();
   const progressosLocais = await buscarTodoProgressoListaDB();
@@ -330,9 +334,6 @@ async function mesclarProgressoDB(progressoRemoto = []) {
   return listaMesclada;
 }
 
-/**
- * Mescla as notificações remotas com as locais.
- */
 async function mesclarNotificacoesDB(notificacoesRemotas = []) {
   const notificacoesLocais = await buscarNotificacoesDB();
   const mapa = new Map();
@@ -357,9 +358,6 @@ async function mesclarNotificacoesDB(notificacoesRemotas = []) {
   return listaMesclada;
 }
 
-/**
- * Mescla perfil mantendo tokens locais e a versão mais atualizada dos campos do usuário.
- */
 async function mesclarPerfilDB(perfilRemotoArr = []) {
   const perfilRemoto = Array.isArray(perfilRemotoArr) ? perfilRemotoArr[0] : perfilRemotoArr;
   const perfilLocal = await buscarPerfilDB();
@@ -384,9 +382,6 @@ async function mesclarPerfilDB(perfilRemotoArr = []) {
   return perfilMesclado;
 }
 
-/**
- * Importa e mescla dados (modo mesclagem por padrão para evitar perda de dados).
- */
 export async function importarDadosDB(dados, mesclar = true) {
   if (!dados || typeof dados !== "object") return false;
 
@@ -501,15 +496,16 @@ export function agendarReSincronizacaoCincoMinutos() {
   }, 5 * 60 * 1000);
 }
 
-export async function sincronizarUploadGithub(forcar = false) {
+/**
+ * Envia dados locais para o GitHub Gist de forma silenciosa.
+ */
+export async function sincronizarUploadGithub(forcar = false, silencioso = true) {
   const perfil = await buscarPerfilDB();
   if (!perfil.githubToken) return { sucesso: false, motivo: 'no_token' };
 
   if (!forcar && sincronizacaoBloqueada()) {
     return { sucesso: false, motivo: 'bloqueado_tempo' };
   }
-
-  registrarSincronizacao();
 
   try {
     let gistId = perfil.gistId;
@@ -534,49 +530,52 @@ export async function sincronizarUploadGithub(forcar = false) {
     });
 
     if (response.status === 403 || response.status === 429) {
-      await adicionarNotificacao({
-        titulo: 'Limite de Requisições do GitHub',
-        mensagem: 'O GitHub bloqueou o envio por limite de taxa. Nova tentativa em 5 minutos.',
-        tipo: 'alerta'
-      });
-      agendarReSincronizacaoCincoMinutos();
-      return { sucesso: false, erro: 'Rate Limit' };
+      throw new Error('RATE_LIMIT');
     }
 
-    if (!response.ok) throw new Error('Não foi possível atualizar o Gist no GitHub.');
+    if (!response.ok) throw new Error('Falha ao atualizar backup na nuvem.');
 
-    await adicionarNotificacao({
-      titulo: 'Sincronizado com a Nuvem',
-      mensagem: 'Seus dados foram atualizados e salvos com sucesso na nuvem.',
-      tipo: 'sucesso'
-    });
+    if (!silencioso) {
+      await adicionarNotificacao({
+        titulo: 'Sincronização Concluída',
+        mensagem: 'Seus dados foram atualizados e salvos com sucesso na nuvem.',
+        tipo: 'sucesso'
+      });
+    }
 
     return { sucesso: true };
   } catch (erro) {
     console.error('❌ [Sync Upload Error]:', erro);
-
-    await adicionarNotificacao({
-      titulo: 'Sincronização em Espera',
-      mensagem: `Sincronização pendente. Mantendo banco local intacto. Tentando novamente em 5 minutos.`,
-      tipo: 'alerta'
-    });
-
-    agendarReSincronizacaoCincoMinutos();
     return { sucesso: false, erro: erro.message };
   }
 }
 
+/**
+ * Fluxo Unificado de Sincronização:
+ * 1. Baixa dados da Nuvem
+ * 2. Mescla no IndexedDB Local
+ * 3. Faz Upload Silencioso do Resultado Mesclado
+ * 4. Exibe APENAS 1 notificação de sucesso e re-renderiza a tela.
+ */
 export async function sincronizarDownloadGithub(forcar = false) {
   const perfil = await buscarPerfilDB();
   if (!perfil.githubToken) return { sucesso: false, motivo: 'no_token' };
+
+  // IMPEDE CHAMADAS SIMULTÂNEAS/CONCORRENTES
+  if (syncEmAndamento) return { sucesso: false, motivo: 'ja_em_execucao' };
 
   if (!forcar && sincronizacaoBloqueada()) {
     return { sucesso: false, motivo: 'bloqueado_tempo' };
   }
 
+  syncEmAndamento = true;
   registrarSincronizacao();
 
   try {
+    if (!navigator.onLine) {
+      throw new Error('OFFLINE');
+    }
+
     let gistId = perfil.gistId;
     if (!gistId) {
       gistId = await obterOuCriarGistId(perfil.githubToken);
@@ -592,50 +591,60 @@ export async function sincronizarDownloadGithub(forcar = false) {
     });
 
     if (response.status === 403 || response.status === 429) {
-      await adicionarNotificacao({
-        titulo: 'Aviso de Rate Limit',
-        mensagem: 'Limites do GitHub atingidos. Mantendo dados locais. Tentando em 5 minutos.',
-        tipo: 'alerta'
-      });
-      agendarReSincronizacaoCincoMinutos();
-      return { sucesso: false, erro: 'Rate Limit' };
+      throw new Error('RATE_LIMIT');
     }
 
-    if (!response.ok) throw new Error('Erro ao buscar backup na nuvem.');
+    if (!response.ok) throw new Error('ERRO_CONEXAO');
 
     const gist = await response.json();
     const conteudoTexto = gist.files[GIST_FILENAME]?.content;
 
     if (!conteudoTexto) {
-      return await sincronizarUploadGithub(true);
+      await sincronizarUploadGithub(true, true);
+    } else {
+      const dadosRemotos = JSON.parse(conteudoTexto);
+
+      // 1. MESCLA NO INDEXEDDB
+      await importarDadosDB(dadosRemotos, true);
+
+      // 2. ENVIA DE VOLTA A VERSÃO UNIFICADA (SILENCIOSO)
+      await sincronizarUploadGithub(true, true);
     }
 
-    const dadosRemotos = JSON.parse(conteudoTexto);
-
-    // REALIZA A MESCLAGEM INTELIGENTE (UNINDO NUVEM + LOCAL)
-    await importarDadosDB(dadosRemotos, true);
-
-    // APÓS UNIR OS DADOS, ATUALIZA A NUVEM COM A VERSÃO CONSOLIDADA
-    await sincronizarUploadGithub(true);
-
+    // 3. APENAS 1 NOTIFICAÇÃO DE SUCESSO
     await adicionarNotificacao({
       titulo: 'Sincronização Concluída',
-      mensagem: 'Histórico mesclado com sucesso com a nuvem.',
+      mensagem: 'Seus dados foram atualizados e salvos com sucesso na nuvem.',
       tipo: 'sucesso'
     });
 
-    return { sucesso: true, dados: dadosRemotos };
+    // 4. RE-RENDERIZA A INTERFACE SOMENTE APÓS O PROCESSO ESTAR 100% FINALIZADO
+    notificarAtualizacaoDados();
+
+    return { sucesso: true };
+
   } catch (erro) {
-    console.error('❌ [Sync Download Error]:', erro);
+    console.error('❌ [Sync Engine Error]:', erro);
+
+    let mensagemErro = 'Falha ao conectar com a nuvem. Tentando novamente em 5 minutos.';
+
+    if (erro.message === 'RATE_LIMIT') {
+      mensagemErro = 'Limite de requisições do GitHub atingido. Nova tentativa em 5 minutos.';
+    } else if (erro.message === 'OFFLINE' || !navigator.onLine) {
+      mensagemErro = 'Sem conexão com a internet. Seus dados locais estão salvos.';
+    }
 
     await adicionarNotificacao({
-      titulo: 'Falha na Conexão',
-      mensagem: 'Erro ao conectar à nuvem. Dados locais mantidos em segurança.',
+      titulo: 'Sincronização Indisponível',
+      mensagem: mensagemErro,
       tipo: 'alerta'
     });
 
     agendarReSincronizacaoCincoMinutos();
     return { sucesso: false, erro: erro.message };
+
+  } finally {
+    syncEmAndamento = false;
   }
 }
 
@@ -664,7 +673,7 @@ export async function salvarProgressoDB(epId, tempo, total, dispararSync = false
     });
 
     if (dispararSync) {
-      sincronizarUploadGithub().catch(() => {});
+      sincronizarUploadGithub(false, true).catch(() => {});
     }
     return true;
   } catch (erro) {
@@ -702,7 +711,7 @@ export async function alternarConcluidoDB(epId, concluido = true) {
       requestGet.onerror = (err) => reject(err.target.error);
     });
 
-    sincronizarUploadGithub().catch(() => {});
+    sincronizarUploadGithub(false, true).catch(() => {});
     return true;
   } catch (erro) {
     console.error("❌ [DB] Falha ao alterar status de concluído:", erro);

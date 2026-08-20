@@ -1,5 +1,3 @@
-// js/modules/continuarAssistindo.js
-
 import { buscarTodoProgressoDB } from "./db.js";
 import { obterInfoCompleta } from "./repository.js";
 
@@ -70,19 +68,16 @@ export async function renderizarContinuarAssistindo() {
       return;
     }
 
-    // Agrupa os episódios por Anime para pegar apenas a última interação de cada Anime
     const animesInteragidos = {};
 
     listaRegistros.forEach((reg) => {
       if (!reg || !reg.id) return;
 
-      // Localiza o anime ao qual este registro pertence no banco JSON
       for (const [idAnimeKey, anime] of Object.entries(infoCompleta)) {
         const episodiosLinear = obterListaLinearEpisodios(anime, idAnimeKey);
         const indexAchado = episodiosLinear.findIndex(item => item.epId === reg.id);
 
         if (indexAchado !== -1) {
-          // Se o anime ainda não foi processado ou se este registro for mais recente
           if (!animesInteragidos[idAnimeKey] || (reg.atualizadoEm || 0) > animesInteragidos[idAnimeKey].registro.atualizadoEm) {
             animesInteragidos[idAnimeKey] = {
               anime,
@@ -97,7 +92,6 @@ export async function renderizarContinuarAssistindo() {
       }
     });
 
-    // Converte em Array e Ordena do MAIS RECENTE para o MAIS ANTIGO
     const itensContinuar = Object.values(animesInteragidos);
     itensContinuar.sort((a, b) => (b.registro.atualizadoEm || 0) - (a.registro.atualizadoEm || 0));
 
@@ -116,14 +110,12 @@ export async function renderizarContinuarAssistindo() {
       const estaConcluido = registro.concluido || (registro.total > 0 && (registro.tempo / registro.total) >= 0.85);
 
       if (!estaConcluido) {
-        // CASO 1: O episódio atual ainda não terminou (Continuar de onde parou)
         epAlvo = itemAtual;
         tempoRestante = registro.tempo;
         totalTempo = registro.total;
         percentual = (tempoRestante / totalTempo) * 100;
         subtituloTexto = `Resume ${formatarTempo(tempoRestante)}`;
       } else {
-        // CASO 2: O episódio atual foi concluído -> Tenta pegar o PRÓXIMO episódio
         if (indexEpAtual + 1 < episodiosLinear.length) {
           epAlvo = episodiosLinear[indexEpAtual + 1];
           tempoRestante = 0;
@@ -131,7 +123,6 @@ export async function renderizarContinuarAssistindo() {
           percentual = 0;
           subtituloTexto = `Próximo: Ep. ${epAlvo.ep.index || (indexEpAtual + 2)}`;
         } else {
-          // CASO 3: Concluiu e NÃO existe próximo episódio -> Remove do Continuar Assistindo
           return;
         }
       }
@@ -140,7 +131,6 @@ export async function renderizarContinuarAssistindo() {
 
       contadorExibidos++;
 
-      // Monta o Card HTML
       const clone = template.content.cloneNode(true);
       const link = clone.querySelector("a");
       const img = clone.querySelector(".continuar-thumb");
@@ -172,7 +162,6 @@ export async function renderizarContinuarAssistindo() {
         elDuracao.textContent = epAlvo.ep.duracao || formatarTempo(totalTempo);
       }
 
-      // Se houver progresso acumulado no episódio atual, ajusta a barra
       if (percentual > 0 && barraContainer && barraPreenchimento) {
         barraContainer.style.display = "block";
         barraPreenchimento.style.width = `${Math.min(percentual, 100)}%`;
@@ -183,7 +172,6 @@ export async function renderizarContinuarAssistindo() {
       fragment.appendChild(clone);
     });
 
-    // Exibe ou esconde a seção dependendo se há itens válidos
     if (contadorExibidos > 0) {
       gradeContainer.appendChild(fragment);
       secaoContainer.style.display = "block";

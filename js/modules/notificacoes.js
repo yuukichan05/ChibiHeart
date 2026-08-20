@@ -2,7 +2,8 @@ import {
   buscarNotificacoesDB,
   salvarNotificacaoDB,
   limparNotificacoesDB,
-  marcarNotificacoesLidasDB
+  marcarNotificacoesLidasDB,
+  sincronizarUploadGithub
 } from './db.js';
 
 /**
@@ -119,12 +120,15 @@ export async function marcarTodasComoLidas() {
 }
 
 /**
- * Limpa todas as notificações no banco
+ * Limpa todas as notificações no banco local e atualiza a nuvem
  */
 export async function limparNotificacoes() {
   await limparNotificacoesDB();
   await atualizarBadgeNotificacao();
   await gerenciarTelaNotificacoes();
+
+  // Envia os dados com a lista de notificações zerada para o GitHub
+  sincronizarUploadGithub(true).catch(() => {});
 }
 
 /**

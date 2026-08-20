@@ -1,5 +1,3 @@
-// js/main.js
-
 import { 
   gerarEsqueletosIniciais,
   carregarAnimesRecomendados, 
@@ -12,8 +10,8 @@ import { gerenciarTelaPlayer, verificarESincronizarAoSairDoPlayer } from './modu
 import { inicializarPesquisa } from './modules/pesquisa.js';
 import { gerenciarTelaHistorico } from './modules/historico.js';
 import { renderizarContinuarAssistindo } from './modules/continuarAssistindo.js';
-import { inicializarPerfil, gerenciarTelaPerfil } from './modules/perfil.js';
-import { gerenciarTelaNotificacoes } from './modules/notificacoes.js';
+import { inicializarPerfil, gerenciarTelaPerfil, autoSincronizarGithub } from './modules/perfil.js';
+import { gerenciarTelaNotificacoes, atualizarBadgeNotificacao } from './modules/notificacoes.js';
 
 /* ==========================================================================
    CAPTURA GLOBAL DE IMAGENS
@@ -38,6 +36,32 @@ function inicializarScrollHeader() {
 
 // Armazena a rota anterior para saber se o usuário está SAINDO do Player
 let rotaAnterior = "";
+
+/**
+ * Re-renderiza exclusivamente a view que o usuário está visualizando no momento
+ */
+export async function atualizarTelaAtiva() {
+  const hashCompleta = window.location.hash || "#inicio";
+  const novaRota = hashCompleta.split("?")[0];
+
+  await atualizarBadgeNotificacao();
+
+  switch (novaRota) {
+    case "#inicio":
+    case "":
+      await renderizarContinuarAssistindo();
+      break;
+    case "#historico":
+      await gerenciarTelaHistorico();
+      break;
+    case "#perfil":
+      await gerenciarTelaPerfil();
+      break;
+    case "#notificacoes":
+      await gerenciarTelaNotificacoes();
+      break;
+  }
+}
 
 async function processarRota() {
   const hashCompleta = window.location.hash || "#inicio";
@@ -68,7 +92,7 @@ async function processarRota() {
     tab.classList.toggle("active", tab.getAttribute("href") === novaRota);
   });
 
-  // 3. ROTEAMENTO ESPECÍFICO (Executa APENAS a tela ativa, sem disparar sincronizações das outras)
+  // 3. ROTEAMENTO ESPECÍFICO
   switch (novaRota) {
     case "#inicio":
     case "":
@@ -102,12 +126,28 @@ document.addEventListener("DOMContentLoaded", async () => {
   inicializarScrollHeader();
   gerarEsqueletosIniciais();
 
-  // Inicializa a pesquisa, módulo de perfil e eventos de rota
   inicializarPesquisa();
   inicializarPerfil();
 
   window.addEventListener("hashchange", processarRota);
   await processarRota();
+
+  // ESCUTA ATUALIZAÇÕES AUTOMÁTICAS E RE-RENDERIZA A TELA ATIVA
+  window.addEventListener("dadosAtualizados", async () => {
+    await atualizarTelaAtiva();
+  });
+
+  // VERIFICA NOVAS SINCRONIZAÇÕES QUANDO O USUÁRIO RETORNA À ABA
+  window.addEventListener("focus", async () => {
+    await autoSincronizarGithub();
+  });
+
+  // POLLING PERIÓDICO EM SEGUNDO PLANO (A CADA 45 SEGUNDOS)
+  setInterval(async () => {
+    if (document.visibilityState === "visible") {
+      await autoSincronizarGithub();
+    }
+  }, 45 * 1000);
 
   // Carrega as fileiras adicionais da Home em segundo plano
   try {

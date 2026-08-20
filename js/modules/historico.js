@@ -1,9 +1,6 @@
-// js/modules/historico.js
-
 import { buscarTodoProgressoDB } from "./db.js";
 import { obterInfoCompleta } from "./repository.js";
 
-// Formata segundos em MM:SS ou HH:MM:SS
 function formatarTempo(segundos) {
   if (isNaN(segundos) || segundos <= 0) return "00:00";
   const horas = Math.floor(segundos / 3600);
@@ -16,10 +13,6 @@ function formatarTempo(segundos) {
   return `${String(minutos).padStart(2, '0')}:${String(seg).padStart(2, '0')}`;
 }
 
-/**
- * Retorna o título da seção de data.
- * Exemplo: "20 de Agosto de 2026"
- */
 function obterTituloDataGrupo(timestamp) {
   if (!timestamp) return "Data desconhecida";
   const data = new Date(timestamp);
@@ -35,10 +28,6 @@ function obterTituloDataGrupo(timestamp) {
   return `${dia} de ${mes} de ${ano}`;
 }
 
-/**
- * Retorna o texto dinâmico exibido no card do anime.
- * Ex: "hoje às 14:30", "ontem às 20:15", "última terça-feira às 18:00"
- */
 function formatarDataStatus(timestamp) {
   if (!timestamp) return "";
 
@@ -49,7 +38,6 @@ function formatarDataStatus(timestamp) {
   const min = String(data.getMinutes()).padStart(2, "0");
   const horaFormatada = `${hora}:${min}`;
 
-  // Compara os dias civis zera-se a hora (meia-noite)
   const hojeMeiaNoite = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
   const dataMeiaNoite = new Date(data.getFullYear(), data.getMonth(), data.getDate());
 
@@ -77,16 +65,12 @@ function formatarDataStatus(timestamp) {
     return `${prefixo} ${diasSemana[diaSemanaIdx]} às ${horaFormatada}`;
   }
 
-  // Para 7 dias ou mais
   const dia = String(data.getDate()).padStart(2, "0");
   const mes = String(data.getMonth() + 1).padStart(2, "0");
   const ano = data.getFullYear();
   return `${dia}/${mes}/${ano} às ${horaFormatada}`;
 }
 
-/**
- * Agrupa os registros resolvidos por Dia Civil (YYYY-MM-DD)
- */
 function agruparPorData(listaItens) {
   const gruposMap = new Map();
 
@@ -94,7 +78,6 @@ function agruparPorData(listaItens) {
     const timestamp = item.registro.atualizadoEm || Date.now();
     const dataObj = new Date(timestamp);
     
-    // Chave única para agrupar o mesmo dia
     const chaveData = `${dataObj.getFullYear()}-${String(dataObj.getMonth() + 1).padStart(2, '0')}-${String(dataObj.getDate()).padStart(2, '0')}`;
 
     if (!gruposMap.has(chaveData)) {
@@ -109,9 +92,6 @@ function agruparPorData(listaItens) {
   return Array.from(gruposMap.values());
 }
 
-/**
- * Busca um episódio no catálogo universalmente
- */
 function encontrarEpisodioNoCatalogo(idBuscado, infoCompleta) {
   if (!infoCompleta || !idBuscado) return null;
 
@@ -149,10 +129,11 @@ function encontrarEpisodioNoCatalogo(idBuscado, infoCompleta) {
   return null;
 }
 
-/**
- * Configura os ouvintes de clique nos botões de filtro
- */
+let filtrosInicializados = false;
+
 function inicializarFiltros() {
+  if (filtrosInicializados) return;
+
   const botoes = document.querySelectorAll(".btn-filtro-historico");
   const secaoAssistindo = document.getElementById("secao-assistindo");
   const secaoConcluidos = document.getElementById("secao-concluidos");
@@ -173,6 +154,8 @@ function inicializarFiltros() {
       }
     };
   });
+
+  filtrosInicializados = true;
 }
 
 export async function gerenciarTelaHistorico() {
@@ -213,13 +196,11 @@ export async function gerenciarTelaHistorico() {
       return;
     }
 
-    // Ordena do progresso mais recente para o mais antigo
     listaRegistros.sort((a, b) => (b.atualizadoEm || 0) - (a.atualizadoEm || 0));
 
     const listaAssistindo = [];
     const listaConcluidos = [];
 
-    // Resolve as informações do catálogo para cada item
     listaRegistros.forEach((registro) => {
       if (!registro || !registro.id) return;
 
@@ -233,23 +214,19 @@ export async function gerenciarTelaHistorico() {
       }
     });
 
-    // Função interna para construir a estrutura de grupos de datas e cards
     const renderizarGrupos = (listaItens, containerPai) => {
       const grupos = agruparPorData(listaItens);
       const frag = document.createDocumentFragment();
 
       grupos.forEach((grupo) => {
-        // Container do Grupo de Data
         const grupoDiv = document.createElement("div");
         grupoDiv.className = "historico-grupo-data";
 
-        // Cabeçalho da Data (ex: 20 de Agosto de 2026)
         const tituloHeader = document.createElement("h3");
         tituloHeader.className = "data-grupo-titulo";
         tituloHeader.textContent = grupo.tituloData;
         grupoDiv.appendChild(tituloHeader);
 
-        // Sub-container dos cards do dia
         const subLista = document.createElement("div");
         subLista.className = "episodes-list";
 
@@ -282,7 +259,6 @@ export async function gerenciarTelaHistorico() {
             elDuracao.textContent = ep.duracao || formatarTempo(registro.total);
           }
 
-          // Barra de progresso visual
           if (registro.total > 0 && registro.tempo > 0) {
             const porcentagem = (registro.tempo / registro.total) * 100;
             if (barraContainer && barraPreenchimento) {
@@ -291,7 +267,6 @@ export async function gerenciarTelaHistorico() {
             }
           }
 
-          // Formatação do status + Texto dinâmico de data
           const textoDataDinamica = formatarDataStatus(registro.atualizadoEm);
 
           if (elStatus) {
@@ -313,15 +288,12 @@ export async function gerenciarTelaHistorico() {
       containerPai.appendChild(frag);
     };
 
-    // Renderiza as duas abas
     renderizarGrupos(listaAssistindo, containerAssistindo);
     renderizarGrupos(listaConcluidos, containerConcluidos);
 
-    // Atualiza contadores dos filtros
     if (badgeAssistindo) badgeAssistindo.textContent = String(listaAssistindo.length);
     if (badgeConcluidos) badgeConcluidos.textContent = String(listaConcluidos.length);
 
-    // Exibe mensagens de estado vazio se necessário
     if (vazioAssistindo) vazioAssistindo.style.display = listaAssistindo.length === 0 ? "block" : "none";
     if (vazioConcluidos) vazioConcluidos.style.display = listaConcluidos.length === 0 ? "block" : "none";
 
