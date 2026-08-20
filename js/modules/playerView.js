@@ -1,6 +1,11 @@
 // js/modules/playerView.js
 
-import { salvarProgressoDB, buscarProgressoDB, buscarTodoProgressoDB } from "./db.js";
+import { 
+  salvarProgressoDB, 
+  buscarProgressoDB, 
+  buscarTodoProgressoDB, 
+  sincronizarUploadGithub 
+} from "./db.js";
 import { obterAnimePorId } from "./repository.js";
 
 let todosEpisodiosAtuais = [];
@@ -9,8 +14,11 @@ let animeIdAtual = null;
 let hideControlsTimeout = null;
 let listenersAtivos = false;
 
-// Controle de I/O de Banco de Dados (Evita engasgos de gravação no timeupdate)
+// Controle de I/O e Sincronização em Tempo Real
 let ultimoTempoSalvoDB = 0;
+let timerCincoMinutos = null;
+let timerPausaCincoSegundos = null;
+let assistiuAlgo = false;
 
 function makeEpisodeId(animeId, seasonIdx, episodeIdx) {
   const s = String(seasonIdx).padStart(2, '0');
@@ -31,20 +39,89 @@ function formatarTempo(segundos) {
   return `${String(minutos).padStart(2, '0')}:${String(seg).padStart(2, '0')}`;
 }
 
+// Limpa os timers ativos de sincronização
+function limparTimersSync() {
+  if (timerCincoMinutos) {
+    clearInterval(timerCincoMinutos);
+    timerCincoMinutos = null;
+  }
+  if (timerPausaCincoSegundos) {
+    clearTimeout(timerPausaCincoSegundos);
+    timerPausaCincoSegundos = null;
+  }
+}
+
+// Inicia o cronômetro de 5 minutos enquanto assiste
+function iniciarTimerCincoMinutos(videoElement) {
+  limparTimersSync();
+
+  timerCincoMinutos = setInterval(async () => {
+    if (!videoElement || videoElement.paused || !epIdAtual) return;
+
+    const tempoAtual = Math.floor(videoElement.currentTime);
+    const duracaoTotal = Math.floor(videoElement.duration || 0);
+
+    if (tempoAtual > 0) {
+      console.log("⏰ [Player 5min Sync] Sincronizando progresso com a nuvem...");
+      await salvarProgressoDB(epIdAtual, tempoAtual, duracaoTotal);
+      await sincronizarUploadGithub();
+    }
+  }, 5 * 60 * 1000); // 5 minutos
+}
+
+// Agenda sincronização para 5s após o vídeo ser pausado
+function agendarSyncPausaCincoSegundos(videoElement) {
+  if (timerPausaCincoSegundos) clearTimeout(timerPausaCincoSegundos);
+
+  timerPausaCincoSegundos = setTimeout(async () => {
+    if (!epIdAtual || !videoElement) return;
+
+    const tempoAtual = Math.floor(videoElement.currentTime);
+    const duracaoTotal = Math.floor(videoElement.duration || 0);
+
+    if (tempoAtual > 0) {
+      console.log("⏸️ [Player 5s Pause Sync] Enviando atualização de pausa para a nuvem...");
+      await salvarProgressoDB(epIdAtual, tempoAtual, duracaoTotal);
+      await sincronizarUploadGithub();
+    }
+  }, 10000); // 5 segundos
+}
+
+// Chamado pela main.js ao trocar de rota para verificar se algo foi assistido
+export async function verificarESincronizarAoSairDoPlayer() {
+  limparTimersSync();
+
+  if (assistiuAlgo) {
+    console.log("🚪 [Player Exit] Algo foi assistido. Sincronizando dados com a nuvem...");
+    assistiuAlgo = false;
+
+    const videoElement = document.getElementById("player-video");
+    if (videoElement && epIdAtual) {
+      const tempoAtual = Math.floor(videoElement.currentTime);
+      const duracaoTotal = Math.floor(videoElement.duration || 0);
+      if (tempoAtual > 0) {
+        await salvarProgressoDB(epIdAtual, tempoAtual, duracaoTotal);
+      }
+    }
+    await sincronizarUploadGithub();
+  }
+}
+
 // OTIMIZAÇÃO SPA: Limpeza profunda para liberar GPU/RAM ao trocar de tela
 export function limparPlayer() {
+  limparTimersSync();
+
   const videoElement = document.getElementById("player-video");
   if (videoElement) {
     videoElement.pause();
     videoElement.removeAttribute("src");
-    videoElement.load(); // Força o navegador a desalocar os buffers de vídeo da memória
+    videoElement.load();
   }
   if (hideControlsTimeout) {
     clearTimeout(hideControlsTimeout);
     hideControlsTimeout = null;
   }
-  
-  // Reseta variáveis globais do módulo
+
   epIdAtual = null;
   animeIdAtual = null;
   ultimoTempoSalvoDB = 0;
@@ -119,12 +196,13 @@ export async function gerenciarTelaPlayer() {
     todosEpisodiosAtuais = todosEpisodios;
     epIdAtual = epId;
     animeIdAtual = animeId;
-    ultimoTempoSalvoDB = 0; // Reseta controle de salvamento
+    ultimoTempoSalvoDB = 0;
+    assistiuAlgo = false; // Reseta a flag ao iniciar novo episódio
 
     const videoElement = document.getElementById("player-video");
     const containerPlayer = document.getElementById("custom-player-container");
     const controlsOverlay = document.getElementById("custom-player-controls");
-    
+
     const btnPlay = document.getElementById("btn-player-play");
     const btnRewind = document.getElementById("btn-player-rewind");
     const btnForward = document.getElementById("btn-player-forward");
@@ -137,11 +215,9 @@ export async function gerenciarTelaPlayer() {
     const btnVerTodos = document.getElementById("lnk-ver-todos");
 
     if (videoElement) {
-      // Define a nova mídia reaproveitando a tag <video>
       videoElement.src = episodioAtual.video || "";
       videoElement.poster = episodioAtual.thumb || "";
 
-      // Restaura o tempo salvo do banco
       async function restaurarTempoSalvo() {
         const progressoSalvo = await buscarProgressoDB(epIdAtual);
         if (progressoSalvo && progressoSalvo.tempo > 0) {
@@ -152,11 +228,9 @@ export async function gerenciarTelaPlayer() {
 
       videoElement.addEventListener('loadedmetadata', restaurarTempoSalvo, { once: true });
 
-      // Configuração dos Listeners de Eventos (Executada apenas UMA VEZ para a SPA toda)
       if (!listenersAtivos) {
         listenersAtivos = true;
 
-        // Auto-ocultar Controles por Inatividade
         function mostrarControles() {
           controlsOverlay.classList.remove("controls-hidden");
         }
@@ -175,7 +249,6 @@ export async function gerenciarTelaPlayer() {
           }
         }
 
-        // Alternar Play/Pause
         const togglePlay = () => {
           if (videoElement.paused) {
             videoElement.play().catch(e => console.log("Autoplay bloqueado:", e));
@@ -190,22 +263,29 @@ export async function gerenciarTelaPlayer() {
         videoElement.addEventListener("play", () => {
           btnPlay.innerHTML = `<span class="material-symbols-outlined">pause</span>`;
           resetAutoOcultarControles();
+          assistiuAlgo = true;
+
+          // Inicia o timer de 5 minutos e cancela eventual timer de pausa
+          iniciarTimerCincoMinutos(videoElement);
         });
 
         videoElement.addEventListener("pause", () => {
           btnPlay.innerHTML = `<span class="material-symbols-outlined">play_arrow</span>`;
           mostrarControles();
 
-          // Salva o progresso imediatamente ao pausar
+          // Salva o progresso localmente
           const tempoAtual = Math.floor(videoElement.currentTime);
           const duracaoTotal = Math.floor(videoElement.duration || 0);
           if (tempoAtual > 0 && epIdAtual) {
             salvarProgressoDB(epIdAtual, tempoAtual, duracaoTotal);
             ultimoTempoSalvoDB = tempoAtual;
           }
+
+          // Cancela timer de 5min e agenda envio para 5s após a pausa
+          limparTimersSync();
+          agendarSyncPausaCincoSegundos(videoElement);
         });
 
-        // Avançar/Voltar 10s
         btnRewind.addEventListener("click", (e) => {
           e.stopPropagation();
           videoElement.currentTime = Math.max(0, videoElement.currentTime - 10);
@@ -218,14 +298,14 @@ export async function gerenciarTelaPlayer() {
           resetAutoOcultarControles();
         });
 
-        // Atualização de Progresso e Tempo
         videoElement.addEventListener("timeupdate", () => {
           const tempoAtual = videoElement.currentTime;
           const duracaoTotal = videoElement.duration || 0;
 
-          // =========================================================
-          // MANTIDO EXATAMENTE COMO NO SEU ORIGINAL (Não altera lógica nem CSS)
-          // =========================================================
+          if (tempoAtual > 2) {
+            assistiuAlgo = true;
+          }
+
           if (duracaoTotal > 0) {
             const porcentagem = (tempoAtual / duracaoTotal) * 100;
             progressBar.value = porcentagem;
@@ -233,9 +313,8 @@ export async function gerenciarTelaPlayer() {
           }
 
           timeDisplay.textContent = `${formatarTempo(tempoAtual)} • ${formatarTempo(duracaoTotal)}`;
-          // =========================================================
 
-          // OTIMIZAÇÃO I/O: Salva no IndexedDB apenas a cada 10 segundos para não travar a CPU
+          // Salva localmente no DB a cada 10 segundos
           const segAtual = Math.floor(tempoAtual);
           if (segAtual >= 15 && (segAtual - ultimoTempoSalvoDB >= 10)) {
             ultimoTempoSalvoDB = segAtual;
@@ -243,7 +322,6 @@ export async function gerenciarTelaPlayer() {
           }
         });
 
-        // Interação na Barra de Progresso (Seek)
         progressBar.addEventListener("input", () => {
           const duracaoTotal = videoElement.duration || 0;
           if (duracaoTotal > 0) {
@@ -251,7 +329,6 @@ export async function gerenciarTelaPlayer() {
           }
         });
 
-        // Avança para o próximo episódio
         const avancarProximoEpisodio = () => {
           const indexAtualIndex = todosEpisodiosAtuais.findIndex(e => e.id === epIdAtual);
           if (indexAtualIndex !== -1 && indexAtualIndex + 1 < todosEpisodiosAtuais.length) {
@@ -262,14 +339,15 @@ export async function gerenciarTelaPlayer() {
         };
 
         videoElement.addEventListener("ended", async () => {
+          limparTimersSync();
           const duracaoTotal = Math.floor(videoElement.duration || 0);
           if (duracaoTotal > 0 && epIdAtual) {
             await salvarProgressoDB(epIdAtual, duracaoTotal, duracaoTotal);
+            await sincronizarUploadGithub();
           }
           avancarProximoEpisodio();
         });
 
-        // Alternar Tela Cheia
         const toggleFullscreen = () => {
           const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
 
@@ -290,7 +368,6 @@ export async function gerenciarTelaPlayer() {
 
         btnFullscreen.addEventListener("click", toggleFullscreen);
 
-        // Atualização do Ícone do Fullscreen
         const atualizarIconeFullscreen = () => {
           const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
 
@@ -312,7 +389,6 @@ export async function gerenciarTelaPlayer() {
         document.addEventListener("fullscreenchange", atualizarIconeFullscreen);
         document.addEventListener("webkitfullscreenchange", atualizarIconeFullscreen);
 
-        // ATALHOS DE TECLADO
         window.addEventListener("keydown", (e) => {
           if (!window.location.hash.startsWith("#player")) return;
 
@@ -377,13 +453,11 @@ export async function gerenciarTelaPlayer() {
         containerPlayer.addEventListener("touchstart", resetAutoOcultarControles, { passive: true });
       }
 
-      // Autoplay seguro com tratamento de promessa
       setTimeout(() => {
         videoElement.play().catch(e => console.log("Autoplay bloqueado pelo navegador:", e));
       }, 200);
     }
 
-    // Atualiza Metadados na Tela
     const numTemp = temporadaAtualNome.replace(/\D/g, "").padStart(2, "0") || "01";
     const numEp = String(episodioAtual.index || 1).padStart(2, "0");
 
@@ -401,14 +475,12 @@ export async function gerenciarTelaPlayer() {
   }
 }
 
-// OTIMIZAÇÃO: Renderização de Próximos Episódios com Event Delegation + DocumentFragment (Zero Memory Leak)
 async function renderizarProximos(lista, animeId) {
   const container = document.getElementById("player-lista-proximos");
   const template = document.getElementById("modelo-card-player");
 
   if (!container || !template) return;
 
-  // 1. Limpeza de DOM sem usar .innerHTML = "" (Evita parse HTML na CPU)
   while (container.firstChild) {
     container.removeChild(container.firstChild);
   }
@@ -423,7 +495,7 @@ async function renderizarProximos(lista, animeId) {
   }
 
   const mapaProgresso = await buscarTodoProgressoDB();
-  const fragment = document.createDocumentFragment(); // Montagem em lote na memória RAM
+  const fragment = document.createDocumentFragment();
 
   lista.forEach(ep => {
     const clone = template.content.cloneNode(true);
@@ -445,7 +517,6 @@ async function renderizarProximos(lista, animeId) {
 
     if (card) {
       card.style.cursor = "pointer";
-      // Guarda o ID do episódio no dataset em vez de criar múltiplos listeners
       card.dataset.epId = ep.id;
     }
 
@@ -453,7 +524,7 @@ async function renderizarProximos(lista, animeId) {
       const dadosEp = mapaProgresso[ep.id];
       if (dadosEp.total > 0 && dadosEp.tempo > 0) {
         const porcentagem = (dadosEp.tempo / dadosEp.total) * 100;
-        
+
         if (containerBarra && preenchimentoBarra) {
           containerBarra.style.display = "block";
           preenchimentoBarra.style.width = `${Math.min(porcentagem, 100)}%`;
@@ -464,10 +535,8 @@ async function renderizarProximos(lista, animeId) {
     fragment.appendChild(clone);
   });
 
-  // Insere todos os episódios de uma vez só no DOM real
   container.appendChild(fragment);
 
-  // 2. EVENT DELEGATION: Apenas 1 listener de clique atrelado ao container pai
   if (!container.dataset.hasListener) {
     container.dataset.hasListener = "true";
     container.addEventListener("click", (e) => {

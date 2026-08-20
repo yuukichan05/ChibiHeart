@@ -3,7 +3,7 @@
 import { adicionarNotificacao } from './notificacoes.js';
 
 const DB_NAME = "ChibiHeartDB";
-const DB_VERSION = 3; // Atualizado para suporte a notificações
+const DB_VERSION = 3;
 const STORES = {
   PROGRESSO: "progresso",
   PERFIL: "perfil",
@@ -14,6 +14,25 @@ const GIST_FILENAME = "chibiheart_sync_backup.json";
 const GIST_DESCRIPTION = "[ChibiHeart Streaming] Backup Automático de Conta";
 
 let timerReSincronizacao = null;
+
+// ==========================================================================
+// CONTROLE DE TRAVA/BLOQUEIO DE SINCRONIZAÇÃO (3 SEGUNDOS)
+// ==========================================================================
+let ultimoSyncTimestamp = 0;
+const SYNC_LOCK_MS = 30 * 1000;
+
+function sincronizacaoBloqueada() {
+  const agora = Date.now();
+  if (agora - ultimoSyncTimestamp < SYNC_LOCK_MS) {
+    console.log(`⏳ [Sync Lock] Sincronização ignorada (aguarde ${SYNC_LOCK_MS / 1000}s entre chamadas).`);
+    return true;
+  }
+  return false;
+}
+
+function registrarSincronizacao() {
+  ultimoSyncTimestamp = Date.now();
+}
 
 /**
  * Conexão com o IndexedDB
@@ -115,7 +134,6 @@ export async function buscarNotificacoesDB() {
 
       req.onsuccess = () => {
         const lista = req.result || [];
-        // Ordena da mais recente para a mais antiga
         lista.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
         resolve(lista);
       };
@@ -132,8 +150,6 @@ export async function salvarNotificacaoDB(notificacao) {
     const listaAtual = await buscarNotificacoesDB();
 
     listaAtual.unshift(notificacao);
-
-    // Mantém no máximo as últimas 50 notificações
     const listaFormatada = listaAtual.slice(0, 50);
 
     return new Promise((resolve, reject) => {
@@ -222,9 +238,6 @@ export function obterDataHoraFormatada() {
   return `${agora.getFullYear()}-${pad(agora.getMonth() + 1)}-${pad(agora.getDate())}_${pad(agora.getHours())}-${pad(agora.getMinutes())}-${pad(agora.getSeconds())}`;
 }
 
-/**
- * Calcula a data/hora exata do estado local mais recente
- */
 export async function obterMaiorTimestampLocal() {
   const perfil = await buscarPerfilDB();
   const progressos = await buscarTodoProgressoListaDB();
@@ -243,9 +256,6 @@ export async function obterMaiorTimestampLocal() {
   return maxTs || Date.now();
 }
 
-/**
- * Exporta todos os dados com o timestamp exato de sincronização
- */
 export async function exportarDadosDB() {
   try {
     const db = await abrirBanco();
@@ -281,9 +291,6 @@ export async function exportarDadosDB() {
   }
 }
 
-/**
- * Importa perfil, progresso e notificações para o banco local
- */
 export async function importarDadosDB(dados) {
   if (!dados || typeof dados !== "object") return false;
 
@@ -345,7 +352,7 @@ export async function importarDadosDB(dados) {
 }
 
 /* ==========================================================================
-   SINCRONIZAÇÃO INTELIGENTE (PRIORIDADE BANCO LOCAL + RE-TRY EM 5 MIN)
+   SINCRONIZAÇÃO INTELIGENTE COM BLOQUEIO DE 3 SEGUNDOS
    ========================================================================== */
 
 async function obterOuCriarGistId(token) {
@@ -381,9 +388,6 @@ async function obterOuCriarGistId(token) {
   return novoGist.id;
 }
 
-/**
- * Agenda uma nova tentativa de sincronização em 5 minutos (300.000 ms)
- */
 export function agendarReSincronizacaoCincoMinutos() {
   if (timerReSincronizacao) clearTimeout(timerReSincronizacao);
 
@@ -391,16 +395,20 @@ export function agendarReSincronizacaoCincoMinutos() {
 
   timerReSincronizacao = setTimeout(async () => {
     console.log("🔄 [Sync Engine] Executando tentativa automática de re-sincronização...");
-    await sincronizarUploadGithub();
-  }, 5 * 60 * 1000); // 5 minutos
+    await sincronizarUploadGithub(true);
+  }, 5 * 60 * 1000);
 }
 
-/**
- * Envia os dados do banco local para a Nuvem
- */
-export async function sincronizarUploadGithub() {
+export async function sincronizarUploadGithub(forcar = false) {
   const perfil = await buscarPerfilDB();
   if (!perfil.githubToken) return { sucesso: false, motivo: 'no_token' };
+
+  // Aplica o bloqueio de 3 segundos se não for uma ação forçada
+  if (!forcar && sincronizacaoBloqueada()) {
+    return { sucesso: false, motivo: 'bloqueado_tempo' };
+  }
+
+  registrarSincronizacao();
 
   try {
     let gistId = perfil.gistId;
@@ -457,12 +465,15 @@ export async function sincronizarUploadGithub() {
   }
 }
 
-/**
- * Executa a sincronização comparando local vs nuvem com PRIORIDADE AO BANCO LOCAL
- */
-export async function sincronizarDownloadGithub() {
+export async function sincronizarDownloadGithub(forcar = false) {
   const perfil = await buscarPerfilDB();
   if (!perfil.githubToken) return { sucesso: false, motivo: 'no_token' };
+
+  if (!forcar && sincronizacaoBloqueada()) {
+    return { sucesso: false, motivo: 'bloqueado_tempo' };
+  }
+
+  registrarSincronizacao();
 
   try {
     let gistId = perfil.gistId;
@@ -495,22 +506,18 @@ export async function sincronizarDownloadGithub() {
     const conteudoTexto = gist.files[GIST_FILENAME]?.content;
 
     if (!conteudoTexto) {
-      // Nuvem vazia -> Envia local
-      return await sincronizarUploadGithub();
+      return await sincronizarUploadGithub(true);
     }
 
     const dadosRemotos = JSON.parse(conteudoTexto);
     const timestampRemoto = dadosRemotos.timestampModificacao || (dadosRemotos.exportadoEm ? new Date(dadosRemotos.exportadoEm).getTime() : 0);
     const timestampLocal = await obterMaiorTimestampLocal();
 
-    // COMPARAÇÃO SEVERA DE TIMESTAMPS:
-    // Se o banco local for MAIS RECENTE ou IGUAL ao da nuvem:
     if (timestampLocal >= timestampRemoto) {
       console.log("🛡️ [Sync Engine] Banco local é mais recente ou igual. Enviando atualização local para a nuvem...");
-      return await sincronizarUploadGithub();
+      return await sincronizarUploadGithub(true);
     }
 
-    // Se o banco remoto for estritamente mais recente que o local:
     console.log("☁️ [Sync Engine] Backup na nuvem é mais recente. Atualizando banco de dados local...");
     await importarDadosDB(dadosRemotos);
 
@@ -539,7 +546,7 @@ export async function sincronizarDownloadGithub() {
    PROGRESSO DOS EPISÓDIOS
    ========================================================================== */
 
-export async function salvarProgressoDB(epId, tempo, total) {
+export async function salvarProgressoDB(epId, tempo, total, dispararSync = false) {
   try {
     const db = await abrirBanco();
     const concluido = total > 0 ? (tempo / total) >= 0.85 : false;
@@ -559,8 +566,10 @@ export async function salvarProgressoDB(epId, tempo, total) {
       req.onerror = (e) => reject(e.target.error);
     });
 
-    // Dispara envio silencioso do novo progresso local para a nuvem
-    sincronizarUploadGithub().catch(() => {});
+    // Sincronização condicional (pode ser chamada diretamente pelo Player nos intervalos específicos)
+    if (dispararSync) {
+      sincronizarUploadGithub().catch(() => {});
+    }
     return true;
   } catch (erro) {
     console.error("❌ [DB] Falha ao salvar progresso:", erro);

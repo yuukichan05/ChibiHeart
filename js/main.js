@@ -8,7 +8,7 @@ import {
 } from './modules/inicio.js';
 
 import { gerenciarTelaInfo } from './modules/info.js';
-import { gerenciarTelaPlayer } from './modules/playerView.js';
+import { gerenciarTelaPlayer, verificarESincronizarAoSairDoPlayer } from './modules/playerView.js';
 import { inicializarPesquisa } from './modules/pesquisa.js';
 import { gerenciarTelaHistorico } from './modules/historico.js';
 import { renderizarContinuarAssistindo } from './modules/continuarAssistindo.js';
@@ -17,7 +17,6 @@ import { gerenciarTelaNotificacoes } from './modules/notificacoes.js';
 
 /* ==========================================================================
    CAPTURA GLOBAL DE IMAGENS
-   Adiciona .loaded automaticamente em QUALQUER <img> assim que o download termina
    ========================================================================== */
 document.addEventListener('load', (event) => {
   if (event.target && event.target.tagName === 'IMG') {
@@ -37,13 +36,26 @@ function inicializarScrollHeader() {
   }, { passive: true });
 }
 
+// Armazena a rota anterior para saber se o usuário está SAINDO do Player
+let rotaAnterior = "";
+
 async function processarRota() {
-  const hash = window.location.hash.split("?")[0] || "#inicio";
+  const hashCompleta = window.location.hash || "#inicio";
+  const novaRota = hashCompleta.split("?")[0];
   const views = document.querySelectorAll(".app-view");
   let rotaExiste = false;
 
+  // 1. Verifica se está saindo do Player e executa a verificação
+  if (rotaAnterior === "#player" && novaRota !== "#player") {
+    await verificarESincronizarAoSairDoPlayer();
+  }
+
+  // Atualiza a rota anterior
+  rotaAnterior = novaRota;
+
+  // 2. Alterna visibilidade das Views
   views.forEach((view) => {
-    const ativa = `#${view.id}` === hash;
+    const ativa = `#${view.id}` === novaRota;
     view.classList.toggle("active", ativa);
     if (ativa) rotaExiste = true;
   });
@@ -53,20 +65,31 @@ async function processarRota() {
   }
 
   document.querySelectorAll(".tab-item").forEach((tab) => {
-    tab.classList.toggle("active", tab.getAttribute("href") === hash);
+    tab.classList.toggle("active", tab.getAttribute("href") === novaRota);
   });
 
-  // Atualiza a seção "Continuar Assistindo" sempre que navegar para a Home (#inicio)
-  if (hash === "#inicio" || hash === "") {
-    await renderizarContinuarAssistindo();
+  // 3. ROTEAMENTO ESPECÍFICO (Executa APENAS a tela ativa, sem disparar sincronizações das outras)
+  switch (novaRota) {
+    case "#inicio":
+    case "":
+      await renderizarContinuarAssistindo();
+      break;
+    case "#info":
+      await gerenciarTelaInfo();
+      break;
+    case "#player":
+      await gerenciarTelaPlayer();
+      break;
+    case "#historico":
+      await gerenciarTelaHistorico();
+      break;
+    case "#perfil":
+      await gerenciarTelaPerfil();
+      break;
+    case "#notificacoes":
+      await gerenciarTelaNotificacoes();
+      break;
   }
-
-  // Executa os gerenciadores das telas da SPA
-  await gerenciarTelaInfo();
-  await gerenciarTelaPlayer();
-  await gerenciarTelaHistorico();
-  await gerenciarTelaPerfil();
-  await gerenciarTelaNotificacoes();
 
   window.scrollTo(0, 0);
 }
@@ -79,7 +102,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   inicializarScrollHeader();
   gerarEsqueletosIniciais();
 
-  // Inicializa a pesquisa, módulo de perfil e rotas
+  // Inicializa a pesquisa, módulo de perfil e eventos de rota
   inicializarPesquisa();
   inicializarPerfil();
 
