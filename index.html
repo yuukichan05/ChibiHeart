@@ -362,171 +362,166 @@
         
         <!-- VIEW DE PERFIL -->
         <!-- VIEW DE PERFIL -->
-                <section id="perfil" class="app-view">
-                    <div class="perfil-header">
-                        <div class="perfil-avatar-large">
-                            <img id="perfil-foto" src="" alt="Foto do Usuário">
-                            <label for="input-foto-perfil" class="btn-trocar-foto" aria-label="Alterar Foto">
-                                <span class="material-symbols-outlined">photo_camera</span>
-                            </label>
-                            <!-- Input invisível para upload da foto -->
-                            <input type="file" id="input-foto-perfil" accept="image/*" style="display: none;">
-                        </div>
+        <section id="perfil" class="app-view">
+            <div class="perfil-header">
+                <div class="perfil-avatar-large">
+                    <img id="perfil-foto" src="" alt="Foto do Usuário">
+                    <label for="input-foto-perfil" class="btn-trocar-foto" aria-label="Alterar Foto">
+                        <span class="material-symbols-outlined">photo_camera</span>
+                    </label>
+                    <!-- Input invisível para upload da foto -->
+                    <input type="file" id="input-foto-perfil" accept="image/*" style="display: none;">
+                </div>
         
-                        <h2 id="perfil-nome" class="perfil-nome">Usuário Chibi</h2>
-                        <p id="perfil-email" class="perfil-email">usuario@chibiheart.com</p>
+                <h2 id="perfil-nome" class="perfil-nome">Usuário Chibi</h2>
+                <p id="perfil-email" class="perfil-email">usuario@chibiheart.com</p>
+            </div>
+        
+            <!-- Opções/Ações do Perfil estilo App Moderno -->
+            <div class="perfil-opcoes">
+                <div class="opcao-item" id="btn-editar-nome">
+                    <div class="opcao-info">
+                        <span class="material-symbols-outlined">edit</span>
+                        <span>Editar Nome</span>
                     </div>
+                    <span class="material-symbols-outlined chevron">chevron_right</span>
+                </div>
         
-                    <!-- Opções/Ações do Perfil estilo App Moderno -->
-                    <div class="perfil-opcoes">
-                        <div class="opcao-item" id="btn-editar-nome">
-                            <div class="opcao-info">
-                                <span class="material-symbols-outlined">edit</span>
-                                <span>Editar Nome</span>
-                            </div>
-                            <span class="material-symbols-outlined chevron">chevron_right</span>
-                        </div>
-        
-                        <!-- Opção: Sincronização automática com GitHub -->
-                        <div class="opcao-item" id="btn-config-github">
-                            <div class="opcao-info">
-                                <span class="status-dot-wrapper">
-                                    <span id="github-status-dot" class="status-dot off" title="Desconectado"></span>
-                                </span>
-                                <span>Sincronização GitHub</span>
-                            </div>
-                            <span class="material-symbols-outlined chevron">chevron_right</span>
-                        </div>
-        
-                        <a href="#historico" class="opcao-item" style="text-decoration: none; color: inherit;">
-                            <div class="opcao-info">
-                                <span class="material-symbols-outlined">history</span>
-                                <span>Meu Histórico</span>
-                            </div>
-                            <span class="material-symbols-outlined chevron">chevron_right</span>
-                        </a>
-        
-                        <!-- Opção: Salvar dados da conta -->
-                        <div class="opcao-item" id="btn-exportar-dados">
-                            <div class="opcao-info">
-                                <span class="material-symbols-outlined">download</span>
-                                <span>Salvar dados da conta</span>
-                            </div>
-                            <span class="material-symbols-outlined chevron">chevron_right</span>
-                        </div>
-        
-                        <!-- Opção: Restaurar dados da conta -->
-                        <div class="opcao-item" id="btn-restaurar-dados">
-                            <div class="opcao-info">
-                                <span class="material-symbols-outlined">upload</span>
-                                <span>Restaurar dados da conta</span>
-                            </div>
-                            <span class="material-symbols-outlined chevron">chevron_right</span>
-                        </div>
-                        <!-- Input invisível para restauração de backup -->
-                        <input type="file" id="input-restaurar-dados" style="display: none;">
-        
-                        <div class="opcao-item">
-                            <div class="opcao-info">
-                                <span class="material-symbols-outlined">settings</span>
-                                <span>Configurações</span>
-                            </div>
-                            <span class="material-symbols-outlined chevron">chevron_right</span>
-                        </div>
-        
-                        <div class="opcao-item logout">
-                            <div class="opcao-info">
-                                <span class="material-symbols-outlined">logout</span>
-                                <span>Sair da Conta</span>
-                            </div>
-                        </div>
+                <!-- Opção: Sincronização automática com GitHub -->
+                <div class="opcao-item" id="btn-config-github">
+                    <div class="opcao-info">
+                        <span class="status-dot-wrapper">
+                            <span id="github-status-dot" class="status-dot off" title="Desconectado"></span>
+                        </span>
+                        <span>Sincronização GitHub</span>
                     </div>
+                    <span class="material-symbols-outlined chevron">chevron_right</span>
+                </div>
         
-                    <!-- MODAL CUSTOMIZADO: EDITAR NOME -->
-                    <div id="modal-editar-nome" class="modal-overlay">
-                        <div class="modal-container">
-                            <div class="modal-header">
-                                <h3>Editar Nome</h3>
-                                <button id="btn-fechar-modal-nome" class="btn-fechar-modal" aria-label="Fechar">
-                                    <span class="material-symbols-outlined">close</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <label for="input-novo-nome" class="modal-label">Nome de Exibição</label>
-                                <input type="text" id="input-novo-nome" class="modal-input" placeholder="Digite seu nome" autocomplete="off">
-                            </div>
-                            <div class="modal-footer">
-                                <button id="btn-cancelar-nome" class="btn-modal btn-cancelar">Cancelar</button>
-                                <button id="btn-salvar-nome" class="btn-modal btn-salvar">Salvar</button>
-                            </div>
-                        </div>
+                <a href="#historico" class="opcao-item" style="text-decoration: none; color: inherit;">
+                    <div class="opcao-info">
+                        <span class="material-symbols-outlined">history</span>
+                        <span>Meu Histórico</span>
                     </div>
+                    <span class="material-symbols-outlined chevron">chevron_right</span>
+                </a>
         
-                    <!-- MODAL CUSTOMIZADO: CONFIGURAR GITHUB TOKEN -->
-                    <div id="modal-github-token" class="modal-overlay">
-                        <div class="modal-container">
-                            <div class="modal-header">
-                                <h3>Sincronização GitHub</h3>
-                                <button id="btn-fechar-modal-github" class="btn-fechar-modal" aria-label="Fechar">
-                                    <span class="material-symbols-outlined">close</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p class="modal-texto">Cole seu <strong>Personal Access Token</strong> do GitHub (com permissão de <code>gist</code>) para sincronizar seu histórico e conta em múltiplos dispositivos.</p>
-        
-                                <label for="input-github-token" class="modal-label">Chave de API / Token GitHub</label>
-                                <div class="input-password-wrapper">
-                                    <input type="password" id="input-github-token" class="modal-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
-                                    <button type="button" id="btn-toggle-token" class="btn-toggle-password" aria-label="Mostrar ou ocultar chave">
-                                        <span class="material-symbols-outlined" id="icone-olho">visibility_off</span>
-                                    </button>
-                                </div>
-        
-                                <p id="github-modal-msg" class="modal-msg-status"></p>
-                            </div>
-                            <div class="modal-footer">
-                                <button id="btn-remover-github-token" class="btn-modal btn-danger-outline" style="display: none;">Desconectar</button>
-                                <button id="btn-cancelar-github" class="btn-modal btn-cancelar">Cancelar</button>
-                                <button id="btn-salvar-github" class="btn-modal btn-salvar">Salvar e Conectar</button>
-                            </div>
-                        </div>
+                <!-- Opção: Salvar dados da conta -->
+                <div class="opcao-item" id="btn-exportar-dados">
+                    <div class="opcao-info">
+                        <span class="material-symbols-outlined">download</span>
+                        <span>Salvar dados da conta</span>
                     </div>
+                    <span class="material-symbols-outlined chevron">chevron_right</span>
+                </div>
         
-                    <!-- MODAL 1: RECOMENDAÇÃO DE BACKUP -->
-                    <div id="modal-alerta-backup" class="modal-overlay">
-                        <div class="modal-container">
-                            <div class="modal-header">
-                                <h3>Atenção</h3>
-                                <button id="btn-fechar-modal-alerta" class="btn-fechar-modal" aria-label="Fechar">
-                                    <span class="material-symbols-outlined">close</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p class="modal-texto">Antes desta ação, recomendamos que faça backup dos seus dados para não perder seu histórico.</p>
-                            </div>
-                            <div class="modal-footer modal-footer-stack">
-                                <button id="btn-ja-fiz-backup" class="btn-modal btn-cancelar">Já fiz backup, prosseguir</button>
-                                <button id="btn-fazer-backup-agora" class="btn-modal btn-salvar">Fazer backup agora</button>
-                            </div>
-                        </div>
+                <!-- Opção: Restaurar dados da conta -->
+                <div class="opcao-item" id="btn-restaurar-dados">
+                    <div class="opcao-info">
+                        <span class="material-symbols-outlined">upload</span>
+                        <span>Restaurar dados da conta</span>
                     </div>
+                    <span class="material-symbols-outlined chevron">chevron_right</span>
+                </div>
+                <!-- Input invisível para restauração de backup -->
+                <input type="file" id="input-restaurar-dados" style="display: none;">
         
-                    <!-- MODAL 2: CONFIRMAÇÃO FINAL DE LOGOUT -->
-                    <div id="modal-confirmar-logout" class="modal-overlay">
-                        <div class="modal-container">
-                            <div class="modal-header">
-                                <h3>Sair da Conta</h3>
-                            </div>
-                            <div class="modal-body">
-                                <p class="modal-texto">Tem certeza que deseja sair da conta? Seu perfil e histórico local serão apagados.</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button id="btn-cancelar-logout" class="btn-modal btn-cancelar">Não</button>
-                                <button id="btn-confirmar-logout" class="btn-modal btn-danger">Sim, sair</button>
-                            </div>
-                        </div>
+                <div class="opcao-item">
+                    <div class="opcao-info">
+                        <span class="material-symbols-outlined">settings</span>
+                        <span>Configurações</span>
                     </div>
-                </section>
+                    <span class="material-symbols-outlined chevron">chevron_right</span>
+                </div>
+        
+                <div class="opcao-item logout">
+                    <div class="opcao-info">
+                        <span class="material-symbols-outlined">logout</span>
+                        <span>Sair da Conta</span>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- MODAL CUSTOMIZADO: EDITAR NOME -->
+            <div id="modal-editar-nome" class="modal-overlay">
+                <div class="modal-container">
+                    <div class="modal-header">
+                        <h3>Editar Nome</h3>
+                        <button id="btn-fechar-modal-nome" class="btn-fechar-modal" aria-label="Fechar">
+                            <span class="material-symbols-outlined">close</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="input-novo-nome" class="modal-label">Nome de Exibição</label>
+                        <input type="text" id="input-novo-nome" class="modal-input" placeholder="Digite seu nome" autocomplete="off">
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btn-cancelar-nome" class="btn-modal btn-cancelar">Cancelar</button>
+                        <button id="btn-salvar-nome" class="btn-modal btn-salvar">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- MODAL CUSTOMIZADO: CONFIGURAR GITHUB TOKEN -->
+            <div id="modal-github-token" class="modal-overlay">
+                <div class="modal-container">
+                    <div class="modal-header">
+                        <h3>Sincronização GitHub</h3>
+                        <button id="btn-fechar-modal-github" class="btn-fechar-modal" aria-label="Fechar">
+                            <span class="material-symbols-outlined">close</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="modal-texto">Cole seu <strong>Personal Access Token</strong> do GitHub (com permissão de <code>gist</code>) para sincronizar seu histórico e conta em múltiplos dispositivos.</p>
+                        
+                        <label for="input-github-token" class="modal-label">Chave de API / Token GitHub</label>
+                        <input type="password" id="input-github-token" class="modal-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+                        
+                        <p id="github-modal-msg" class="modal-msg-status"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btn-remover-github-token" class="btn-modal btn-danger-outline" style="display: none;">Desconectar</button>
+                        <button id="btn-cancelar-github" class="btn-modal btn-cancelar">Cancelar</button>
+                        <button id="btn-salvar-github" class="btn-modal btn-salvar">Salvar e Conectar</button>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- MODAL 1: RECOMENDAÇÃO DE BACKUP -->
+            <div id="modal-alerta-backup" class="modal-overlay">
+                <div class="modal-container">
+                    <div class="modal-header">
+                        <h3>Atenção</h3>
+                        <button id="btn-fechar-modal-alerta" class="btn-fechar-modal" aria-label="Fechar">
+                            <span class="material-symbols-outlined">close</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="modal-texto">Antes desta ação, recomendamos que faça backup dos seus dados para não perder seu histórico.</p>
+                    </div>
+                    <div class="modal-footer modal-footer-stack">
+                        <button id="btn-ja-fiz-backup" class="btn-modal btn-cancelar">Já fiz backup, prosseguir</button>
+                        <button id="btn-fazer-backup-agora" class="btn-modal btn-salvar">Fazer backup agora</button>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- MODAL 2: CONFIRMAÇÃO FINAL DE LOGOUT -->
+            <div id="modal-confirmar-logout" class="modal-overlay">
+                <div class="modal-container">
+                    <div class="modal-header">
+                        <h3>Sair da Conta</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p class="modal-texto">Tem certeza que deseja sair da conta? Seu perfil e histórico local serão apagados.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btn-cancelar-logout" class="btn-modal btn-cancelar">Não</button>
+                        <button id="btn-confirmar-logout" class="btn-modal btn-danger">Sim, sair</button>
+                    </div>
+                </div>
+            </div>
+        </section>
         
     </main>
 
