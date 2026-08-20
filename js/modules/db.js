@@ -128,7 +128,6 @@ export async function limparTudoDB() {
 
 /**
  * Retorna uma string formatada com Data e Hora para o nome do arquivo de backup
- * Exemplo: 2026-08-20_01-14-05
  */
 export function obterDataHoraFormatada() {
   const agora = new Date();
@@ -145,14 +144,14 @@ export function obterDataHoraFormatada() {
 }
 
 /**
- * Extrai todos os dados garantindo a remoção do token para evitar vazamento
+ * Extrai todos os dados garantindo a remoção do token para evitar vazamento no Gist
  */
 export async function exportarDadosDB() {
   try {
     const db = await abrirBanco();
     const perfilAtual = await buscarPerfilDB();
 
-    // REMOVE O TOKEN E O ID DO GIST ANTES DE GERAR O JSON
+    // Remove tokens e chaves privadas antes de criar o arquivo
     const perfilSeguro = {
       ...perfilAtual,
       githubToken: "",
@@ -179,7 +178,7 @@ export async function exportarDadosDB() {
 }
 
 /**
- * Importa e sobrescreve as stores de Perfil e Progresso preservando credenciais locais
+ * Importa e MESCLA os dados remotos com os locais (Union Merge)
  */
 export async function importarDadosDB(dados) {
   if (!dados || typeof dados !== "object") return false;
@@ -188,6 +187,7 @@ export async function importarDadosDB(dados) {
     const db = await abrirBanco();
     const perfilLocalAtual = await buscarPerfilDB();
 
+    // 1. MESCLAR PERFIL (Preserva tokens locais)
     let listaPerfil = [];
     if (Array.isArray(dados.perfil)) {
       listaPerfil = dados.perfil;
@@ -199,13 +199,11 @@ export async function importarDadosDB(dados) {
       await new Promise((resolve, reject) => {
         const tx = db.transaction(STORES.PERFIL, "readwrite");
         const store = tx.objectStore(STORES.PERFIL);
-        store.clear();
 
         listaPerfil.forEach((item) => {
           const registro = {
             ...perfilPadrao,
             ...item,
-            // Mantém as chaves locais intactas durante a restauração
             githubToken: perfilLocalAtual.githubToken || item.githubToken || "",
             gistId: perfilLocalAtual.gistId || item.gistId || "",
             id: PERFIL_KEY,
@@ -219,12 +217,39 @@ export async function importarDadosDB(dados) {
       });
     }
 
+    // 2. MESCLAGEM INTELIGENTE DO PROGRESSO DOS EPISÓDIOS
     if (Array.isArray(dados.progresso)) {
+      const progressoLocal = await buscarTodoProgressoDB();
+
       await new Promise((resolve, reject) => {
         const tx = db.transaction(STORES.PROGRESSO, "readwrite");
         const store = tx.objectStore(STORES.PROGRESSO);
-        store.clear();
-        dados.progresso.forEach((item) => store.put(item));
+
+        dados.progresso.forEach((itemRemoto) => {
+          const itemLocal = progressoLocal[itemRemoto.id];
+
+          if (!itemLocal) {
+            // Caso 1: Episódio só existe na nuvem -> Adiciona ao aparelho
+            store.put(itemRemoto);
+          } else {
+            // Caso 2: Existe em ambos -> Prevalece o mais recente
+            const dataRemota = itemRemoto.atualizadoEm || 0;
+            const dataLocal = itemLocal.atualizadoEm || 0;
+
+            const itemMaisRecente = dataRemota > dataLocal ? itemRemoto : itemLocal;
+
+            // Trava de Conclusão: Se foi concluído em qualquer um dos dois, mantém true
+            const foiConcluido = Boolean(itemRemoto.concluido || itemLocal.concluido);
+
+            const itemMesclado = {
+              ...itemMaisRecente,
+              concluido: foiConcluido
+            };
+
+            store.put(itemMesclado);
+          }
+        });
+
         tx.oncomplete = () => resolve(true);
         tx.onerror = (e) => reject(e.target.error);
       });
@@ -232,7 +257,7 @@ export async function importarDadosDB(dados) {
 
     return true;
   } catch (erro) {
-    console.error("❌ [DB] Erro ao importar dados:", erro);
+    console.error("❌ [DB] Erro ao mesclar dados:", erro);
     return false;
   }
 }
@@ -281,7 +306,7 @@ async function obterOuCriarGistId(token) {
 }
 
 /**
- * Envia o backup local atual para o GitHub (Upload)
+ * Envia o backup local mesclado para a nuvem
  */
 export async function sincronizarUploadGithub() {
   const perfil = await buscarPerfilDB();
@@ -322,7 +347,7 @@ export async function sincronizarUploadGithub() {
 }
 
 /**
- * Baixa o backup do GitHub e restaura localmente (Download)
+ * Baixa dados da nuvem, mescla localmente e atualiza a nuvem com o resultado mesclado
  */
 export async function sincronizarDownloadGithub() {
   const perfil = await buscarPerfilDB();
@@ -350,7 +375,28 @@ export async function sincronizarDownloadGithub() {
 
     if (conteudoTexto) {
       const dadosRemotos = JSON.parse(conteudoTexto);
+      
+      // 1. Mescla no dispositivo
       await importarDadosDB(dadosRemotos);
+      
+      // 2. Sobe a versão mesclada de volta para que a nuvem fique completa
+      const dadosMescladosLocais = await exportarDadosDB();
+      await fetch(`https://api.github.com/gists/${gistId}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${perfil.githubToken}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/vnd.github+json'
+        },
+        body: JSON.stringify({
+          files: {
+            [GIST_FILENAME]: {
+              content: JSON.stringify(dadosMescladosLocais, null, 2)
+            }
+          }
+        })
+      });
+
       return { sucesso: true, dados: dadosRemotos };
     }
 

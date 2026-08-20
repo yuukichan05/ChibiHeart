@@ -125,7 +125,7 @@
 }
 
 /* ==========================================================================
-   MODAL EDITAR NOME (POP-UP COM DESFOQUE DE FUNDO)
+   MODAIS (POP-UP COM DESFOQUE DE FUNDO)
    ========================================================================== */
 .modal-overlay {
     position: fixed;
@@ -228,6 +228,43 @@
     border-color: var(--accent-color, #8124e4);
 }
 
+/* Container do Input de Senha + Botão do Olho */
+.input-password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.input-password-wrapper .modal-input {
+    width: 100%;
+    padding-right: 48px;
+}
+
+.btn-toggle-password {
+    position: absolute;
+    right: 8px;
+    background: transparent;
+    border: none;
+    color: #a0aec0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 50%;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-toggle-password:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-toggle-password:focus {
+    outline: none;
+}
+
 .modal-footer {
     display: flex;
     align-items: center;
@@ -291,7 +328,7 @@
     text-align: center;
 }
 
-/* Botão de destaque destrutivo (Logout Sim) */
+/* Botão de destaque destrutivo */
 .btn-danger {
     background: #ff4081;
     color: #fff;
@@ -301,7 +338,6 @@
 .btn-danger:hover {
     opacity: 0.9;
 }
-
 
 /* ==========================================================================
    INDICADOR VISUAL DE STATUS DO GITHUB (PONTO)
@@ -322,26 +358,26 @@
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* 1. CINZA: Desconectado / Sem Chave */
+/* 1. CINZA: Desconectado */
 .status-dot.off {
     background-color: #718096;
     box-shadow: none;
 }
 
-/* 2. VERMELHO: Erro / Chave Inválida */
+/* 2. VERMELHO: Erro */
 .status-dot.error {
     background-color: #ff4081;
     box-shadow: 0 0 8px rgba(255, 64, 129, 0.7);
 }
 
-/* 3. AMARELO / LARANJA: Sincronizando (Com animação de pulso) */
+/* 3. AMARELO: Sincronizando */
 .status-dot.syncing {
     background-color: #ecc94b;
     box-shadow: 0 0 8px rgba(236, 201, 75, 0.7);
     animation: statusPulse 0.8s infinite alternate;
 }
 
-/* 4. VERDE: Conectado e Sincronizado */
+/* 4. VERDE: Conectado */
 .status-dot.online {
     background-color: #38a169;
     box-shadow: 0 0 8px rgba(56, 161, 105, 0.8);
