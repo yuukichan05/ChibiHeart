@@ -7,6 +7,9 @@ const STORES = {
   PERFIL: "perfil"
 };
 
+const GIST_FILENAME = "chibiheart_sync_backup.json";
+const GIST_DESCRIPTION = "[ChibiHeart Streaming] Backup Automático de Conta";
+
 /**
  * Inicializa e abre a conexão com o IndexedDB
  */
@@ -32,7 +35,7 @@ function abrirBanco() {
 }
 
 /* ==========================================================================
-   MÉTODOS DE PERFIL
+   MÉTODOS DE PERFIL E CONFIGURAÇÃO
    ========================================================================== */
 
 const PERFIL_KEY = "usuario_atual";
@@ -41,11 +44,13 @@ const perfilPadrao = {
   id: PERFIL_KEY,
   nome: "Usuário Chibi",
   email: "usuario@chibiheart.com",
-  foto: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSP-d8FnyUc7-qF7238NfPxfjaILuYofuXX40GH3RCUFJES5zDqFP3ptKs&s=10"
+  foto: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSP-d8FnyUc7-qF7238NfPxfjaILuYofuXX40GH3RCUFJES5zDqFP3ptKs&s=10",
+  githubToken: "",
+  gistId: ""
 };
 
 /**
- * Busca os dados do perfil salvo no IndexedDB
+ * Busca os dados do perfil e configurações salvos no IndexedDB
  */
 export async function buscarPerfilDB() {
   try {
@@ -72,7 +77,7 @@ export async function buscarPerfilDB() {
 }
 
 /**
- * Salva ou atualiza os dados do perfil no IndexedDB
+ * Salva ou atualiza os dados do perfil/chaves no IndexedDB
  */
 export async function salvarPerfilDB(perfil) {
   try {
@@ -122,14 +127,37 @@ export async function limparTudoDB() {
    ========================================================================== */
 
 /**
- * Extrai todos os dados salvos garantindo que o perfil atual nunca vá vazio
+ * Retorna uma string formatada com Data e Hora para o nome do arquivo de backup
+ * Exemplo: 2026-08-20_01-14-05
+ */
+export function obterDataHoraFormatada() {
+  const agora = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+
+  const ano = agora.getFullYear();
+  const mes = pad(agora.getMonth() + 1);
+  const dia = pad(agora.getDate());
+  const horas = pad(agora.getHours());
+  const minutos = pad(agora.getMinutes());
+  const segundos = pad(agora.getSeconds());
+
+  return `${ano}-${mes}-${dia}_${horas}-${minutos}-${segundos}`;
+}
+
+/**
+ * Extrai todos os dados garantindo a remoção do token para evitar vazamento
  */
 export async function exportarDadosDB() {
   try {
     const db = await abrirBanco();
-
-    // Busca o perfil ativo (inclusive o padrão caso não tenha sido editado ainda)
     const perfilAtual = await buscarPerfilDB();
+
+    // REMOVE O TOKEN E O ID DO GIST ANTES DE GERAR O JSON
+    const perfilSeguro = {
+      ...perfilAtual,
+      githubToken: "",
+      gistId: ""
+    };
 
     const progressoData = await new Promise((resolve, reject) => {
       const tx = db.transaction(STORES.PROGRESSO, "readonly");
@@ -141,7 +169,7 @@ export async function exportarDadosDB() {
     return {
       versao: 1,
       exportadoEm: new Date().toISOString(),
-      perfil: [perfilAtual],
+      perfil: [perfilSeguro],
       progresso: progressoData
     };
   } catch (erro) {
@@ -151,15 +179,15 @@ export async function exportarDadosDB() {
 }
 
 /**
- * Importa e sobrescreve as stores de Perfil e Progresso
+ * Importa e sobrescreve as stores de Perfil e Progresso preservando credenciais locais
  */
 export async function importarDadosDB(dados) {
   if (!dados || typeof dados !== "object") return false;
 
   try {
     const db = await abrirBanco();
+    const perfilLocalAtual = await buscarPerfilDB();
 
-    // Importa dados do Perfil (aceita Array ou Objeto simples)
     let listaPerfil = [];
     if (Array.isArray(dados.perfil)) {
       listaPerfil = dados.perfil;
@@ -177,6 +205,9 @@ export async function importarDadosDB(dados) {
           const registro = {
             ...perfilPadrao,
             ...item,
+            // Mantém as chaves locais intactas durante a restauração
+            githubToken: perfilLocalAtual.githubToken || item.githubToken || "",
+            gistId: perfilLocalAtual.gistId || item.gistId || "",
             id: PERFIL_KEY,
             atualizadoEm: Date.now()
           };
@@ -188,7 +219,6 @@ export async function importarDadosDB(dados) {
       });
     }
 
-    // Importa dados de Progresso
     if (Array.isArray(dados.progresso)) {
       await new Promise((resolve, reject) => {
         const tx = db.transaction(STORES.PROGRESSO, "readwrite");
@@ -208,13 +238,137 @@ export async function importarDadosDB(dados) {
 }
 
 /* ==========================================================================
+   SINCRONIZAÇÃO VIA GITHUB GIST (API REST)
+   ========================================================================== */
+
+/**
+ * Busca ou cria o Gist de backup no GitHub
+ */
+async function obterOuCriarGistId(token) {
+  const headers = {
+    'Authorization': `Bearer ${token}`,
+    'Accept': 'application/vnd.github+json'
+  };
+
+  const responseList = await fetch('https://api.github.com/gists', { headers });
+  if (!responseList.ok) throw new Error('Chave Token inválida ou sem permissão de Gist.');
+
+  const gists = await responseList.json();
+  const gistExistente = gists.find(g => g.description === GIST_DESCRIPTION || g.files[GIST_FILENAME]);
+
+  if (gistExistente) {
+    return gistExistente.id;
+  }
+
+  const dadosIniciais = await exportarDadosDB();
+  const responseCreate = await fetch('https://api.github.com/gists', {
+    method: 'POST',
+    headers: { ...headers, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      description: GIST_DESCRIPTION,
+      public: false,
+      files: {
+        [GIST_FILENAME]: {
+          content: JSON.stringify(dadosIniciais, null, 2)
+        }
+      }
+    })
+  });
+
+  if (!responseCreate.ok) throw new Error('Erro ao criar arquivo Gist de sincronização.');
+  const novoGist = await responseCreate.json();
+  return novoGist.id;
+}
+
+/**
+ * Envia o backup local atual para o GitHub (Upload)
+ */
+export async function sincronizarUploadGithub() {
+  const perfil = await buscarPerfilDB();
+  if (!perfil.githubToken) return { sucesso: false, motivo: 'no_token' };
+
+  try {
+    let gistId = perfil.gistId;
+    if (!gistId) {
+      gistId = await obterOuCriarGistId(perfil.githubToken);
+      perfil.gistId = gistId;
+      await salvarPerfilDB(perfil);
+    }
+
+    const dadosLocais = await exportarDadosDB();
+
+    const response = await fetch(`https://api.github.com/gists/${gistId}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${perfil.githubToken}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/vnd.github+json'
+      },
+      body: JSON.stringify({
+        files: {
+          [GIST_FILENAME]: {
+            content: JSON.stringify(dadosLocais, null, 2)
+          }
+        }
+      })
+    });
+
+    if (!response.ok) throw new Error('Falha ao enviar backup para o GitHub.');
+    return { sucesso: true };
+  } catch (erro) {
+    console.error('❌ [Sync] Erro de Upload:', erro);
+    return { sucesso: false, erro: erro.message };
+  }
+}
+
+/**
+ * Baixa o backup do GitHub e restaura localmente (Download)
+ */
+export async function sincronizarDownloadGithub() {
+  const perfil = await buscarPerfilDB();
+  if (!perfil.githubToken) return { sucesso: false, motivo: 'no_token' };
+
+  try {
+    let gistId = perfil.gistId;
+    if (!gistId) {
+      gistId = await obterOuCriarGistId(perfil.githubToken);
+      perfil.gistId = gistId;
+      await salvarPerfilDB(perfil);
+    }
+
+    const response = await fetch(`https://api.github.com/gists/${gistId}`, {
+      headers: {
+        'Authorization': `Bearer ${perfil.githubToken}`,
+        'Accept': 'application/vnd.github+json'
+      }
+    });
+
+    if (!response.ok) throw new Error('Erro ao buscar arquivo no GitHub.');
+
+    const gist = await response.json();
+    const conteudoTexto = gist.files[GIST_FILENAME]?.content;
+
+    if (conteudoTexto) {
+      const dadosRemotos = JSON.parse(conteudoTexto);
+      await importarDadosDB(dadosRemotos);
+      return { sucesso: true, dados: dadosRemotos };
+    }
+
+    return { sucesso: false, erro: 'Conteúdo vazio' };
+  } catch (erro) {
+    console.error('❌ [Sync] Erro de Download:', erro);
+    return { sucesso: false, erro: erro.message };
+  }
+}
+
+/* ==========================================================================
    MÉTODOS DE PROGRESSO DOS EPISÓDIOS
    ========================================================================== */
 
 export async function salvarProgressoDB(epId, tempo, total) {
   try {
     const db = await abrirBanco();
-    return new Promise((resolve, reject) => {
+    const result = await new Promise((resolve, reject) => {
       const transaction = db.transaction(STORES.PROGRESSO, "readwrite");
       const store = transaction.objectStore(STORES.PROGRESSO);
 
@@ -232,6 +386,9 @@ export async function salvarProgressoDB(epId, tempo, total) {
       request.onsuccess = () => resolve(true);
       request.onerror = (e) => reject(e.target.error);
     });
+
+    sincronizarUploadGithub().catch(() => {});
+    return result;
   } catch (erro) {
     console.error("❌ [DB] Falha ao salvar progresso:", erro);
   }
@@ -240,7 +397,7 @@ export async function salvarProgressoDB(epId, tempo, total) {
 export async function alternarConcluidoDB(epId, concluido = true) {
   try {
     const db = await abrirBanco();
-    return new Promise((resolve, reject) => {
+    const result = await new Promise((resolve, reject) => {
       const transaction = db.transaction(STORES.PROGRESSO, "readwrite");
       const store = transaction.objectStore(STORES.PROGRESSO);
 
@@ -266,6 +423,9 @@ export async function alternarConcluidoDB(epId, concluido = true) {
 
       requestGet.onerror = (err) => reject(err.target.error);
     });
+
+    sincronizarUploadGithub().catch(() => {});
+    return result;
   } catch (erro) {
     console.error("❌ [DB] Falha ao alterar status de concluído:", erro);
   }

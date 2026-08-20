@@ -5,8 +5,29 @@ import {
   salvarPerfilDB,
   limparTudoDB,
   exportarDadosDB,
-  importarDadosDB
+  importarDadosDB,
+  obterDataHoraFormatada,
+  sincronizarDownloadGithub,
+  sincronizarUploadGithub
 } from './db.js';
+
+/**
+ * Atualiza o indicador visual do ponto de status do GitHub
+ * @param {'off' | 'error' | 'syncing' | 'online'} status 
+ * @param {string} mensagem 
+ */
+export function atualizarStatusDotGithub(status, mensagem = '') {
+  const dot = document.getElementById('github-status-dot');
+  if (!dot) return;
+
+  dot.className = `status-dot ${status}`;
+  dot.title = mensagem || {
+    off: 'Desconectado',
+    error: 'Erro de sincronização',
+    syncing: 'Sincronizando...',
+    online: 'Conectado e Sincronizado'
+  }[status];
+}
 
 /**
  * Sincroniza a interface (Header e Tela de Perfil) com o banco IndexedDB
@@ -31,6 +52,13 @@ export async function atualizarInterfacePerfil() {
     elHeaderAvatar.src = perfil.foto;
     elHeaderAvatar.classList.add('loaded');
   }
+
+  // Atualiza o estado inicial do indicador visual do GitHub
+  if (perfil.githubToken) {
+    atualizarStatusDotGithub('online', 'Conectado e Sincronizado');
+  } else {
+    atualizarStatusDotGithub('off', 'Desconectado (Nenhuma chave configurada)');
+  }
 }
 
 /* ==========================================================================
@@ -44,13 +72,17 @@ async function executarExportacao() {
     const blob = new Blob([jsonString], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
 
-    const dataFormatada = new Date().toISOString().slice(0, 10);
+    // Nome com DATA e HORA EXATAS
+    const dataHora = obterDataHoraFormatada();
     const linkDownload = document.createElement('a');
     linkDownload.href = url;
-    linkDownload.download = `chibiheart_backup_${dataFormatada}.json`;
+    linkDownload.download = `chibiheart_backup_${dataHora}.json`;
     linkDownload.click();
 
     URL.revokeObjectURL(url);
+    
+    // Tenta enviar o backup para o Github também
+    sincronizarUploadGithub().catch(() => {});
     return true;
   } catch (erro) {
     alert('Erro ao exportar os dados da conta.');
@@ -70,10 +102,32 @@ function fecharModal(id) {
 }
 
 /**
+ * Executa a sincronização automática ao carregar
+ */
+export async function autoSincronizarGithub() {
+  const perfil = await buscarPerfilDB();
+  if (!perfil.githubToken) {
+    atualizarStatusDotGithub('off');
+    return;
+  }
+
+  atualizarStatusDotGithub('syncing', 'Baixando atualização...');
+  const resDownload = await sincronizarDownloadGithub();
+
+  if (resDownload.sucesso) {
+    await atualizarInterfacePerfil();
+    atualizarStatusDotGithub('online', 'Conectado e Sincronizado');
+  } else {
+    atualizarStatusDotGithub('error', resDownload.erro || 'Erro ao sincronizar');
+  }
+}
+
+/**
  * Configura os ouvintes de eventos do perfil
  */
 export function inicializarPerfil() {
   atualizarInterfacePerfil();
+  autoSincronizarGithub();
 
   // 1. Alterar Foto de Perfil
   const inputFoto = document.getElementById('input-foto-perfil');
@@ -90,13 +144,14 @@ export function inicializarPerfil() {
           perfil.foto = fotoBase64;
           await salvarPerfilDB(perfil);
           await atualizarInterfacePerfil();
+          await sincronizarUploadGithub();
         }
       };
       reader.readAsDataURL(arquivo);
     });
   }
 
-  // 2. Exportar Dados (Ação Direta)
+  // 2. Exportar Dados (Com Data e Hora)
   const btnExportar = document.getElementById('btn-exportar-dados');
   if (btnExportar) {
     btnExportar.addEventListener('click', () => executarExportacao());
@@ -126,6 +181,7 @@ export function inicializarPerfil() {
 
           if (sucesso) {
             await atualizarInterfacePerfil();
+            await sincronizarUploadGithub();
             alert('Dados da conta e histórico restaurados com sucesso!');
           }
         } catch (erro) {
@@ -167,11 +223,94 @@ export function inicializarPerfil() {
         await salvarPerfilDB(perfil);
         await atualizarInterfacePerfil();
         fecharModal('modal-editar-nome');
+        await sincronizarUploadGithub();
       }
     });
   }
 
-  // 5. Fluxo Customizado de Logout (Sair da Conta)
+  // 5. MODAL CONFIGURAR CHAVE GITHUB
+  const btnConfigGithub = document.getElementById('btn-config-github');
+  const btnFecharModalGithub = document.getElementById('btn-fechar-modal-github');
+  const btnCancelarGithub = document.getElementById('btn-cancelar-github');
+  const btnSalvarGithub = document.getElementById('btn-salvar-github');
+  const btnRemoverGithub = document.getElementById('btn-remover-github-token');
+  const inputGithubToken = document.getElementById('input-github-token');
+  const msgStatusGithub = document.getElementById('github-modal-msg');
+
+  if (btnConfigGithub) {
+    btnConfigGithub.addEventListener('click', async () => {
+      const perfil = await buscarPerfilDB();
+      if (inputGithubToken) inputGithubToken.value = perfil.githubToken || '';
+      
+      if (msgStatusGithub) msgStatusGithub.textContent = '';
+
+      if (btnRemoverGithub) {
+        btnRemoverGithub.style.display = perfil.githubToken ? 'block' : 'none';
+      }
+
+      abrirModal('modal-github-token');
+    });
+  }
+
+  if (btnFecharModalGithub) btnFecharModalGithub.addEventListener('click', () => fecharModal('modal-github-token'));
+  if (btnCancelarGithub) btnCancelarGithub.addEventListener('click', () => fecharModal('modal-github-token'));
+
+  if (btnSalvarGithub) {
+    btnSalvarGithub.addEventListener('click', async () => {
+      const token = inputGithubToken?.value.trim();
+
+      if (!token) {
+        if (msgStatusGithub) {
+          msgStatusGithub.textContent = 'Por favor, digite o token.';
+          msgStatusGithub.className = 'modal-msg-status erro';
+        }
+        return;
+      }
+
+      if (msgStatusGithub) {
+        msgStatusGithub.textContent = 'Testando conexão e sincronizando...';
+        msgStatusGithub.className = 'modal-msg-status info';
+      }
+
+      atualizarStatusDotGithub('syncing', 'Conectando...');
+
+      // Salva o token no db.js para ficar guardado para as próximas vezes
+      const perfil = await buscarPerfilDB();
+      perfil.githubToken = token;
+      perfil.gistId = ''; // Reseta ID do gist para re-buscar/criar
+      await salvarPerfilDB(perfil);
+
+      // Tenta baixar/subir dados do Github
+      const resDownload = await sincronizarDownloadGithub();
+
+      if (resDownload.sucesso) {
+        await atualizarInterfacePerfil();
+        atualizarStatusDotGithub('online', 'Sincronizado');
+        fecharModal('modal-github-token');
+      } else {
+        atualizarStatusDotGithub('error', 'Token inválido');
+        if (msgStatusGithub) {
+          msgStatusGithub.textContent = 'Falha ao conectar. Verifique se o token tem permissão de "gist".';
+          msgStatusGithub.className = 'modal-msg-status erro';
+        }
+      }
+    });
+  }
+
+  if (btnRemoverGithub) {
+    btnRemoverGithub.addEventListener('click', async () => {
+      const perfil = await buscarPerfilDB();
+      perfil.githubToken = '';
+      perfil.gistId = '';
+      await salvarPerfilDB(perfil);
+
+      await atualizarInterfacePerfil();
+      atualizarStatusDotGithub('off');
+      fecharModal('modal-github-token');
+    });
+  }
+
+  // 6. Fluxo de Logout
   const btnLogout = document.querySelector('.opcao-item.logout');
   const btnFecharAlerta = document.getElementById('btn-fechar-modal-alerta');
   const btnJaFizBackup = document.getElementById('btn-ja-fiz-backup');
@@ -179,18 +318,9 @@ export function inicializarPerfil() {
   const btnCancelarLogout = document.getElementById('btn-cancelar-logout');
   const btnConfirmarLogout = document.getElementById('btn-confirmar-logout');
 
-  // Clicar em "Sair da Conta" -> Abre Modal 1 (Recomendação Backup)
-  if (btnLogout) {
-    btnLogout.addEventListener('click', () => {
-      abrirModal('modal-alerta-backup');
-    });
-  }
+  if (btnLogout) btnLogout.addEventListener('click', () => abrirModal('modal-alerta-backup'));
+  if (btnFecharAlerta) btnFecharAlerta.addEventListener('click', () => fecharModal('modal-alerta-backup'));
 
-  if (btnFecharAlerta) {
-    btnFecharAlerta.addEventListener('click', () => fecharModal('modal-alerta-backup'));
-  }
-
-  // "Já fiz backup, prosseguir" -> Fecha Modal 1 e Abre Modal 2 (Confirmação)
   if (btnJaFizBackup) {
     btnJaFizBackup.addEventListener('click', () => {
       fecharModal('modal-alerta-backup');
@@ -198,7 +328,6 @@ export function inicializarPerfil() {
     });
   }
 
-  // "Fazer backup agora" -> Faz download do JSON -> Fecha Modal 1 e Abre Modal 2
   if (btnFazerBackupAgora) {
     btnFazerBackupAgora.addEventListener('click', async () => {
       await executarExportacao();
@@ -207,12 +336,8 @@ export function inicializarPerfil() {
     });
   }
 
-  // Modal 2: "Não" -> Cancela e fecha o modal
-  if (btnCancelarLogout) {
-    btnCancelarLogout.addEventListener('click', () => fecharModal('modal-confirmar-logout'));
-  }
+  if (btnCancelarLogout) btnCancelarLogout.addEventListener('click', () => fecharModal('modal-confirmar-logout'));
 
-  // Modal 2: "Sim, sair" -> Executa a limpeza do IndexedDB e desloga
   if (btnConfirmarLogout) {
     btnConfirmarLogout.addEventListener('click', async () => {
       await limparTudoDB();
@@ -228,4 +353,5 @@ export function inicializarPerfil() {
  */
 export async function gerenciarTelaPerfil() {
   await atualizarInterfacePerfil();
+  await autoSincronizarGithub();
 }

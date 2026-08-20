@@ -301,3 +301,85 @@
 .btn-danger:hover {
     opacity: 0.9;
 }
+
+
+/* ==========================================================================
+   INDICADOR VISUAL DE STATUS DO GITHUB (PONTO)
+   ========================================================================== */
+.status-dot-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 1. CINZA: Desconectado / Sem Chave */
+.status-dot.off {
+    background-color: #718096;
+    box-shadow: none;
+}
+
+/* 2. VERMELHO: Erro / Chave Inválida */
+.status-dot.error {
+    background-color: #ff4081;
+    box-shadow: 0 0 8px rgba(255, 64, 129, 0.7);
+}
+
+/* 3. AMARELO / LARANJA: Sincronizando (Com animação de pulso) */
+.status-dot.syncing {
+    background-color: #ecc94b;
+    box-shadow: 0 0 8px rgba(236, 201, 75, 0.7);
+    animation: statusPulse 0.8s infinite alternate;
+}
+
+/* 4. VERDE: Conectado e Sincronizado */
+.status-dot.online {
+    background-color: #38a169;
+    box-shadow: 0 0 8px rgba(56, 161, 105, 0.8);
+}
+
+@keyframes statusPulse {
+    from {
+        opacity: 0.4;
+        transform: scale(0.85);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1.15);
+    }
+}
+
+/* Mensagens de feedback no Modal */
+.modal-msg-status {
+    font-size: 0.85rem;
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+.modal-msg-status.erro {
+    color: #ff4081;
+}
+
+.modal-msg-status.info {
+    color: #ecc94b;
+}
+
+/* Botão outline de desconectar */
+.btn-danger-outline {
+    background: transparent;
+    color: #ff4081;
+    border: 1px solid rgba(255, 64, 129, 0.4);
+}
+
+.btn-danger-outline:hover {
+    background: rgba(255, 64, 129, 0.1);
+}
