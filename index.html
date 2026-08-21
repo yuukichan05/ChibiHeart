@@ -371,12 +371,13 @@
         
         <!-- VIEW DE PERFIL -->
         <!-- VIEW DE PERFIL -->
+        <!-- VIEW DE PERFIL -->
         <section id="perfil" class="app-view">
-
-        	<div class="perfil-bg-blur">
-        	    <img id="perfil-bg-img" src="" alt="" />
-        	  </div>
-        	  
+        
+            <div class="perfil-bg-blur">
+                <img id="perfil-bg-img" src="" alt="" />
+            </div>
+        
             <div class="perfil-header">
                 <div class="perfil-avatar-large">
                     <img id="perfil-foto" src="" alt="Foto do Usuário">
@@ -408,6 +409,15 @@
                             <span id="github-status-dot" class="status-dot off" title="Desconectado"></span>
                         </span>
                         <span>Sincronização GitHub</span>
+                    </div>
+                    <span class="material-symbols-outlined chevron">chevron_right</span>
+                </div>
+        
+                <!-- Opção: Sincronizar Agora Manualmente -->
+                <div class="opcao-item" id="btn-sincronizar-agora">
+                    <div class="opcao-info">
+                        <span class="material-symbols-outlined">sync</span>
+                        <span>Sincronizar Agora</span>
                     </div>
                     <span class="material-symbols-outlined chevron">chevron_right</span>
                 </div>
@@ -487,10 +497,10 @@
                     </div>
                     <div class="modal-body">
                         <p class="modal-texto">Cole seu <strong>Personal Access Token</strong> do GitHub (com permissão de <code>gist</code>) para sincronizar seu histórico e conta em múltiplos dispositivos.</p>
-                        
+        
                         <label for="input-github-token" class="modal-label">Chave de API / Token GitHub</label>
                         <input type="password" id="input-github-token" class="modal-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
-                        
+        
                         <p id="github-modal-msg" class="modal-msg-status"></p>
                     </div>
                     <div class="modal-footer">

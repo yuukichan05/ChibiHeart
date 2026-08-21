@@ -308,7 +308,7 @@ export function inicializarPerfil() {
     });
   }
 
-  // 5. Configurar Chave GitHub (EXIBIÇÃO DO ERRO REAL DA API/REDE)
+  // 5. Configurar Chave GitHub
   const btnConfigGithub = document.getElementById('btn-config-github');
   const btnFecharModalGithub = document.getElementById('btn-fechar-modal-github');
   const btnCancelarGithub = document.getElementById('btn-cancelar-github');
@@ -369,7 +369,6 @@ export function inicializarPerfil() {
         atualizarStatusDotGithub('online', 'Sincronizado');
         fecharModal('modal-github-token');
       } else {
-        // EXIBE O ERRO NATIVO EXATO RETORNADO PELA REQUISIÇÃO
         const detalheErro = resDownload.erro || 'Falha ao comunicar com a API';
         atualizarStatusDotGithub('error', detalheErro);
         
@@ -400,7 +399,41 @@ export function inicializarPerfil() {
     });
   }
 
-  // 6. Fluxo de Logout
+  // 6. Botão Sincronizar Agora (Manual)
+  const btnSincronizarAgora = document.getElementById('btn-sincronizar-agora');
+  if (btnSincronizarAgora) {
+    btnSincronizarAgora.addEventListener('click', async () => {
+      const perfil = await buscarPerfilDB();
+
+      if (!perfil.githubToken) {
+        alert('Você precisa configurar seu token do GitHub antes de sincronizar.');
+        abrirModal('modal-github-token');
+        return;
+      }
+
+      atualizarStatusDotGithub('syncing', 'Sincronizando dados...');
+
+      // Executa a sincronização forçada (ignora o tempo de bloqueio)
+      const res = await sincronizarDownloadGithub(true);
+
+      if (res.sucesso) {
+        await atualizarInterfacePerfil();
+        atualizarStatusDotGithub('online', 'Sincronizado com sucesso');
+
+        await adicionarNotificacao({
+          titulo: 'Sincronização Manual',
+          mensagem: 'Seus dados foram atualizados com o GitHub.',
+          tipo: 'sucesso'
+        });
+      } else {
+        const detalheErro = res.erro || res.motivo || 'Erro ao sincronizar';
+        atualizarStatusDotGithub('error', detalheErro);
+        alert(`Falha na sincronização: ${detalheErro}`);
+      }
+    });
+  }
+
+  // 7. Fluxo de Logout
   const btnLogout = document.querySelector('.opcao-item.logout');
   const btnFecharAlerta = document.getElementById('btn-fechar-modal-alerta');
   const btnJaFizBackup = document.getElementById('btn-ja-fiz-backup');
