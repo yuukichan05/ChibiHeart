@@ -109,6 +109,12 @@ body {
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
+/* Sidebar oculta no celular/mobile */
+.sidebar {
+    display: none;
+}
+
+
 body:has(#inicio.active) .main-header {
     display: flex;
 }

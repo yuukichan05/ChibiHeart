@@ -88,8 +88,9 @@ async function processarRota() {
     document.getElementById("erro")?.classList.add("active");
   }
 
-  document.querySelectorAll(".tab-item").forEach((tab) => {
-    tab.classList.toggle("active", tab.getAttribute("href") === novaRota);
+  // ATUALIZADO: Atualiza o estado ativo em TODOS os menus de navegação (TabBar mobile, Sidebar e Nav Links desktop)
+  document.querySelectorAll(".tab-item, .sidebar-item, .nav-item, .nav-link").forEach((navItem) => {
+    navItem.classList.toggle("active", navItem.getAttribute("href") === novaRota);
   });
 
   // 3. ROTEAMENTO ESPECÍFICO

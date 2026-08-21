@@ -573,9 +573,52 @@
         
     </main>
 
+    <!-- SIDEBAR NATIVA DESKTOP (Aparece apenas em telas grandes) -->
+    <aside class="sidebar">
+        <!-- 1. TOPO: LOGO DA PLATAFORMA -->
+        <div class="sidebar-top">
+            <div class="logo">
+                <h1>Chibi<span>Heart</span></h1>
+            </div>
+        </div>
+    
+        <!-- 2. MEIO: NAVEGAÇÃO PRINCIPAL (EX-TAB BAR) -->
+        <nav class="sidebar-nav">
+            <a href="#inicio" class="sidebar-item active" aria-label="Início">
+                <span class="material-symbols-outlined">home</span>
+                <span class="sidebar-label">Início</span>
+            </a>
+            <a href="#lista" class="sidebar-item" aria-label="Minha Lista">
+                <span class="material-symbols-outlined">list</span>
+                <span class="sidebar-label">Minha Lista</span>
+            </a>
+            <a href="#historico" class="sidebar-item" aria-label="Histórico">
+                <span class="material-symbols-outlined">history</span>
+                <span class="sidebar-label">Histórico</span>
+            </a>
+        </nav>
+    
+        <!-- 3. BASE: AÇÕES E PERFIL (EX-HEADER ACTIONS) -->
+        <div class="sidebar-bottom">
+            <a href="#pesquisa" class="sidebar-item" aria-label="Pesquisar">
+                <span class="material-symbols-outlined">search</span>
+                <span class="sidebar-label">Pesquisar</span>
+            </a>
+            <a href="#notificacoes" class="sidebar-item" aria-label="Notificações">
+                <span class="material-symbols-outlined">notifications</span>
+                <span id="notificacao-badge-desktop" class="notifi-badge"></span>
+                <span class="sidebar-label">Notificações</span>
+            </a>
+            <a href="#perfil" class="sidebar-item sidebar-profile" aria-label="Perfil">
+                <img src="https://via.placeholder.com/150" class="header-profile-avatar" alt="Perfil">
+                <span class="sidebar-label">Perfil</span>
+            </a>
+        </div>
+    </aside>
+
     <!-- TAB BAR DE NAVEGAÇÃO -->
     <nav class="tab-bar">
-        <a href="#inicio" class="tab-item active" aria-label="Início" tabindex="0">
+        <a href="#inicio" class="tab-item" aria-label="Início" tabindex="0">
             <span class="material-symbols-outlined">home</span>
         </a>
         <a href="#lista" class="tab-item" aria-label="Minha Lista" tabindex="0">

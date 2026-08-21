@@ -10,3 +10,9 @@
 @import url("modules/historico.css");
 @import url("modules/pesquisa.css");
 @import url("modules/notifi.css");
+
+
+/*@Media */
+
+@import url("modules/media/player.css");
+/*@import url("modules/media/trakt_query.css");*/

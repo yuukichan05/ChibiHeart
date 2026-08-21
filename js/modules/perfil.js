@@ -71,7 +71,7 @@ export function atualizarStatusDotGithub(status, mensagem = '') {
 }
 
 /**
- * Sincroniza a interface com o banco IndexedDB
+ * Sincroniza a interface com o banco IndexedDB (Atualiza todas as instâncias de avatares)
  */
 export async function atualizarInterfacePerfil() {
   const perfil = await buscarPerfilDB();
@@ -79,7 +79,7 @@ export async function atualizarInterfacePerfil() {
   const elNome = document.getElementById('perfil-nome');
   const elEmail = document.getElementById('perfil-email');
   const elFoto = document.getElementById('perfil-foto');
-  const elHeaderAvatar = document.querySelector('.header-profile-avatar');
+  const elHeaderAvatares = document.querySelectorAll('.header-profile-avatar');
 
   if (elNome) elNome.textContent = perfil.nome;
   if (elEmail) elEmail.textContent = perfil.email;
@@ -89,9 +89,12 @@ export async function atualizarInterfacePerfil() {
     elFoto.classList.add('loaded');
   }
 
-  if (elHeaderAvatar) {
-    elHeaderAvatar.src = perfil.foto;
-    elHeaderAvatar.classList.add('loaded');
+  // Atualiza a foto em todos os avatares (Mobile Header e Sidebar Desktop)
+  if (elHeaderAvatares.length > 0) {
+    elHeaderAvatares.forEach(avatar => {
+      avatar.src = perfil.foto;
+      avatar.classList.add('loaded');
+    });
   }
 
   if (perfil.githubToken) {

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'chibiheart-v9';
+const CACHE_NAME = 'chibiheart-v2026/08/21';
 
 // Arquivos para guardar em cache estático (sincronizados com a estrutura do projeto)
 const ASSETS_TO_CACHE = [
@@ -44,7 +44,7 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[SW] Cache v9: Guardando arquivos atualizados...');
+      console.log('[SW] Cache v2026/08/21: Guardando arquivos atualizados...');
       return Promise.all(
         ASSETS_TO_CACHE.map(url => {
           return cache.add(url).catch(err => console.error(`[SW] Erro ao cachear: ${url}`, err));
