@@ -1,7 +1,6 @@
 // dbProgresso.js - Operações de Progresso de Reprodução dos Episódios
 
-import { abrirBanco, STORES } from './dbCore.js';
-import { sincronizarUploadGithub } from './dbSync.js';
+import { abrirBanco, STORES, sincronizarUploadGithub } from './db.js';
 
 export async function salvarProgressoDB(epId, tempo, total, dispararSync = false) {
   try {

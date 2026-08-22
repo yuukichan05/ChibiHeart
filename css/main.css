@@ -2,6 +2,7 @@
    ARQUIVO MAESTRO - CARREGAMENTO DOS MÓDULOS CSS
    ========================================================================== */
 
+
 @import url("modules/trakt.css");
 @import url("modules/player.css");
 @import url("modules/views.css");
@@ -21,3 +22,4 @@
 @import url("modules/media/views-desktop.css");
 @import url("modules/media/historico-desktop.css");
 @import url("modules/media/pesquisa-desktop.css");
+

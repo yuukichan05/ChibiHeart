@@ -9,16 +9,15 @@ import {
   buscarPerfilDB,
   salvarPerfilDB,
   buscarNotificacoesDB,
-  notificarAtualizacaoDados
-} from './dbCore.js';
-import { buscarTodoProgressoListaDB } from './dbProgresso.js';
+  notificarAtualizacaoDados,
+  buscarTodoProgressoListaDB
+} from './db.js';
 
 const GIST_FILENAME = "chibiheart_sync_backup.json";
 const GIST_DESCRIPTION = "[ChibiHeart Streaming] Backup Automático de Conta";
 
 let timerReSincronizacao = null;
 
-// CONTROLE DE TRAVA DE SINCRONIZAÇÃO (Reduzido para 5s para troca rápida de aparelhos)
 let ultimoSyncTimestamp = 0;
 let syncEmAndamento = false;
 const SYNC_LOCK_MS = 5 * 1000;
@@ -94,7 +93,6 @@ async function mesclarProgressoDB(progressoRemoto = []) {
       const tsRemoto = itemRemoto.atualizadoEm || 0;
       const tsLocal = itemLocal.atualizadoEm || 0;
 
-      // Mantém a alteração com o timestamp mais recente
       if (tsRemoto > tsLocal || (itemRemoto.tempo || 0) > (itemLocal.tempo || 0)) {
         mapa.set(itemRemoto.id, itemRemoto);
       }
@@ -316,9 +314,6 @@ export async function sincronizarUploadGithub(forcar = false, silencioso = true)
   }
 }
 
-/**
- * Sincronização Inteligente e Otimizada
- */
 export async function sincronizarDownloadGithub(forcar = false) {
   const perfil = await buscarPerfilDB();
   if (!perfil.githubToken) return { sucesso: false, motivo: 'no_token' };
@@ -362,16 +357,13 @@ export async function sincronizarDownloadGithub(forcar = false) {
       const tsLocalAntes = await obterMaiorTimestampLocal();
       const tsRemoto = dadosRemotos.timestampModificacao || 0;
 
-      // 1. MESCLA DADOS REMOTOS NO BANCO LOCAL
       await importarDadosDB(dadosRemotos, true);
 
-      // 2. SÓ ENVIA DE VOLTA PARA O GITHUB SE O LOCAL TIVER ALTERAÇÕES MAIS RECENTES QUE A NUVEM
       if (tsLocalAntes > tsRemoto) {
         await sincronizarUploadGithub(true, true);
       }
     }
 
-    // 3. RE-RENDERIZA A INTERFACE INSTANTANEAMENTE
     notificarAtualizacaoDados();
 
     return { sucesso: true };
