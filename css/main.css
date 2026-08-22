@@ -14,5 +14,11 @@
 
 /*@Media */
 
-@import url("modules/media/player.css");
+@import url("modules/media/base.css");
+@import url("modules/media/player.css"); 
+@import url("modules/media/trakt.css");
+@import url("modules/media/perfil.css");
+@import url("modules/media/views.css");
+@import url("modules/media/historico.css");
+@import url("modules/media/pesquisa.css");
 /*@import url("modules/media/trakt_query.css");*/

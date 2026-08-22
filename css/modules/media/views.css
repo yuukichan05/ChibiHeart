@@ -1,0 +1,105 @@
+/* ==========================================================================
+   ADAPTAÇÃO DESKTOP: APENAS PARA A TELA DE DETALHES (#INFO)
+   ========================================================================== */
+
+@media (min-width: 1024px) {
+    /* 1. ANULA REGRAS DA TELA QUANDO ELA NÃO ESTIVER ATIVA (EVITA VAZAMENTO) */
+    #info:not(.active) {
+        display: none !important;
+    }
+
+    /* 2. OCULTA BOTÃO MOBILE DE VOLTAR NO DESKTOP CUJO MENU É A SIDEBAR */
+    body:has(#info.active) .btn-voltar {
+        display: none !important;
+    }
+
+    /* 3. HERO (BANNER PRINCIPAL COM EFEITO DE GRADIENTE LATERAL/INFERIOR) */
+    #info.active .info-hero {
+        height: 70vh;
+    }
+
+    #info.active .hero-overlay {
+        background: linear-gradient(
+            90deg, 
+            var(--bg-main, #141414) 0%, 
+            rgba(20, 20, 20, 0.7) 40%, 
+            rgba(20, 20, 20, 0.1) 100%
+        ),
+        linear-gradient(
+            180deg, 
+            rgba(20, 20, 20, 0) 60%, 
+            var(--bg-main, #141414) 100%
+        );
+    }
+
+    /* 4. BLOCO DE CONTEÚDO PRINCIPAL (POSICIONADO SOBRE O HERO COM GRID) */
+    #info.active .info-content {
+        margin-top: 25vh;
+        max-width: 1200px;
+        padding: 0 40px;
+    }
+
+    #info.active .info-header-block h2 {
+        font-size: 2.8rem;
+        max-width: 600px;
+    }
+
+    #info.active .info-meta,
+    #info.active .info-genres {
+        font-size: 0.9rem;
+    }
+
+    /* BOTÃO PLAY MAIS COMPACTO NO DESKTOP */
+    #info.active .acao-principal-container {
+        width: auto;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    #info.active .btn-disney-play {
+        width: 220px;
+        padding: 12px 24px;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+
+    /* SINOPSE AMPLIADA */
+    #info.active .info-synopsis-container {
+        max-width: 650px;
+    }
+
+    #info.active .info-synopsis-container p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        -webkit-line-clamp: 5; /* Permite mostrar mais linhas da sinopse */
+    }
+
+    /* 5. SEÇÃO E LISTA DE EPISÓDIOS */
+    #info.active .info-episodes-container {
+        max-width: 1200px;
+        margin-top: 40px;
+        padding: 0 40px 48px 40px;
+    }
+
+    #info.active .episodes-header .titulo-categoria {
+        font-size: 1.4rem;
+    }
+
+    #info.active .episodes-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 20px;
+    }
+
+    #info.active .card-ep {
+        transition: transform 0.2s ease;
+    }
+
+    #info.active .card-ep:hover {
+        transform: translateY(-4px);
+    }
+
+    #info.active .ep-media {
+        width: 12rem;
+    }
+}

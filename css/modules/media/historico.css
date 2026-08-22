@@ -1,0 +1,108 @@
+/* ==========================================================================
+   ADAPTAÇÃO DESKTOP (1024px+): TELA DE HISTÓRICO (#HISTORICO)
+   ========================================================================== */
+
+@media (min-width: 1024px) {
+
+    /* 1. TRAVA DE BLOQUEIO QUANDO INATIVO */
+    #historico:not(.active) {
+        display: none !important;
+    }
+
+    /* 2. LAYOUT PRINCIPAL DA TELA DE HISTÓRICO ATIVA */
+    #historico.active {
+        display: block;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 32px 24px 48px 24px;
+        box-sizing: border-box;
+    }
+
+    /* Filtros / Abas no Topo do Histórico */
+    #historico.active .historico-filtros {
+        max-width: 480px;
+        margin: 20px auto 32px auto;
+        padding: 6px;
+        border-radius: 14px;
+    }
+
+    #historico.active .btn-filtro-historico {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+    }
+
+    /* Grupos de Datas e Títulos */
+    #historico.active .historico-grupo-data {
+        margin-bottom: 32px;
+    }
+
+    #historico.active .data-grupo-titulo {
+        font-size: 1.05rem;
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+    }
+
+    /* Grid Duplo para Cards de Histórico no Desktop */
+    #historico.active .episodes-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+        gap: 16px;
+    }
+
+    #historico.active .item-historico {
+        padding: 10px;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    #historico.active .item-historico:hover {
+        background-color: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    #historico.active .item-historico .ep-media {
+        width: 12.5rem;
+        min-width: 12.5rem;
+    }
+
+    #historico.active .historico-anime-meta {
+        font-size: 0.8rem;
+    }
+
+    #historico.active .historico-titulo-ep {
+        font-size: 1rem;
+    }
+
+    /* 3. CONDIÇÕES GLOBAIS VIA BODY:HAS() */
+    body:has(#historico.active) {
+        overflow-y: auto;
+    }
+
+    body:has(#historico.active) .main-wrapper {
+        margin-left: 260px; /* Adapte com o tamanho do seu menu/sidebar */
+    }
+
+    body:has(#historico.active) .bottom-nav {
+        display: none;
+    }
+/* 3. CONDIÇÕES GLOBAIS VIA BODY:HAS() */
+    body:has(#historico.active) {
+        overflow-y: auto;
+    }
+
+    body:has(#historico.active) .main-wrapper {
+        margin-left: 260px; /* Adapte com o tamanho do seu menu/sidebar */
+    }
+
+    /* Oculta a Tab Bar/Navegação inferior cobrindo as variações de nomes mais comuns */
+    body:has(#historico.active) .bottom-nav,
+    body:has(#historico.active) .tab-bar,
+    body:has(#historico.active) #tab-bar,
+    body:has(#historico.active) .navigation,
+    body:has(#historico.active) nav.mobile-nav,
+    body:has(#historico.active) footer {
+        display: none !important;
+    }
+}

@@ -1,0 +1,22 @@
+@media (min-width: 1024px) {
+    /* ==========================================================================
+       1. REGRAS GLOBAIS DE ESTRUTURA DESKTOP (ESCOPO CONTROLADO POR TELA ATIVA)
+       ========================================================================== */
+
+    /* Esconde o Header e a Tab Bar do Mobile APENAS nas telas configuradas para Desktop */
+    body:has(#inicio.active, #player.active, #perfil.active, #info.active) .main-header,
+    body:has(#inicio.active, #player.active, #perfil.active, #info.active) .tab-bar {
+        display: none !important;
+    }
+
+    /* Garante que a Sidebar Desktop fique visível apenas nas telas que utilizam o layout padrão */
+    body:has(#inicio.active, #perfil.active) .sidebar {
+        display: flex !important;
+    }
+
+    /* Ajusta a margem do conteúdo apenas quando a Sidebar estiver visível */
+    body:has(#inicio.active, #perfil.active) .main-content {
+        margin-left: 72px !important;
+        width: calc(100% - 72px) !important;
+    }
+}

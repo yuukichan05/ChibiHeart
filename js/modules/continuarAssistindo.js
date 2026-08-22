@@ -39,7 +39,8 @@ function obterListaLinearEpisodios(anime, idAnimeKey) {
         ep,
         epId,
         animeId: idAnimeKey,
-        temporadaNome: temp.nome || `${tIdx + 1}ª Temporada`
+        temporadaNome: temp.nome || `${tIdx + 1}ª Temporada`,
+        tempIndex: tIdx + 1 // Salva o número da temporada
       });
     });
   });
@@ -115,7 +116,6 @@ export async function renderizarContinuarAssistindo() {
       let tempoRestante = 0;
       let totalTempo = 0;
       let percentual = 0;
-      let subtituloTexto = "";
 
       const itemAtual = episodiosLinear[indexEpAtual];
       const estaConcluido = registro.concluido || (registro.total > 0 && (registro.tempo / registro.total) >= 0.85);
@@ -125,14 +125,12 @@ export async function renderizarContinuarAssistindo() {
         tempoRestante = registro.tempo;
         totalTempo = registro.total;
         percentual = (tempoRestante / totalTempo) * 100;
-        subtituloTexto = `Resume ${formatarTempo(tempoRestante)}`;
       } else {
         if (indexEpAtual + 1 < episodiosLinear.length) {
           epAlvo = episodiosLinear[indexEpAtual + 1];
           tempoRestante = 0;
           totalTempo = 0;
           percentual = 0;
-          subtituloTexto = `Próximo: Ep. ${epAlvo.ep.index || (indexEpAtual + 2)}`;
         } else {
           return;
         }
@@ -143,7 +141,9 @@ export async function renderizarContinuarAssistindo() {
       contadorExibidos++;
 
       const clone = template.content.cloneNode(true);
-      const link = clone.querySelector("a");
+      const cardRoot = clone.querySelector(".card-continuar");
+      const linkPlayer = clone.querySelector(".continuar-link-player");
+      const linkInfo = clone.querySelector(".continuar-link-info");
       const img = clone.querySelector(".continuar-thumb");
       const barraContainer = clone.querySelector(".barra-progresso-container");
       const barraPreenchimento = clone.querySelector(".barra-progresso-preenchimento");
@@ -151,10 +151,19 @@ export async function renderizarContinuarAssistindo() {
       const elTituloAnime = clone.querySelector(".continuar-titulo-anime");
       const elSubtituloEp = clone.querySelector(".continuar-subtitulo-ep");
 
-      // Identificador único no dataset para calcular o deslocamento FLIP
-      if (link) {
-        link.dataset.id = animeId;
-        link.href = `#player?anime=${encodeURIComponent(animeId)}&ep=${encodeURIComponent(epAlvo.epId)}`;
+      if (cardRoot) {
+        cardRoot.dataset.id = animeId;
+      }
+
+      // 1. Link da Imagem -> Direciona diretamente ao PLAYER
+      if (linkPlayer) {
+        linkPlayer.href = `#player?anime=${encodeURIComponent(animeId)}&ep=${encodeURIComponent(epAlvo.epId)}`;
+      }
+
+      // 2. Link do Texto -> Direciona para a TELA DE DETALHES do anime
+      if (linkInfo) {
+        // NOVO (padrão exato esperado pela view de detalhes #info):
+        linkInfo.href = `#info?anime=${encodeURIComponent(animeId)}`;
       }
 
       if (img) {
@@ -167,8 +176,14 @@ export async function renderizarContinuarAssistindo() {
       }
 
       if (elSubtituloEp) {
-        const epNum = epAlvo.ep.index ? `Ep. ${epAlvo.ep.index}` : `Episódio`;
-        elSubtituloEp.textContent = `${epNum} • ${subtituloTexto}`;
+        const tempNum = epAlvo.tempIndex || 1;
+        const epNum = epAlvo.ep.index || (indexEpAtual + 1);
+
+        // Obtém o título do EP e remove prefixos numéricos (ex: "01. Nome" -> "Nome")
+        let nomeEp = epAlvo.ep.titulo || epAlvo.ep.nome || "Episódio";
+        nomeEp = nomeEp.replace(/^\d+[\.\s-]+\s*/, '');
+
+        elSubtituloEp.textContent = `T${tempNum} • EP${epNum} - ${nomeEp}`;
       }
 
       if (elDuracao) {
@@ -206,7 +221,6 @@ export async function renderizarContinuarAssistindo() {
           const mudouDePosicao = Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2;
 
           if (mudouDePosicao) {
-            // CASO A: O card mudou de posição na fila (Desliza para a posição nova)
             cardNovo.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
             cardNovo.style.transition = 'transform 0s';
 
@@ -215,7 +229,6 @@ export async function renderizarContinuarAssistindo() {
               cardNovo.style.transform = 'translate(0, 0)';
             });
           } else if (indice === 0) {
-            // CASO B: Permaneceu no mesmo lugar no topo (Fade suave das informações atualizadas)
             cardNovo.style.opacity = '0';
             cardNovo.style.transition = 'opacity 0s';
 
@@ -225,7 +238,6 @@ export async function renderizarContinuarAssistindo() {
             });
           }
         } else {
-          // CASO C: Card totalmente novo na seção
           cardNovo.style.opacity = '0';
           cardNovo.style.transform = 'translateY(10px)';
           cardNovo.style.transition = 'opacity 0s, transform 0s';

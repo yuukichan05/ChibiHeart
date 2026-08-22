@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 /* ==========================================================================
    1. VARIÁVEIS GLOBAIS, RESET E UTILITÁRIOS BASE
    ========================================================================== */
@@ -9,6 +11,7 @@
     --bg-glass: rgba(23, 23, 30, 0.88);  /* Efeito translúcido / blur */
 
     /* Tipografia */
+    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --text-main: #ffffff;
     --text-secondary: #a0a0b2;           /* Texto secundário (cinza frio suave) */
     --text-light: #e2e2e8;
@@ -34,7 +37,7 @@
 body { 
     background-color: var(--bg-main); 
     color: var(--text-main); 
-    font-family: 'Poppins', sans-serif; 
+    font-family: var(--font-main); 
     overflow-x: hidden; 
 }
 
@@ -481,6 +484,10 @@ body.overlay-open .main-content { filter: blur(3px) brightness(0.92); pointer-ev
     gap: 6px;
     text-decoration: none;
     color: inherit;
+
+    /* Aceleração gráfica para animação FLIP sem lag ou flicker */
+    will-change: transform, opacity;
+    backface-visibility: hidden;
 }
 
 .card-continuar .card-media {
@@ -555,30 +562,18 @@ body.overlay-open .main-content { filter: blur(3px) brightness(0.92); pointer-ev
     text-overflow: ellipsis;
     margin: 0;
     line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-align: left;
 }
 
 .card-continuar .continuar-subtitulo-ep {
     font-size: 0.75rem;
+    font-weight: 400;
     color: var(--text-secondary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 0;
-}
-
-/* Card Continuar Assistindo (Horizontal 16:9) */
-.card-continuar {
-    width: 195px;
-    min-width: 195px;
-    max-width: 195px;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    text-decoration: none;
-    color: inherit;
-
-    /* Aceleração gráfica para animação FLIP sem lag ou flicker */
-    will-change: transform, opacity;
-    backface-visibility: hidden;
+    line-height: 1.3;
+    text-align: left;
 }
