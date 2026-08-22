@@ -17,6 +17,14 @@ const ASSETS_TO_CACHE = [
   './css/modules/trakt.css',
   './css/modules/views.css',
 
+  //DESKTOP CSS
+  './css/modules/media/trakt-desktop.css',
+  './css/modules/media/views-desktop.css',
+  './css/modules/media/player-desktop.css',
+  './css/modules/media/pesquisa-desktop.css',
+  './css/modules/media/base-desktop.css',
+  './css/modules/media/historico-desktop.css',
+  './css/modules/media/perfil-desktop.css',
   // JSON
   './dados/info.json',
 

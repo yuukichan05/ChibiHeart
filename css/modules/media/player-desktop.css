@@ -1,0 +1,114 @@
+/* ==========================================================================
+   ADAPTAÇÃO DESKTOP: APENAS PARA A TELA DO PLAYER (#PLAYER)
+   ========================================================================== */
+
+@media (min-width: 1024px) {
+    /* 1. TRAVA DE ROLAGEM GLOBAL APENAS QUANDO O PLAYER ESTIVER ATIVO */
+    body:has(#player.active) {
+        overflow: hidden !important;
+        height: 100vh;
+    }
+
+    /* ESCONDE O PLAYER CASO NÃO ESTEJA ATIVO (EVITA VAZAMENTO NO DOM) */
+    #player:not(.active) {
+        display: none !important;
+    }
+
+    /* 2. GRID PRINCIPAL DO PLAYER (RODA APENAS QUANDO .ACTIVE ESTIVER PRESENTE) */
+    #player.active {
+        display: grid !important;
+        grid-template-columns: 1fr 380px;
+        grid-template-rows: auto 1fr;
+        gap: 20px;
+        max-width: 1750px;
+        height: 100vh;
+        max-height: 100vh;
+        margin: 0 auto;
+        padding: 24px;
+        box-sizing: border-box;
+        align-items: start;
+        overflow: hidden;
+    }
+
+    /* 3. VÍDEO (ESQUERDA) */
+    #player.active .player-media-block {
+        grid-column: 1;
+        grid-row: 1;
+        position: relative;
+        top: 0;
+        border-radius: 8px;
+        overflow: hidden;
+        transform: translateZ(0);
+        will-change: transform;
+    }
+
+    /* 4. INFORMAÇÕES DO EPISÓDIO (ABAIXO DO VÍDEO) */
+    #player.active .player-episode-detail {
+        grid-column: 1;
+        grid-row: 2;
+        padding: 16px 0;
+        max-width: 100%;
+        margin: 0;
+    }
+
+    /* 5. COLUNA LATERAL DE EPISÓDIOS DA TELA DO PLAYER */
+    #player.active .proximos-container {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        padding: 0 8px 0 0;
+        max-width: 100%;
+        margin: 0;
+        position: sticky;
+        top: 24px;
+        max-height: calc(100vh - 48px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        transform: translateZ(0);
+        will-change: scroll-position;
+    }
+
+    /* Scrollbar Lateral do Player */
+    #player.active .proximos-container::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    #player.active .proximos-container::-webkit-scrollbar-thumb {
+        background: #333333;
+        border-radius: 4px;
+    }
+
+    #player.active .proximos-container::-webkit-scrollbar-thumb:hover {
+        background: #e50914;
+    }
+
+    /* 6. LISTA VERTICAL DE EPISÓDIOS DENTRO DO PLAYER */
+    #player.active .proximos-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        overflow-x: visible;
+        padding-bottom: 0;
+    }
+
+    /* 7. CARDS DOS EPISÓDIOS DENTRO DO PLAYER */
+    #player.active .card-player-ep {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        width: 100%;
+        align-items: center;
+        transform: translateZ(0);
+        will-change: transform;
+    }
+
+    #player.active .player-ep-media {
+        width: 150px;
+        flex-shrink: 0;
+    }
+
+    #player.active .player-card-title {
+        margin: 0;
+        font-size: 0.85rem;
+        flex: 1;
+    }
+}

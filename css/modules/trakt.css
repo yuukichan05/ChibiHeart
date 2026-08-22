@@ -85,6 +85,99 @@ body {
     text-overflow: ellipsis;
 }
 
+/* ==========================================================================
+   SELETOR DE PERFIL (NETFLIX STYLE)
+   ========================================================================== */
+.perfis-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    padding: 24px;
+    text-align: center;
+}
+
+.perfis-titulo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 32px;
+    letter-spacing: -0.5px;
+}
+
+.perfis-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    max-width: 600px;
+    margin-bottom: 40px;
+}
+
+.card-perfil-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text-secondary);
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.card-perfil-item:hover,
+.card-perfil-item:focus {
+    transform: scale(1.08);
+    color: var(--text-main);
+}
+
+.perfil-avatar-wrapper {
+    width: 90px;
+    height: 90px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-perfil-item:hover .perfil-avatar-wrapper,
+.card-perfil-item:focus .perfil-avatar-wrapper {
+    border-color: var(--text-main);
+    box-shadow: 0 0 20px var(--accent-glow-strong);
+}
+
+.perfil-avatar-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.perfil-nome-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.btn-perfil-acao {
+    padding: 10px 24px;
+    background: transparent;
+    border: 1px solid var(--text-secondary);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-perfil-acao:hover {
+    color: var(--text-main);
+    border-color: var(--text-main);
+}
+
 
 /* ==========================================================================
    2. HEADER, ESTRUTURA DAS VIEWS E TAB BAR

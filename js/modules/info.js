@@ -391,7 +391,18 @@ function preencherMetadados(item, containerGeneros) {
     const infoAno = document.getElementById("info-ano");
     const infoSinopse = document.getElementById("info-sinopse");
 
-    if (infoBanner) infoBanner.src = item.poster || item.banner || "";
+    if (infoBanner) {
+        // Detecta diretamente a largura da tela no carregamento
+        const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+
+        // Desktop exibe o Banner (horizontal), Mobile exibe o Poster (vertical)
+        if (isDesktop) {
+            infoBanner.src = item.banner || item.poster || "";
+        } else {
+            infoBanner.src = item.poster || item.banner || "";
+        }
+    }
+
     if (infoTitulo) infoTitulo.textContent = item.titulo || "Sem título";
     if (infoAno) infoAno.textContent = item.ano || "----";
     if (infoSinopse) infoSinopse.textContent = item.sinopse || "Sem sinopse disponível.";

@@ -1,0 +1,155 @@
+/* ==========================================================================
+   ADAPTAÇÃO DESKTOP (#INFO) - ESTILO NETFLIX / DISNEY+ AMBIENTE IMMERSIVE
+   ========================================================================== */
+
+@media (min-width: 1024px) {
+    /* 1. Oculta a view inativa */
+    #info:not(.active) {
+        display: none !important;
+    }
+
+    /* 2. Oculta botão voltar mobile quando sidebar/menu desktop estiver visível */
+    body:has(#info.active) .btn-voltar {
+        display: none !important;
+    }
+
+    /* 3. HERO FULLSCREEN & BANNER */
+    #info.active .info-hero {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 85vh; /* Ocupa quase toda a tela para valorizar o banner */
+        z-index: 1;
+    }
+
+    /* Troca dinâmica para imagem wide (Landscape/Banner) no Desktop */
+    #info.active .banner-img {
+        content: var(--img-banner, var(--img-poster));
+        object-fit: cover;
+        object-position: center 20%; /* Foca na área de interesse do banner */
+    }
+
+    /* 4. GRADIENTE DE SOMBREAMENTO VAZADO (Efeito Netflix/Cinema) */
+    #info.active .hero-overlay {
+        background: 
+            /* Sombra na esquerda para leitura do título */
+            linear-gradient(
+                90deg, 
+                var(--bg-main, #141414) 0%, 
+                rgba(20, 20, 20, 0.85) 35%, 
+                rgba(20, 20, 20, 0.4) 60%, 
+                transparent 100%
+            ),
+            /* Transição suave na base (vaza o banner para o fundo sólido) */
+            linear-gradient(
+                180deg, 
+                transparent 40%, 
+                rgba(20, 20, 20, 0.7) 70%, 
+                var(--bg-main, #141414) 100%
+            ),
+            /* Vinheta superior discreta */
+            linear-gradient(
+                180deg,
+                rgba(0, 0, 0, 0.5) 0%,
+                transparent 20%
+            );
+    }
+
+    /* 5. CONTEÚDO PRINCIPAL (SOBREPOSTO E ALINHADO) */
+    #info.active .info-content {
+        position: relative;
+        z-index: 2;
+        margin-top: 28vh; /* Posiciona o texto na altura ideal sobre o banner */
+        max-width: 1300px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 1rem; /* Paddings padronizados nas laterais */
+    }
+
+    #info.active .info-header-block {
+        max-width: 650px;
+    }
+
+    #info.active .info-header-block h2 {
+        font-size: 3.2rem;
+        font-weight: 900;
+        line-height: 1.1;
+        letter-spacing: -0.8px;
+        text-shadow: 0 4px 16px rgba(0, 0, 0, 0.8);
+    }
+
+    #info.active .info-meta,
+    #info.active .info-genres {
+        font-size: 0.95rem;
+        gap: 8px;
+    }
+
+    #info.active .info-genres {
+        margin-bottom: 20px;
+    }
+
+    /* BOTÃO PLAY / AÇÃO */
+    #info.active .acao-principal-container {
+        width: auto;
+        margin-top: 16px;
+        margin-bottom: 24px;
+    }
+
+    #info.active .btn-disney-play {
+        width: auto;
+        display: inline-flex;
+        padding: 12px 32px;
+        font-size: 1.05rem;
+        border-radius: 6px;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    #info.active .btn-disney-play:hover {
+        background-color: #e6e6e6;
+        transform: scale(1.03);
+    }
+
+    /* SINOPSE */
+    #info.active .info-synopsis-container {
+        max-width: 620px;
+    }
+
+    #info.active .info-synopsis-container p {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #d2d2d2;
+        -webkit-line-clamp: 4; /* Exibe mais detalhes da sinopse */
+    }
+
+    /* 6. SEÇÃO E LISTA DE EPISÓDIOS (MANTIDOS COMO ANTES) */
+    #info.active .info-episodes-container {
+        position: relative;
+        z-index: 2;
+        max-width: 1300px;
+        margin: 40px auto 0 auto;
+        padding: 0 1.5rem 48px 1rem; /* Paddings idênticos ao conteúdo superior */
+    }
+
+    #info.active .episodes-header .titulo-categoria {
+        font-size: 1.4rem;
+    }
+
+    #info.active .episodes-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 20px;
+    }
+
+    #info.active .card-ep {
+        transition: transform 0.2s ease;
+    }
+
+    #info.active .card-ep:hover {
+        transform: translateY(-4px);
+    }
+
+    #info.active .ep-media {
+        width: 12rem;
+    }
