@@ -31,22 +31,23 @@
 }
 
 /* Header de Perfil */
+/* Header de Perfil */
 .perfil-header {
     position: relative;
     z-index: 1;
     display: flex;
-    flex-direction: row;
+    flex-direction: row; /* Alinha foto e textos lado a lado */
     align-items: center;
-    justify-content: flex-start;
+    justify-content: flex-start; /* Alinha todo o conteúdo à esquerda */
     padding: 24px 16px 20px 16px;
-    gap: 16px;
+    gap: 16px; /* Espaço entre a foto e o texto */
 }
 
 .perfil-avatar-large {
     position: relative;
-    width: 86px;
-    height: 86px;
-    margin-bottom: 0;
+    width: 80px; /* Reduzido um pouco para casar com o tamanho do print */
+    height: 80px;
+    margin-bottom: 0; /* Remove a margem inferior antiga */
     flex-shrink: 0;
 }
 
@@ -55,16 +56,57 @@
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.2); /* Borda fina clara como no print */
     background-color: var(--bg-card);
+}
+
+/* Novo container para agrupar o Nome e a Localização (Ex: Brazil) */
+.perfil-dados-texto {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alinha os textos à esquerda */
+    justify-content: center;
+}
+
+.perfil-nome {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    text-align: left; /* Alinhado à esquerda */
+    letter-spacing: -0.3px;
+}
+
+/* Nova classe para a localização abaixo do nome */
+.perfil-localizacao {
+    font-size: 0.9rem;
+    color: var(--text-secondary); /* Cor cinza/secundária */
+    margin-top: 2px;
+}
+
+/* Engrenagem de Configuração no canto superior direito */
+.btn-config-header {
+    position: absolute;
+    top: 24px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-config-header .material-symbols-outlined {
+    font-size: 24px;
 }
 
 .btn-trocar-foto {
     position: absolute;
-    bottom: 0px;
-    right: 0px;
-    width: 28px;
-    height: 28px;
+    bottom: 2px;
+    right: 2px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     background: var(--accent-gradient);
     color: var(--text-main);
@@ -72,7 +114,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     transition: transform 0.2s ease;
 }
 
@@ -81,56 +123,9 @@
 }
 
 .btn-trocar-foto .material-symbols-outlined {
-    font-size: 15px;
+    font-size: 18px;
 }
 
-/* Container de Textos */
-.perfil-dados-texto {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-}
-
-.perfil-nome {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--text-main);
-    text-align: left;
-    letter-spacing: -0.3px;
-    margin: 0;
-}
-
-.perfil-localizacao {
-    font-size: 0.95rem;
-    color: var(--text-secondary, #8b8b8b);
-    margin-top: 2px;
-}
-
-/* Engrenagem de Configuração */
-.btn-config-header {
-    position: absolute;
-    top: 28px;
-    right: 16px;
-    background: none;
-    border: none;
-    color: var(--text-main, #ffffff);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.85;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.btn-config-header:hover {
-    opacity: 1;
-    transform: scale(1.05);
-}
-
-.btn-config-header .material-symbols-outlined {
-    font-size: 26px;
-}
 
 /* Lista de Opções e Links */
 .perfil-opcoes {

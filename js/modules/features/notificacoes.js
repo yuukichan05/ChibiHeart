@@ -4,7 +4,7 @@ import {
   limparNotificacoesDB,
   marcarNotificacoesLidasDB,
   sincronizarUploadGithub
-} from './db.js';
+} from '../database/db.js';
 
 /**
  * Retorna o título formatado da seção de data (Ex: "20 de Agosto de 2026")

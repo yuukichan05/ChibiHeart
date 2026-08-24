@@ -1,5 +1,5 @@
-import { buscarTodoProgressoDB } from "./db.js";
-import { obterInfoCompleta } from "./repository.js";
+import { buscarTodoProgressoDB } from "../database/db.js";
+import { obterInfoCompleta } from "../database/repository.js";
 
 function formatarTempo(segundos) {
   if (isNaN(segundos) || segundos <= 0) return "00:00";

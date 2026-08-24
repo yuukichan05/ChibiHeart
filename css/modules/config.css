@@ -1,0 +1,212 @@
+/* ==========================================================================
+   VIEW DE CONFIGURAÇÕES
+   ========================================================================== */
+
+#configuracoes {
+    padding: 16px 16px 32px 16px;
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* Header Topo Navegação (Configurações) */
+.notificacoes-header-topo {
+    padding-top: 8px;
+}
+
+.notificacoes-header-topo a {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.notificacoes-header-topo a:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Ponto de Status (GitHub Sync / Status de Configuração) */
+.status-dot-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #22c55e;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+}
+
+.status-dot.off {
+    background-color: #ef4444;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+}
+
+/* Container que Agrupa os Botões de Configuração */
+.config-grupo {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-card, #16151d); /* Cor escura do card */
+    border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.05));
+    border-radius: 16px; /* Bordas arredondadas externas bem marcadas */
+    margin-top: 16px;
+    overflow: hidden; /* Garante que os itens de dentro respeitem o arredondamento */
+}
+
+/* Item de opção dentro do grupo */
+.config-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s ease;
+    /* Linha divisória fina na base de cada item, exceto no último */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03); 
+}
+
+/* Remove a linha divisória do último item do grupo */
+.config-item:last-child {
+    border-bottom: none;
+}
+
+/* Efeito de hover ao passar o mouse ou tocar */
+.config-item:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+/* Alinhamento do Ícone + Texto à esquerda */
+.config-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-main, #ffffff);
+}
+
+/* Estilização padrão dos ícones (Roxinho de fundo) */
+.config-info .material-symbols-outlined {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background-color: rgba(168, 85, 247, 0.15); /* Fundo roxo suave */
+    color: var(--accent-color, #a855f7); /* Ícone roxo */
+    font-size: 20px;
+}
+
+/* Chevron/Seta da direita */
+.config-chevron {
+    color: var(--text-secondary, #6b7280);
+    font-size: 20px;
+}
+
+/* Mini Card de Perfil no Topo da Configuração */
+.config-perfil-mini {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: var(--bg-card, #16151d);
+    border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.05));
+    border-radius: 16px;
+    padding: 16px;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.config-avatar-mini {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+}
+
+.config-avatar-mini img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.config-perfil-dados {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.config-perfil-nome {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-main, #ffffff);
+}
+
+.config-perfil-local {
+    font-size: 0.85rem;
+    color: var(--text-secondary, #8b8b8b);
+    margin-top: 2px;
+}
+
+/* Estrutura de Agrupamento das Linhas (Geral, Conta, etc) */
+.config-grupo {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-card, #16151d);
+    border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.05));
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.config-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.config-item:last-child {
+    border-bottom: none;
+}
+
+.config-item:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.config-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* Ícones Roxos em caixas quadradas idênticas às do print */
+.config-info .material-symbols-outlined {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background-color: rgba(168, 85, 247, 0.12); /* Fundo roxo suave */
+    font-size: 22px;
+}
+
+.config-chevron {
+    color: var(--text-secondary, #6b7280);
+    font-size: 20px;
+}

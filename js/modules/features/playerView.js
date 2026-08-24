@@ -1,12 +1,12 @@
-// js/modules/playerView.js
+// js/modules/features/playerView.js
 
 import { 
   salvarProgressoDB, 
   buscarProgressoDB, 
   buscarTodoProgressoDB, 
   sincronizarUploadGithub 
-} from "./db.js";
-import { obterAnimePorId } from "./repository.js";
+} from "../database/db.js";
+import { obterAnimePorId } from "../database/repository.js";
 
 let todosEpisodiosAtuais = [];
 let epIdAtual = null;

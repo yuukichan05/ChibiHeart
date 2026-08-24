@@ -1,5 +1,5 @@
-import { buscarTodoProgressoDB } from "./db.js";
-import { obterInfoCompleta } from "./repository.js";
+import { buscarTodoProgressoDB } from "../database/db.js";
+import { obterInfoCompleta } from "../database/repository.js";
 
 // Formata segundos em MM:SS ou HH:MM:SS
 function formatarTempo(segundos) {

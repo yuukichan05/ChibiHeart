@@ -1,6 +1,6 @@
 // js/modules/pesquisa.js
 
-import { obterInfoCompleta } from './repository.js'; //[cite: 1]
+import { obterInfoCompleta } from '../database/repository.js';
 
 function normalizarTexto(texto) { //[cite: 1]
     return (texto || "") //[cite: 1]

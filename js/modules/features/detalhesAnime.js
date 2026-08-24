@@ -1,7 +1,7 @@
-// js/modules/info.js
+// js/modules/features/info.js
 
-import { buscarTodoProgressoDB, buscarProgressoDB, alternarConcluidoDB } from './db.js';
-import { obterAnimePorId } from './repository.js';
+import { buscarTodoProgressoDB, buscarProgressoDB, alternarConcluidoDB } from '../database/db.js';
+import { obterAnimePorId } from '../database/repository.js';
 
 // --- ESTADO LOCAL E MAPEAMENTOS ---
 export let episodesMap = {}; 

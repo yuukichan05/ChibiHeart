@@ -3,15 +3,16 @@ import {
   carregarAnimesRecomendados, 
   carregarAnimesRecentes, 
   carregarAnimesPorGenero 
-} from './modules/inicio.js';
+} from './modules/features/inicio.js';
 
-import { gerenciarTelaInfo } from './modules/info.js';
-import { gerenciarTelaPlayer, verificarESincronizarAoSairDoPlayer } from './modules/playerView.js';
-import { inicializarPesquisa } from './modules/pesquisa.js';
-import { gerenciarTelaHistorico } from './modules/historico.js';
-import { renderizarContinuarAssistindo } from './modules/continuarAssistindo.js';
-import { inicializarPerfil, gerenciarTelaPerfil, autoSincronizarGithub } from './modules/perfil.js';
-import { gerenciarTelaNotificacoes, atualizarBadgeNotificacao } from './modules/notificacoes.js';
+import { gerenciarTelaInfo } from './modules/features/detalhesAnime.js';
+import { gerenciarTelaPlayer, verificarESincronizarAoSairDoPlayer } from './modules/features/playerView.js';
+import { inicializarPesquisa } from './modules/features/pesquisa.js';
+import { gerenciarTelaHistorico } from './modules/features/historico.js';
+import { renderizarContinuarAssistindo } from './modules/features/continuarAssistindo.js';
+import { inicializarPerfil, gerenciarTelaPerfil } from './modules/features/perfil.js';
+import { inicializarConta, autoSincronizarGithub } from './modules/features/conta.js';
+import { gerenciarTelaNotificacoes, atualizarBadgeNotificacao } from './modules/features/notificacoes.js';
 
 /* ==========================================================================
    CAPTURA GLOBAL DE IMAGENS
@@ -34,12 +35,8 @@ function inicializarScrollHeader() {
   }, { passive: true });
 }
 
-// Armazena a rota anterior para saber se o usuário está SAINDO do Player
 let rotaAnterior = "";
 
-/**
- * Re-renderiza exclusivamente a view que o usuário está visualizando no momento
- */
 export async function atualizarTelaAtiva() {
   const hashCompleta = window.location.hash || "#inicio";
   const novaRota = hashCompleta.split("?")[0];
@@ -69,15 +66,12 @@ async function processarRota() {
   const views = document.querySelectorAll(".app-view");
   let rotaExiste = false;
 
-  // 1. Verifica se está saindo do Player e executa a verificação
   if (rotaAnterior === "#player" && novaRota !== "#player") {
     await verificarESincronizarAoSairDoPlayer();
   }
 
-  // Atualiza a rota anterior
   rotaAnterior = novaRota;
 
-  // 2. Alterna visibilidade das Views
   views.forEach((view) => {
     const ativa = `#${view.id}` === novaRota;
     view.classList.toggle("active", ativa);
@@ -88,12 +82,10 @@ async function processarRota() {
     document.getElementById("erro")?.classList.add("active");
   }
 
-  // ATUALIZADO: Atualiza o estado ativo em TODOS os menus de navegação (TabBar mobile, Sidebar e Nav Links desktop)
   document.querySelectorAll(".tab-item, .sidebar-item, .nav-item, .nav-link").forEach((navItem) => {
     navItem.classList.toggle("active", navItem.getAttribute("href") === novaRota);
   });
 
-  // 3. ROTEAMENTO ESPECÍFICO
   switch (novaRota) {
     case "#inicio":
     case "":
@@ -129,28 +121,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   inicializarPesquisa();
   inicializarPerfil();
+  inicializarConta();
 
   window.addEventListener("hashchange", processarRota);
   await processarRota();
 
-  // ESCUTA ATUALIZAÇÕES AUTOMÁTICAS E RE-RENDERIZA A TELA ATIVA
   window.addEventListener("dadosAtualizados", async () => {
     await atualizarTelaAtiva();
   });
 
-  // VERIFICA NOVAS SINCRONIZAÇÕES QUANDO O USUÁRIO RETORNA À ABA
   window.addEventListener("focus", async () => {
     await autoSincronizarGithub();
   });
 
-  // POLLING PERIÓDICO EM SEGUNDO PLANO (A CADA 45 SEGUNDOS)
   setInterval(async () => {
     if (document.visibilityState === "visible") {
       await autoSincronizarGithub();
     }
   }, 45 * 1000);
 
-  // Carrega as fileiras adicionais da Home em segundo plano
   try {
     await Promise.all([
       carregarAnimesRecomendados(),

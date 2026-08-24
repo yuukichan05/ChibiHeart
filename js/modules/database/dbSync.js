@@ -1,6 +1,6 @@
 // dbSync.js - Exportação, Importação e Sincronização em Nuvem (GitHub Gist)
 
-import { adicionarNotificacao } from './notificacoes.js';
+import { adicionarNotificacao } from '../features/notificacoes.js';
 import {
   abrirBanco,
   STORES,
