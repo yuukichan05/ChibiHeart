@@ -20,6 +20,11 @@ let timerCincoMinutos = null;
 let timerPausaCincoSegundos = null;
 let assistiuAlgo = false;
 
+// Controle de Áudio (DUB / LEG / UNICO)
+let idiomaAtual = 'dub';
+let urlDubAtual = '';
+let urlLegAtual = '';
+
 function makeEpisodeId(animeId, seasonIdx, episodeIdx) {
   const s = String(seasonIdx).padStart(2, '0');
   const e = String(episodeIdx).padStart(2, '0');
@@ -105,6 +110,9 @@ export function limparPlayer() {
   epIdAtual = null;
   animeIdAtual = null;
   ultimoTempoSalvoDB = 0;
+  urlDubAtual = '';
+  urlLegAtual = '';
+  idiomaAtual = 'dub';
 }
 
 // Chamado pela main.js ao trocar de rota para verificar se algo foi assistido
@@ -124,13 +132,38 @@ export async function verificarESincronizarAoSairDoPlayer() {
       }
     }
 
-    // CORREÇÃO: Força o corte imediato do player antes de aguardar a API externa
     limparPlayer();
-
     await sincronizarUploadGithub();
   } else {
-    // Garante que o player seja desligado se nada tiver sido assistido
     limparPlayer();
+  }
+}
+
+// Atualiza o estado visual do botão de áudio DUB / LEG sem innerHTML
+function atualizarBotaoAudio(btnAudio, idioma, temAmbos) {
+  if (!btnAudio) return;
+
+  if (temAmbos) {
+    btnAudio.disabled = false;
+    btnAudio.style.opacity = "1";
+    btnAudio.style.cursor = "pointer";
+    btnAudio.style.filter = "none";
+    btnAudio.textContent = idioma === 'dub' ? "Dublado" : "Legendado";
+    btnAudio.title = `Clique para alternar para ${idioma === 'dub' ? 'Legendado' : 'Dublado'}`;
+  } else {
+    btnAudio.disabled = true;
+    btnAudio.style.opacity = "0.5";
+    btnAudio.style.cursor = "not-allowed";
+    btnAudio.style.filter = "grayscale(100%)";
+    btnAudio.title = "Apenas uma opção de áudio disponível";
+
+    if (idioma === 'dub') {
+      btnAudio.textContent = "Dublado";
+    } else if (idioma === 'leg') {
+      btnAudio.textContent = "Legendado";
+    } else {
+      btnAudio.textContent = "Vídeo";
+    }
   }
 }
 
@@ -204,7 +237,40 @@ export async function gerenciarTelaPlayer() {
     epIdAtual = epId;
     animeIdAtual = animeId;
     ultimoTempoSalvoDB = 0;
-    assistiuAlgo = false; // Reseta a flag ao iniciar novo episódio
+    assistiuAlgo = false;
+
+    // Resgate de URLs de áudio com compatibilidade (url_dub -> video_dub || url_leg -> video_leg)
+    urlDubAtual = episodioAtual.url_dub || episodioAtual.video_dub || "";
+    urlLegAtual = episodioAtual.url_leg || episodioAtual.video_leg || "";
+    const urlVideoUnico = episodioAtual.video || "";
+
+    // Análise da ordem das chaves do JSON para definir qual áudio inicia primeiro
+    const keys = Object.keys(episodioAtual);
+    const idxDub = keys.findIndex(k => k === "url_dub" || k === "video_dub");
+    const idxLeg = keys.findIndex(k => k === "url_leg" || k === "video_leg");
+
+    const temAmbos = Boolean(urlDubAtual && urlLegAtual);
+
+    if (temAmbos) {
+      // Se 'url_leg' vier antes de 'url_dub' na estrutura do JSON, inicia em Legendado
+      if (idxLeg !== -1 && idxDub !== -1 && idxLeg < idxDub) {
+        idiomaAtual = 'leg';
+      } else {
+        idiomaAtual = 'dub';
+      }
+    } else if (urlDubAtual) {
+      idiomaAtual = 'dub';
+    } else if (urlLegAtual) {
+      idiomaAtual = 'leg';
+    } else {
+      idiomaAtual = 'unico';
+    }
+
+    // Seleção da URL inicial do player
+    let videoInicial = "";
+    if (idiomaAtual === 'dub') videoInicial = urlDubAtual;
+    else if (idiomaAtual === 'leg') videoInicial = urlLegAtual;
+    else videoInicial = urlVideoUnico || urlDubAtual || urlLegAtual;
 
     const videoElement = document.getElementById("player-video");
     const containerPlayer = document.getElementById("custom-player-container");
@@ -217,12 +283,16 @@ export async function gerenciarTelaPlayer() {
     const timeDisplay = document.getElementById("player-time-display");
     const btnFullscreen = document.getElementById("btn-player-fullscreen");
 
+    // Seleciona o botão nativo do HTML e aplica a renderização inicial
+    const btnAudio = document.getElementById("btn-player-audio");
+    atualizarBotaoAudio(btnAudio, idiomaAtual, temAmbos);
+
     const metaTag = document.getElementById("player-meta-tag");
     const tituloEp = document.getElementById("player-titulo-ep");
     const btnVerTodos = document.getElementById("lnk-ver-todos");
 
     if (videoElement) {
-      videoElement.src = episodioAtual.video || "";
+      videoElement.src = videoInicial;
       videoElement.poster = episodioAtual.thumb || "";
 
       async function restaurarTempoSalvo() {
@@ -267,12 +337,42 @@ export async function gerenciarTelaPlayer() {
         btnPlay.addEventListener("click", togglePlay);
         videoElement.addEventListener("click", togglePlay);
 
+        // Função de troca de áudio dinâmica preservando a posição atual
+        const alternarAudioHandler = () => {
+          if (!urlDubAtual || !urlLegAtual) return;
+
+          const tempoAtual = videoElement.currentTime;
+          const estavaPausado = videoElement.paused;
+
+          idiomaAtual = (idiomaAtual === 'dub') ? 'leg' : 'dub';
+          const novaUrl = (idiomaAtual === 'dub') ? urlDubAtual : urlLegAtual;
+
+          videoElement.src = novaUrl;
+
+          const sincronizarAposTroca = () => {
+            videoElement.currentTime = tempoAtual;
+            if (!estavaPausado) {
+              videoElement.play().catch(e => console.log("Erro ao retomar reprodução pós troca de áudio:", e));
+            }
+          };
+
+          videoElement.addEventListener('loadedmetadata', sincronizarAposTroca, { once: true });
+          atualizarBotaoAudio(document.getElementById("btn-player-audio"), idiomaAtual, true);
+        };
+
+        // Evento direto no botão sem utilizar delegadores complexos ou innerHTML
+        if (btnAudio) {
+          btnAudio.addEventListener("click", (e) => {
+            e.stopPropagation();
+            alternarAudioHandler();
+          });
+        }
+
         videoElement.addEventListener("play", () => {
           btnPlay.innerHTML = `<span class="material-symbols-outlined">pause</span>`;
           resetAutoOcultarControles();
           assistiuAlgo = true;
 
-          // Inicia o timer de 5 minutos e cancela eventual timer de pausa
           iniciarTimerCincoMinutos(videoElement);
         });
 
@@ -280,7 +380,6 @@ export async function gerenciarTelaPlayer() {
           btnPlay.innerHTML = `<span class="material-symbols-outlined">play_arrow</span>`;
           mostrarControles();
 
-          // Salva o progresso localmente
           const tempoAtual = Math.floor(videoElement.currentTime);
           const duracaoTotal = Math.floor(videoElement.duration || 0);
           if (tempoAtual > 0 && epIdAtual) {
@@ -288,7 +387,6 @@ export async function gerenciarTelaPlayer() {
             ultimoTempoSalvoDB = tempoAtual;
           }
 
-          // Cancela timer de 5min e agenda envio para 5s após a pausa
           limparTimersSync();
           agendarSyncPausaCincoSegundos(videoElement);
         });
@@ -321,7 +419,6 @@ export async function gerenciarTelaPlayer() {
 
           timeDisplay.textContent = `${formatarTempo(tempoAtual)} • ${formatarTempo(duracaoTotal)}`;
 
-          // Salva localmente no DB a cada 10 segundos
           const segAtual = Math.floor(tempoAtual);
           if (segAtual >= 15 && (segAtual - ultimoTempoSalvoDB >= 10)) {
             ultimoTempoSalvoDB = segAtual;

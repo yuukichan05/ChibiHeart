@@ -538,7 +538,7 @@
     "poster": "https://image.tmdb.org/t/p/original/sVc9arJOuIvOKOEFkQkWImvb0CZ.jpg",
     "temporadas": [
       {
-        "nome": "1ª Temporada Dub",
+        "nome": "1ª Temporada",
         "episodios": [
           {
             "id": "oshi no ko_s01e01",
@@ -547,7 +547,7 @@
             "descricao": "O primeiro episódio apresenta a dinâmica entre mãe e filhos e o começo do conflito central.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/rvy4W28wYkct3IFxU0RGF2uHppG.jpg",
             "duracao": "90 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-1.mp4"
+            "url_dub": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-1.mp4"
           },
           {
             "id": "oshi no ko_s01e02",
@@ -556,7 +556,7 @@
             "descricao": "Decisões difíceis aparecem e a história ganha camadas inesperadas.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/klFBxM7QHRtYvuqBcHGSoJaY5ES.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-2.mp4"
+            "url_dub": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-2.mp4"
           },
           {
             "id": "oshi no ko_s01e03",
@@ -565,7 +565,7 @@
             "descricao": "Kana oferece a Aqua um papel em uma série de TV, mas ele recusa. Até perceber que viu o nome do produtor na lista de contatos do telefone de Ai.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/gRmEOAKLkF2qWUT0GB4QQcI2X1q.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-3.mp4"
+            "url_dub": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-3.mp4"
           },
           {
             "id": "oshi no ko_s01e04",
@@ -574,7 +574,7 @@
             "descricao": "Kana faz o que pode para elevar a qualidade da série, mas fica chocada com a indiferença do colega de cena e do diretor. A atuação de Aqua muda tudo.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/h44DwOqXqq44KzNHOzkNpcTRVRR.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-4.mp4"
+            "url_dub": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-4.mp4"
           },
           {
             "id": "oshi no ko_s01e05",
@@ -583,7 +583,7 @@
             "descricao": "Ansiosa para formar um grupo de idols, Ruby tenta recrutar Kana. Relutante no início, ela reconsidera a ideia depois que Aqua a encoraja.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/h0wFnTNhZzQ23IUJmyR7uy9bwVa.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-5.mp4"
+            "url_dub": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-5.mp4"
           },
           {
             "id": "oshi no ko_s01e06",
@@ -592,7 +592,7 @@
             "descricao": "Decisões difíceis aparecem e a história ganha camadas inesperadas.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/klFBxM7QHRtYvuqBcHGSoJaY5ES.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-6.mp4"
+            "url_dub": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-6.mp4"
           },
           {
             "id": "oshi no ko_s01e07",
@@ -601,7 +601,7 @@
             "descricao": "Com o apoio dos colegas, Akane decide ficar no programa. Enquanto isso, Aqua bola um plano engenhoso para melhorar a imagem dela.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/culBlCRSAeAbCmOqw6QnCo0z7td.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-7.mp4"
+            "url_dub": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-7.mp4"
           },
           {
             "id": "oshi no ko_s01e08",
@@ -610,7 +610,7 @@
             "descricao": "Aqua fica confuso com a imitação perfeita que Akane faz de Ai. Depois, Akane chega a uma conclusão sobre Ai que o deixa bastante abalado.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/1NqAdx1Ii9OHR12PzC4IVTDQXti.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-8.mp4"
+            "url_dub": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-8.mp4"
           },
           {
             "id": "oshi no ko_s01e09",
@@ -619,7 +619,7 @@
             "descricao": "Convidada por Aqua, Mem visita a Strawberry Productions para discutir a ideia de entrar no B Komachi, mas Miyako logo percebe que ela está escondendo alguma coisa.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/hGvzVPKuNBUThYsBlpxGMFkuueU.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-9.mp4"
+            "url_dub": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-9.mp4"
           },
           {
             "id": "oshi no ko_s01e10",
@@ -628,7 +628,7 @@
             "descricao": "Mesmo relutante, Kana concorda em assumir a liderança no B Komachi. O grupo se prepara para a apresentação no festival de idols com a ajuda de Pieyon.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/aNYlFnW3TsubWgi3GphiBdI0WgZ.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-10.mp4"
+            "url_dub": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-10.mp4"
           },
           {
             "id": "oshi no ko_s01e11",
@@ -637,7 +637,7 @@
             "descricao": "O B Komachi sobe ao palco. Preocupada por não estar sendo tão notada quanto o resto do grupo, Kana se surpreende ao ver um rosto familiar na multidão.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/3OnHltmntZhMm1DE9urxnoLxRVj.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-11.mp4"
+            "url_dub": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/Primeira-Dub-11.mp4"
           }
         ]
       },
@@ -651,7 +651,7 @@
             "descricao": "Aqua segue nos ensaios com Kana e Akane, mas tenta aproveitar o momento para se aproximar da verdade sobre Ai.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/z05lf0LjvKIFw4sX3TFvN97hAvF.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/12.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/12.mp4"
           },
           {
             "id": "oshi no ko_s02e13",
@@ -660,7 +660,7 @@
             "descricao": "Um pedido repentino de Abiko causa um caos na produção de Tokyo Blade. Faltando apenas 20 dias para a estreia, Raida tenta convencê-la a mudar de ideia.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/tYPdMObN5OskrhIBmTMqNHrNm14.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/13.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/13.mp4"
           },
           {
             "id": "oshi no ko_s02e14",
@@ -669,7 +669,7 @@
             "descricao": "Akane leva Aqua ao teatro. Muito impressionado, ele decide se encontrar com Kichijoji e lhe pedir um favor.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/mcZdAr7RsCI55CdvEh4YDdWAIP2.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/14.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/14.mp4"
           },
           {
             "id": "oshi no ko_s02e15",
@@ -678,7 +678,7 @@
             "descricao": "Após assistir a uma peça escrita por GOA, Abiko decide confiar nele, mas com uma condição. Aqua e os outros atores começam a ensaiar com o novo roteiro.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/zPxK6cTsqnrAjiAzIYgq46mSGL0.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/15.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/15.mp4"
           },
           {
             "id": "oshi no ko_s02e16",
@@ -687,7 +687,7 @@
             "descricao": "Apesar de se considerar sem talento, Aqua revela seu verdadeiro motivo para atuar. Akane promete apoiá-lo, mas pede um favor.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/gWlvxad1umSUdNpxoGRbBXG8xyM.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/16.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/16.mp4"
           },
           {
             "id": "oshi no ko_s02e17",
@@ -696,7 +696,7 @@
             "descricao": "Chegou a hora da grande estreia. Apesar das dúvidas sobre sua atuação, Melt se esforça para provar seu valor e segue os conselhos de Aqua.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/ggKVUgYx5p8vqlfXN15g2f9zRwc.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/17.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/17.mp4"
           },
           {
             "id": "oshi no ko_s02e18",
@@ -705,7 +705,7 @@
             "descricao": "No momento decisivo da peça, Akane finalmente tem seu tão esperado confronto com Kana.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/pG324GkmFrLK1K8MP1MtNPvGORE.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/18.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/18.mp4"
           },
           {
             "id": "oshi no ko_s02e19",
@@ -714,7 +714,7 @@
             "descricao": "Apesar de sempre tentar trabalhar bem em equipe para sobreviver na indústria do entretenimento, Kana é encorajada por Aqua a atuar do jeito que realmente deseja.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/y28v99JXNngNCBamnFf6HIpMMPC.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/19.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/19.mp4"
           },
           {
             "id": "oshi no ko_s02e20",
@@ -723,7 +723,7 @@
             "descricao": "Aqua relembra a trágica morte de Ai e transforma sua frustração, tristeza e arrependimento em uma performance emocionante.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/2988OOYtTt2cgPqQXD8LWtjawCg.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/20.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/20.mp4"
           },
           {
             "id": "oshi no ko_s02e21",
@@ -732,7 +732,7 @@
             "descricao": "Himekawa revela mais detalhes a Aqua sobre a surpreendente conexão entre eles. Ruby e suas colegas de banda trabalham duro para turbinar o canal de vídeos online.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/utlwIdXY7Wn55AXAkB1rsBR0gbV.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/21.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/21.mp4"
           },
           {
             "id": "oshi no ko_s02e22",
@@ -741,7 +741,7 @@
             "descricao": "Kana fica desconcertada com a gentileza de Aqua enquanto fazem compras para a viagem. Mais tarde, Aqua toma uma decisão sobre seu relacionamento com Akane.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/obJ4P3XsGyN1I0IeVGeC9FYGxZE.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/22.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/22.mp4"
           },
           {
             "id": "oshi no ko_s02e23",
@@ -750,7 +750,7 @@
             "descricao": "Aqua visita o hospital onde ele e Ruby nasceram, na esperança de descobrir como sua vida passada chegou ao fim.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/gsL6lGmwWXTG3McvxI8EfiRBp7W.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/23.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/23.mp4"
           },
           {
             "id": "oshi no ko_s02e24",
@@ -759,7 +759,7 @@
             "descricao": "Aqua revela a verdade sobre a descoberta do corpo de Gorou. Uma garotinha misteriosa manda informações para Ruby.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/vVfo7FUIPjJrb92ERlfAsKgsObl.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/24.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/24.mp4"
           }
         ]
       },
@@ -773,7 +773,7 @@
             "descricao": "Temas de obsessão e fama são explorados neste episódio.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/1XPtlsRHFY4H7CdYZItnSZa7Knc.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/25.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/25.mp4"
           },
           {
             "id": "oshi-no-ko_s03e26",
@@ -782,7 +782,7 @@
             "descricao": "Ruby continua no programa de TV, seguindo as dicas de Ichigo e se aproximando do assistente de direção.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/fHEVXh9dU2L2geDU7wDBmUt1yw2.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/26.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/26.mp4"
           },
           {
             "id": "oshi-no-ko_s03e27",
@@ -791,7 +791,7 @@
             "descricao": "Um incidente envolvendo uma cosplayer causa grande comoção e críticas a um programa de TV.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/p1JNFzUHUi6iuC8m6KfhW0EF7ZJ.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/27.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/27.mp4"
           },
           {
             "id": "oshi-no-ko_s03e28",
@@ -800,7 +800,7 @@
             "descricao": "Aqua questiona Ruby sobre seus métodos e acaba descobrindo algumas coisas.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/8S0cS8muiH5iQwF53tOAHFld1hW.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/28.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/28.mp4"
           },
           {
             "id": "oshi-no-ko_s03e29",
@@ -809,7 +809,7 @@
             "descricao": "Akane começa a investigar tudo sobre Hikaru Kamiki, mas sem mencionar nada para Aqua.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/yGqyqnR8jZMBwRWRjSiqBsnbL6x.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/29.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/29.mp4"
           },
           {
             "id": "oshi-no-ko_s03e30",
@@ -818,7 +818,7 @@
             "descricao": "Um jornalista vai atrás de Kana, pronto para questionar sua ida ao estúdio do diretor Shima",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/os6DdBAJGljvP6EYa7ETIeTVAsw.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/30.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/30.mp4"
           },
           {
             "id": "oshi-no-ko_s03e31",
@@ -827,7 +827,7 @@
             "descricao": "O escândalo de Kana está prestes a sair em público e para salvá-la, Aqua toma uma decisão após consultar Ruby.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/iJOvKTBpkm0QicwHjZWzCdMmsBA.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/31.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/31.mp4"
           },
           {
             "id": "oshi-no-ko_s03e32",
@@ -836,7 +836,7 @@
             "descricao": "Kana percebe que foi protegida pelo Aqua após a notícia sobre ele e Ruby serem filhos da Ai se espalhar.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/pkDQjX6ngKU8OcYsl4pyiTPqeZP.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/32.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/32.mp4"
           },
           {
             "id": "oshi-no-ko_s03e33",
@@ -845,7 +845,7 @@
             "descricao": "Os bastidores do filme 'A Mentira de 15 anos' começa, mas há um embate sobre quem deve fazer Ai no filme.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/g9irQl8mnzKd5zeC0o9Ycd6bcee.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/33.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/33.mp4"
           },
           {
             "id": "oshi-no-ko_s03e34",
@@ -854,7 +854,7 @@
             "descricao": "Akane revela as verdadeiras intenções de Frill com o teste de elenco, e Ruby arranja uma nova motivação.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/7ZOUaO6C7lddObfPpE6gIpPn097.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/34.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/34.mp4"
           },
           {
             "id": "oshi-no-ko_s03e35",
@@ -863,7 +863,7 @@
             "descricao": "Aqua se depara com a mãe de Sarina, e descobre o que houve com ela e a família após a morte de Sarina.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/yxsAJHYZleY3LSihDwpqzgKL5tW.jpg",
             "duracao": "24 min",
-            "video": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/35.mp4"
+            "url_leg": "https://ia800705.us.archive.org/15/items/OshiS01S02S03/35.mp4"
           }
         ]
       }
@@ -884,7 +884,7 @@
     "poster": "https://image.tmdb.org/t/p/original/9hRuMU33DBz4z1vaYBRqLLuFFbQ.jpg",
     "temporadas": [
       {
-        "nome": "1ª Temporada Dub",
+        "nome": "1ª Temporada",
         "episodios": [
           {
             "id": "seihantai_s01e01",
@@ -893,7 +893,7 @@
             "descricao": "Suzuki é uma menina do tipo descolada e cheia de amizades, enquanto Tani é quieto e sempre impassível...",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/zJ8F0h0bfUQiDtMYoXI3TTcqTbr.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/1.mp4"
+            "url_dub": "https://ia600905.us.archive.org/12/items/oppositesS01/1.mp4"
           },
           {
             "id": "seihantai_s01e02",
@@ -902,7 +902,7 @@
             "descricao": "Suzuki e Tani finalmente terão seu primeiro encontro, que é marcado por muitas emoções.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/j4N8U1Ko095J34hqlkGtOHeBDuD.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/2.mp4"
+            "url_dub": "https://ia600905.us.archive.org/12/items/oppositesS01/2.mp4"
           },
           {
             "id": "seihantai_s01e03",
@@ -911,7 +911,7 @@
             "descricao": "O fato de Suzuki e Tani estarem juntos é uma incógnita para Taira, que tenta entender a relação como um todo.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/kzwArBjJYjwOIVyQKjH3Wa7xLJP.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/3.mp4"
+            "url_dub": "https://ia600905.us.archive.org/12/items/oppositesS01/3.mp4"
           },
           {
             "id": "seihantai_s01e04",
@@ -920,7 +920,7 @@
             "descricao": "Suzuki organiza um grupo de estudo para os exames de final de semestre. Ela fica feliz em ver que Tani está se aproximando de seus amigos. Então, finalmente, chega o dia do festival de verão.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/sbqLyWw494FzqXkPGTzWmECrlfs.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/4.mp4"
+            "url_dub": "https://ia600905.us.archive.org/12/items/oppositesS01/4.mp4"
           },
           {
             "id": "seihantai_s01e05",
@@ -929,7 +929,7 @@
             "descricao": "Yamada está com uma certa dúvida sobre o amor e pede aos amigos para ajudarem a esclarecê-la.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/drvq3TWFixfmVNu4HeosHo0mNB4.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/5.mp4"
+            "url_dub": "https://ia600905.us.archive.org/12/items/oppositesS01/5.mp4"
           },
           {
             "id": "seihantai_s01e06",
@@ -938,7 +938,7 @@
             "descricao": "Chega a época do Festival Cultural na escola, mas um encontro inusitado nesse evento assusta Yamada.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/nXWfE9t7r0f4oZtVCb3L1epHmHU.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/6.mp4"
+            "url_dub": "https://ia600905.us.archive.org/12/items/oppositesS01/6.mp4"
           },
           {
             "id": "seihantai_s01e07",
@@ -947,7 +947,7 @@
             "descricao": "Nishi sofre por não conseguir entender seus próprios sentimentos, mas tem a ajuda de seus amigos.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/a3hUbc5VffUNxqCFAi9mJ4xSnf7.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/7.mp4"
+            "url_dub": "https://ia600905.us.archive.org/12/items/oppositesS01/7.mp4"
           },
           {
             "id": "seihantai_s01e08",
@@ -956,7 +956,7 @@
             "descricao": "O verão terminou e o outono já está vindo. Hora de aproveitarem o que a estação do ano tem a oferecer.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/h52qNjyK9OWTaDWCBx63eeK26fM.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/8.mp4"
+            "url_dub": "https://ia600905.us.archive.org/12/items/oppositesS01/8.mp4"
           },
           {
             "id": "seihantai_s01e09",
@@ -965,7 +965,7 @@
             "descricao": "O aniversário do Tani está chegando e Suzuki está ansiosa para fazer uma bela surpresa a ele!",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/5zYubjFRu4kjQt50Vezn1iG2ySb.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/9.mp4"
+            "url_dub": "https://ia600905.us.archive.org/12/items/oppositesS01/9.mp4"
           },
           {
             "id": "seihantai_s01e10",
@@ -974,7 +974,7 @@
             "descricao": "Chegou a hora de Suzuki, Tani e seus amigos irem a uma excursão escolar, mas há muitos planos a serem feitos.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/1Zv3mma8R5NLfWA0NOJXOjY4vG9.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/10.mp4"
+            "url_dub": "https://ia600905.us.archive.org/12/items/oppositesS01/10.mp4"
           },
           {
             "id": "seihantai_s01e11",
@@ -983,7 +983,7 @@
             "descricao": "Tudo vai bem durante a viagem de excursão, assim como vários relacionamentos paralelos.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/3krNHdteKbrm5vjuuyttaoh8WuS.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/11.mp4"
+            "url_dub": "https://ia600905.us.archive.org/12/items/oppositesS01/11.mp4"
           },
           {
             "id": "seihantai_s01e12",
@@ -992,12 +992,12 @@
             "descricao": "Tani e Suzuki aproveitam mais um dia para sair e demonstrar as pequenas mudanças positivas entre eles.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/3o4Xb5E8yocJi2a0KEOAr4akIUV.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/12.mp4"
+            "url_dub": "https://ia600905.us.archive.org/12/items/oppositesS01/12.mp4"
           }
         ]
       },
       {
-        "nome": "2ª Temporada Leg",
+        "nome": "2ª Temporada",
         "episodios": [
           {
             "id": "seihantai_s02e13",
@@ -1006,7 +1006,7 @@
             "descricao": "À medida que a primeira véspera de Natal juntos se aproxima, Suzuki e Tani planejam seu encontro. Eles decidem encarar o desafio de fazer um bolo, e o coração de Suzuki dispara ao ver a seriedade com que Tani encara tudo; e então...",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/mg1m3qwjJI2DCoaNFugpaFM4neW.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-1.mp4"
+            "url_leg": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-1.mp4"
           },
           {
             "id": "seihantai_s02e14",
@@ -1015,7 +1015,7 @@
             "descricao": "Em meio às férias de inverno, Yamada fica ansioso com o fato de que seu relacionamento com Nishi simplesmente não tem avançado muito. Ele usa a lição de casa como pretexto para vê-la, mas não consegue encontrar o momento certo para revelar seus sentimentos.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/lEHeSZLCPu3zZIaULslblJAwsp2.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-2.mp4"
+            "url_leg": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-2.mp4"
           },
           {
             "id": "seihantai_s02e15",
@@ -1024,7 +1024,7 @@
             "descricao": "Tani conta à família que está namorando e convida Suzuki para visitá-los no dia de Ano-Novo. Nervoso com o convite, Suzuki comete uma gafe atrás da outra diante da família de Tani. No último dia das férias de inverno, o grupo habitual de amigos aproveita para visitar um santuário. Tocados pelas palavras de Tani sobre viver sem arrependimentos, cada um deles entra no ano novo carregando esperanças e sentimentos no coração.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/e1O9AH0CtDf4SNHoA1sHplhqx9q.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-3.mp4"
+            "url_leg": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-3.mp4"
           },
           {
             "id": "seihantai_s02e16",
@@ -1033,7 +1033,7 @@
             "descricao": "Aos poucos, a relação entre Azuma e Taira parece estar mudando, assim como a da Nishi e Yamada.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/fwJPPDNlbu4f70nCeycKZsUq8by.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-4.mp4"
+            "url_leg": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-4.mp4"
           },
           {
             "id": "seihantai_s02e17",
@@ -1042,7 +1042,7 @@
             "descricao": "Indisponível",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/kwGVKeGsQ9kd2TYb8EdpYHpWoik.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-5.mp4"
+            "url_leg": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-5.mp4"
           },
           {
             "id": "seihantai_s02e18",
@@ -1051,7 +1051,7 @@
             "descricao": "",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/oQhZJOutItvcIDOEYPEKzVu0uVd.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-6.mp4"
+            "url_leg": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-6.mp4"
           },
           {
             "id": "seihantai_s02e19",
@@ -1060,7 +1060,7 @@
             "descricao": "",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/bYMkwSSPDyC4giEaZcb8RMsXRCN.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-7.mp4"
+            "url_leg": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-7.mp4"
           },
           {
             "id": "seihantai_s02e20",
@@ -1069,7 +1069,7 @@
             "descricao": "Indisponível",
             "thumb": "https://media.themoviedb.org/t/p/w1000_and_h563_face/5p423VlhPXf7681XyZCL4khIJLl.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-8.mp4"
+            "url_leg": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-8.mp4"
           },
           {
             "id": "seihantai_s02e21",
@@ -1078,7 +1078,7 @@
             "descricao": "Indisponível",
             "thumb": "https://media.themoviedb.org/t/p/w1000_and_h563_face/5p423VlhPXf7681XyZCL4khIJLl.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-9.mp4"
+            "url_leg": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-9.mp4"
           },
           {
             "id": "seihantai_s02e22",
@@ -1087,7 +1087,7 @@
             "descricao": "Indisponível",
             "thumb": "https://media.themoviedb.org/t/p/w1000_and_h563_face/5p423VlhPXf7681XyZCL4khIJLl.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-10.mp4"
+            "url_leg": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-10.mp4"
           },
           {
             "id": "seihantai_s02e23",
@@ -1096,7 +1096,7 @@
             "descricao": "Indisponível",
             "thumb": "https://media.themoviedb.org/t/p/w1000_and_h563_face/5p423VlhPXf7681XyZCL4khIJLl.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-11.mp4"
+            "url_leg": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-11.mp4"
           },
           {
             "id": "seihantai_s02e24",
@@ -1105,7 +1105,7 @@
             "descricao": "Indisponível",
             "thumb": "https://media.themoviedb.org/t/p/w1000_and_h563_face/5p423VlhPXf7681XyZCL4khIJLl.jpg",
             "duracao": "24 min",
-            "video": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-12.mp4"
+            "url_leg": "https://ia600905.us.archive.org/12/items/oppositesS01/Segunda-Leg-12.mp4"
           }
         ]
       }
@@ -1180,7 +1180,7 @@
     "poster": "https://image.tmdb.org/t/p/original/94MjsZUyxubodMPJdWOVkcJ0bdU.jpg",
     "temporadas": [
       {
-        "nome": "4ª Temporada Dub",
+        "nome": "4ª Temporada",
         "episodios": [
           {
             "id": "tensura_dub-s04e01",
@@ -1189,7 +1189,8 @@
             "descricao": "A cidade de Rimuru está em pleno desenvolvimento, assim como seus planos internacionais. Mas faltam ajustes.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/gb4p6xHYwN3c4gYlnVzvpFtlOB8.jpg",
             "duracao": "24 min",
-            "video": "https://ia903200.us.archive.org/19/items/ShitaraS04/1.mp4"
+            "url_dub": "https://ia903200.us.archive.org/19/items/ShitaraS04/1.mp4",
+            "url_leg": "https://ia903200.us.archive.org/19/items/ShitaraS04/Quarta-Leg-1.mp4"
           },
           {
             "id": "tensura_dub_s04e02",
@@ -1198,7 +1199,7 @@
             "descricao": "Rimuru vê sua masmorra prosperar, mas guerreiros espertos mostram que ainda falta resolver certos detalhes.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/nRLCpzRP359dz7u475PlzOuT9zW.jpg",
             "duracao": "24 min",
-            "video": "https://ia903200.us.archive.org/19/items/ShitaraS04/2.mp4"
+            "url_dub": "https://ia903200.us.archive.org/19/items/ShitaraS04/2.mp4"
           },
           {
             "id": "tensura_dub_s04e03",
@@ -1207,7 +1208,7 @@
             "descricao": "Rimuru se preocupa em manter viável sua nova masmorra enquanto gente poderosa faz novos planos contra o slime.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/tm0pmQIOdzW5choXRITpHgYGGSC.jpg",
             "duracao": "24 min",
-            "video": "https://ia903200.us.archive.org/19/items/ShitaraS04/3.mp4"
+            "url_dub": "https://ia903200.us.archive.org/19/items/ShitaraS04/3.mp4"
           },
           {
             "id": "tensura_dub_s04e04",
@@ -1216,7 +1217,7 @@
             "descricao": "As Nações Ocidentais começam a discutir sobre a entrada de Tempest, a nação de monstros, para o Conselho.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/wzYc59SeMxQUIrb01D3BwIAj90c.jpg",
             "duracao": "24 min",
-            "video": "https://ia903200.us.archive.org/19/items/ShitaraS04/4.mp4"
+            "url_dub": "https://ia903200.us.archive.org/19/items/ShitaraS04/4.mp4"
           },
           {
             "id": "tensura_dub_s04e05",
@@ -1225,7 +1226,7 @@
             "descricao": "Rimuru e seu grupo chegam para a reunião com o Conselho, que definirá o futuro das Nações Ocidentais.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/ztpuWTZbiM0aXFlUSGdhk1Q17zk.jpg",
             "duracao": "24 min",
-            "video": "https://ia903200.us.archive.org/19/items/ShitaraS04/5.mp4"
+            "url_dub": "https://ia903200.us.archive.org/19/items/ShitaraS04/5.mp4"
           },
           {
             "id": "tensura_dub_s04e06",
@@ -1234,7 +1235,7 @@
             "descricao": "Rimuru perde a calma com as exigências absurdas que o Conselho ofereceu, mas há algo mais estranho ali.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/27GSNADh5MnmkTwHC8pmi3SOW7G.jpg",
             "duracao": "24 min",
-            "video": "https://ia903200.us.archive.org/19/items/ShitaraS04/6.mp4"
+            "url_dub": "https://ia903200.us.archive.org/19/items/ShitaraS04/6.mp4"
           },
           {
             "id": "tensura_dub_s04e07",
@@ -1243,7 +1244,7 @@
             "descricao": "Rimuru consegue capturar alguém que dará informações importantes sobre quem ele precisará enfrentar.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/edUKB10nnw9BBK0dyoJNiAlSR56.jpg",
             "duracao": "24 min",
-            "video": "https://ia903200.us.archive.org/19/items/ShitaraS04/7.mp4"
+            "url_dub": "https://ia903200.us.archive.org/19/items/ShitaraS04/7.mp4"
           },
           {
             "id": "tensura_dub_s04e08",
@@ -1252,7 +1253,7 @@
             "descricao": "Glenda revela tudo o que sabe sobre o Conselho e os Rozzo, e Rimuru se prepara para inspecionar ruínas antigas.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/bs2vK9WUOQKvwj8KEC3Ra3WXDQV.jpg",
             "duracao": "24 min",
-            "video": "https://ia903200.us.archive.org/19/items/ShitaraS04/8.mp4"
+            "url_dub": "https://ia903200.us.archive.org/19/items/ShitaraS04/8.mp4"
           },
           {
             "id": "tensura_dub_s04e09",
@@ -1261,7 +1262,7 @@
             "descricao": "A investigação das antigas ruínas de Amrita começa.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/1hrPaiyrBjC9jpB5n43VOzZ8SFA.jpg",
             "duracao": "24 min",
-            "video": "https://ia903200.us.archive.org/19/items/ShitaraS04/9.mp4"
+            "url_dub": "https://ia903200.us.archive.org/19/items/ShitaraS04/9.mp4"
           },
           {
             "id": "tensura_dub_s04e10",
@@ -1270,7 +1271,7 @@
             "descricao": "Rimuru e Mirabel finalmente ficam frente a frente nas ruínas antigas.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/zv5JGGOQl9Rii3NrVip295TyVyE.jpg",
             "duracao": "24 min",
-            "video": "https://ia903200.us.archive.org/19/items/ShitaraS04/10.mp4"
+            "url_dub": "https://ia903200.us.archive.org/19/items/ShitaraS04/10.mp4"
           },
           {
              "id": "tensura_dub_s04e11",
@@ -1279,7 +1280,7 @@
             "descricao": "Rimuru ajuda Milim a enfrentar o Dragão do Caos, uma forma corrompida do filhote de dragão que um dia foi seu amigo.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/w5bBroiKoeCe69CHew0y6Q1edQ8.jpg",
             "duracao": "24 min",
-            "video": "https://ia903200.us.archive.org/19/items/ShitaraS04/11.mp4"
+            "url_dub": "https://ia903200.us.archive.org/19/items/ShitaraS04/11.mp4"
           },
           {
            "id": "tensura_dub_s04e12",
@@ -1288,7 +1289,7 @@
             "descricao": "Rimuru compartilha seus planos para o futuro de Tempest, incluindo um novo sistema de governo e representação no Conselho.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/xtucVEgiymwJ61iErgqom5WcYt.jpg",
             "duracao": "24 min",
-            "video": "https://ia903200.us.archive.org/19/items/ShitaraS04/12.mp4"
+            "url_dub": "https://ia903200.us.archive.org/19/items/ShitaraS04/12.mp4"
           },
           {
              "id": "tensura_dub_s04e13",
@@ -1297,21 +1298,7 @@
             "descricao": "Ramiris e Veldora sentem que estão sobrecarregados, então pedem a Rimuru que encontre assistentes para eles.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/uLRfCUw0ql6HKOezGv5HmsUMooo.jpg",
             "duracao": "24 min",
-            "video": "https://ia903200.us.archive.org/19/items/ShitaraS04/13.mp4"
-          }
-        ]
-      },
-      {
-        "nome": "4ª Temporada Leg",
-        "episodios": [
-          {
-            "id": "tensura_leg_s04e01",
-            "index": 1,
-            "titulo": "73. Novos dias",
-            "descricao": "A cidade de Rimuru está em pleno desenvolvimento, assim como seus planos internacionais. Mas faltam ajustes.",
-            "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/gb4p6xHYwN3c4gYlnVzvpFtlOB8.jpg",
-            "duracao": "24 min",
-            "video": "https://ia903200.us.archive.org/19/items/ShitaraS04/Quarta-Leg-1.mp4"
+            "url_dub": "https://ia903200.us.archive.org/19/items/ShitaraS04/13.mp4"
           }
         ]
       }
@@ -1328,106 +1315,106 @@
     "poster": "https://image.tmdb.org/t/p/original/bQ5wYik4IZaJm8oQfWyCT4pdVQZ.jpg",
     "temporadas": [
       {
-        "nome": "1ª Temporada Dub",
+        "nome": "1ª Temporada",
         "episodios": [
           {
-            "id": "konosuba_dub-s01e01",
+            "id": "konosuba-s01e01",
             "index": 1,
             "titulo": "01. Essa Autoproclamada Deusa e Reencarnação em Outro Mundo!",
             "descricao": "Kazuma conhece a Deusa Aqua após um acidente na Terra. Aqua oferece a Kazuma uma oportunidade para reencarnar em um outro mundo. Será que Kazuma aceitará isso?",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/c93ohIPep6Pd2ltcixMM49zf09I.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-1.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-1.mp4"
           },
           {
-            "id": "konosuba_dub-s01e02",
+            "id": "konosuba-s01e02",
             "index": 2,
             "titulo": "02. Uma Explosão Para Essa Chuunibyou!",
             "descricao": "Kazuma morreu, mas acabou sendo revivido num mundo assolado pelo Rei Demônio. Mas a vida de um aventureiro de nível baixo é muito difícil, então ele e a deusa Aqua começam a recrutar mais gente para o seu grupo. E quem aparece é uma garota que é uma verdadeira explosão!",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/5wf4kCvdTCvbwi6jUQmM0lxDPeL.jpg",
             "duracao": "24 mun",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-2.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-2.mp4"
           },
           {
-            "id": "konosuba_dub-s01e03",
+            "id": "konosuba-s01e03",
             "index": 3,
             "titulo": "03. O Tesouro Nessa Mão Direita!",
             "descricao": "Em sua jornada no novo mundo, Kazuma precisa aprender novas habilidades, e desta vez uma gatuna se oferece para ensinar a roubar tesouros. Todos os tipos de tesouros!",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/bv7h9C9JCEuEQjf3Z5fegSahAu1.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-3.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-3.mp4"
           },
           {
-            "id": "konosuba_dub-s01e04",
+            "id": "konosuba-s01e04",
             "index": 4,
             "titulo": "04. Magia Explosiva Para Esse Inimigo Formidável!",
             "descricao": "O grupo de Kazuma compra novos equipamentos com a recompensa da última missão. Megumin decide treinar magia explosiva, mas parece que não foi uma boa ideia...",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/6542ftoNCEyHNfi0TKKWzuFFOQX.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-4.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-4.mp4"
           },
           {
-            "id": "konosuba_dub-s01e05",
+            "id": "konosuba-s01e05",
             "index": 5,
             "titulo": "05. O Preço Para Essa Espada Amaldiçoada!",
             "descricao": "Aqua quer arrumar uma missão de qualquer jeito e Kazuma aceita ajudá-la. Um novo personagem surge e parece conhecer Aqua.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/xQCJtk2W8cAGjwUdJByGW2oLU6n.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-5.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-5.mp4"
           },
           {
-            "id": "konosuba_dub-s01e06",
+            "id": "konosuba-s01e06",
             "index": 6,
             "titulo": "06. A Conclusão Dessa Luta Inútil!",
             "descricao": "O líder do exército do Rei Demônio aparece novamente na vila dos aventureiros novatos. O que o grupo de Kazuma vai fazer?",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/mjhexvyiePjlMoibwdHrDao4XVj.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-6.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-6.mp4"
           },
           {
-            "id": "konosuba_dub-s01e07",
+            "id": "konosuba-s01e07",
             "index": 7,
             "titulo": "07. Uma Segunda Morte Nessa Estação Congelante!",
             "descricao": "Kazuma e seu grupo busca novas missões para ganhar dinheiro. Entretanto, parece que a missão escolhida não sairá como planejado.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/eXJvrz81IXjwQfpaImBSH7f4dqd.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-7.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-7.mp4"
           },
           {
-            "id": "konosuba_dub-s01e08",
+            "id": "konosuba-s01e08",
             "index": 8,
             "titulo": "08. Uma mão amável para nosso grupo que não consegue passar pelo inverno!",
             "descricao": "Kazuma e Aqua estão passando frio nos estábulos e resolvem buscar uma missão para melhorar essa situação. Mas nada parece ser tão simples.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/es4qpyBOxbFCyMY3mcaiasYZyoY.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-8.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-8.mp4"
           },
           {
-            "id": "konosuba_dub-s01e09",
+            "id": "konosuba-s01e09",
             "index": 9,
             "titulo": "09. As Bênçãos de Deus Nessa Maravilhosa Loja!",
             "descricao": "Kazuma encontra uma loja diferente e resolve experimentar os serviços. Será que as garotas irão descobrir sobre isso?",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/oForvGu6gqF1xUHwtQY2zrk1Kij.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-9.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-9.mp4"
           },
           {
-            "id": "konosuba_dub-s01e10",
+            "id": "konosuba-s01e10",
             "index": 10,
             "titulo": "10. Chama Final para Essa Fortaleza Extraordinária!",
             "descricao": "A Fortaleza Móvel Destroyer se aproxima da cidade dos novatos. Kazuma e seu grupo precisam decidir o que fazer.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/1faDRmHvlUlBNTMNELrpyqMrm8e.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-10.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-10.mp4"
           },
           {
-            "id": "konosuba_dub-s01e11",
+            "id": "konosuba-s01e11",
             "index": 11,
             "titulo": "11. Uma bênção para esta gargantilha maravilhosa!",
             "descricao": "Kazuma encontra uma gargantilha na loja de magia do Wiz que diz que concede um desejo a qualquer um e decide colocá-lo. O problema? Ele vai morrer em quatro dias de estrangulamento se o desejo não for concedido. E Kazuma não consegue lembrar o que ele desejou, então ele não tem idéia de como seus membros do partido podem ajudar. As garotas, portanto, não têm escolha a não ser submeter-se a todos os seus caprichos se quiserem salvá-lo.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/6evGcWeNhD0hvZWrf1GUlM2dRds.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-11.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Primeira-Dub-11.mp4"
           }
         ]
       }
@@ -1444,106 +1431,106 @@
     "poster": "https://image.tmdb.org/t/p/original/dz90mv8ArpKnPqEDBSpAscgl3S3.jpg",
     "temporadas": [
       {
-        "nome": "2ª Temporada Dub",
+        "nome": "2ª Temporada",
         "episodios": [
           {
-            "id": "konosuba_dub-s02e01",
+            "id": "konosuba-s02e01",
             "index": 1,
             "titulo": "01. Liberte-me dessa injustiça judicial!",
             "descricao": "Devido ao ataque na mansão do senhor feudal, Kazuma está preso e vai a julgamento! Apesar de Aqua tentar ajudá-lo a fugir da prisão, as ideias dela não são muito boas... Será Kazuma capaz de provar sua inocência?!",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/16Y76Utc88jQFrKQlazWEIOiJAa.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-1.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-1.mp4"
           },
           {
-            "id": "konosuba_dub-s02e02",
+            "id": "konosuba-s02e02",
             "index": 2,
             "titulo": "02. Um amigo para essa garota demônio carmesim!",
             "descricao": "Uma rival de Megumin aparece, porém Megumin não a considera muito como uma rival... Kazuma está preocupado com Darkness.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/9SC3TPy7JNy6GPPQbNCxMsDosdS.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-2.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-2.mp4"
           },
           {
-            "id": "konosuba_dub-s02e03",
+            "id": "konosuba-s02e03",
             "index": 3,
             "titulo": "03. Paz para o mestre desse labirinto!",
             "descricao": "Para pagar sua enorme dívida, Kazuma terá que se aventurar em uma dungeon. Porém, para seu azar, Aqua está muito disposta a ajudá-lo nessa missão...",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/pVre0WCffItFyMdeehx2IyUDczZ.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-3.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-3.mp4"
           },
           {
-            "id": "konosuba_dub-s02e04",
+            "id": "konosuba-s02e04",
             "index": 4,
             "titulo": "04. O prometido para essa nobre filha!",
             "descricao": "Darkness finalmente reaparece, mas traz consigo notícias ruins! O senhor feudal quer que ela se case com seu filho, um cavaleiro. Darkness precisa convecer seu pai que não quer casar com o cavaleiro, mas tem dificuldades...",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/vSeTaswN4pFhLL9jL0vFulU6Rnc.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-4.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-4.mp4"
           },
           {
-            "id": "konosuba_dub-s02e05",
+            "id": "konosuba-s02e05",
             "index": 5,
             "titulo": "05. Escravidão para esse cavaleiro mascarado!",
             "descricao": "Com um problema de monstros fugindo da dugeon Keele, Kazuma e seu grupo vão até lá para investigar. Porém, ao chegar lá, descobrem que os montros têm relação com um comandante do exército do rei demônio, Vanir!",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/8S5L4vitRPHS03cU1HuwoH6JapB.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-5.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-5.mp4"
           },
           {
-            "id": "konosuba_dub-s02e06",
+            "id": "konosuba-s02e06",
             "index": 6,
             "titulo": "06. Adeus a este mundo irritante em que vivo!",
             "descricao": "Kazuma só quer saber de ficar embaixo de seu... kotatsu?! Ao visitar a casa de Wiz, Darkness e Kazuma descobriram algo sobre Vanir, o comandante do rei demônio que eles derrotaram. Kazuma e suas amigas decidem fazer uma missão para arrecadar dinheiro, mas ela não será nada fácil...",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/gjDoPsy9MlbyoGwRmawMQnZJOJl.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-6.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-6.mp4"
           },
           {
-            "id": "konosuba_dub-s02e07",
+            "id": "konosuba-s02e07",
             "index": 7,
             "titulo": "07. Um convite para essa idiota!",
             "descricao": "Megumin fica louca com a maneira que Kazuma e Aqua estão agindo... Após a situação financeira do grupo melhorar, Kazuma e Aqua decidem ficar relaxados por um longo tempo. Para quebrar a rotina, eles decidem fazer algo diferente...",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/oW74GKp4MlM24vNjaeVuYdNi96A.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-7.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-7.mp4"
           },
           {
-            "id": "konosuba_dub-s02e08",
+            "id": "konosuba-s02e08",
             "index": 8,
             "titulo": "08. Passeios nesta cidade lamentável!",
             "descricao": "Kazuma e seu grupo finalmente chegam a Arcanretia. Apesar de bonita, a cidade que é base da sede da igreja de Axis é mais estranha do que eles imaginavam...",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/cri9SJridfnhgaUJu2KfoTjz393.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-8.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-8.mp4"
           },
           {
-            "id": "konosuba_dub-s02e09",
+            "id": "konosuba-s02e09",
             "index": 9,
             "titulo": "09. Uma deusa para esta cidade de águas termais corrupta",
             "descricao": "O grupo se dirige para a cidade de Arcanretia, que é conhecida por suas águas termais. Mas os habitantes da cidade têm um hábito peculiar...",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/8pGCqJ1uDILuuJpeX1Xyb3nZaVf.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-9.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-9.mp4"
           },
           {
-            "id": "konosuba_dub-s02e10",
+            "id": "konosuba-s02e10",
             "index": 10,
             "titulo": "10. As bênçãos de Deus nesse grupo maravilhoso!",
             "descricao": "O povo da cidade de Arcanretia continua revoltado com Aqua e se reúne em frente a onde o grupo está se hospedando... O grupo de Kazuma descobre o responsávelm pela contaminação da fonte d'água da cidade, mas não será uma pessoa muito fácil de se enfrentar...",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/cP270lqGtcYTJD1MLALJTblPVlz.jpg",
             "duracao": "25 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-10.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-10.mp4"
           },
           {
-            "id": "konosuba_dub-s02e11",
+            "id": "konosuba-s02e11",
             "index": 11,
             "titulo": "11. Uma Bênção a esta maravilhosa obra de arte!",
             "descricao": "O ego incorrigível de Kazuma o obriga a aceitar a busca por uma missão perigosa depois de se gabar diante do seu primeiro torcedor de hardcore. Desta vez, a guilda do aventureiro pede que eles derrubem um goleiro gigante guardando ruínas antigas... Embalado com o décimo segundo volume do light novel.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/2eR0qUuHgkQ4oJBJUgQOReGSQML.jpg",
             "duracao": "28 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-11.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Segunda-Dub-11.mp4"
           }
         ]
       }
@@ -1560,106 +1547,106 @@
     "poster": "https://image.tmdb.org/t/p/original/mu4F6a4ImUT5xqYlc0IcwHaALKE.jpg",
     "temporadas": [
       {
-        "nome": "3ª Temporada Dub",
+        "nome": "3ª Temporada",
         "episodios": [
           {
-            "id": "konosuba_dub-s03e01",
+            "id": "konosuba-s03e01",
             "index": 1,
             "titulo": "01. As Bênçãos de Deus Neste Radiante Futuro!",
             "descricao": "Kazuma está com estresse pós-traumático e segue sonhando com Sylvia. Em busca de uma cura, o rapaz toma uma decisão radical: entrar para uma seita e virar monge!",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/jOUJPe0wfg8GS2QLG8xCr3L2kZD.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-1.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-1.mp4"
           },
           {
-            "id": "konosuba_dub-s03e02",
+            "id": "konosuba-s03e02",
             "index": 2,
             "titulo": "02. Um Sorriso Para Essa Garota Séria!",
             "descricao": "Darkness está preocupada com o comportamento de seus companheiros diante da Princesa Iris. Antes do jantar com a princesa, o grupo visita a loja de Wiz para conferir os produtos que Kazuma criou.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/jJM8mQknHdLSWrvN0NnUiannIAL.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-2.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-2.mp4"
           },
           {
-            "id": "konosuba_dub-s03e03",
+            "id": "konosuba-s03e03",
             "index": 3,
             "titulo": "03. Uma Reeducação Para Esta Garota Espertinha!",
             "descricao": "Kazuma é levado para o palácio real a mando da Princesa Iris. Agora afastado de suas companheiras, Kazuma passa a perceber não só os prazeres de viver no castelo, como também passa a entender melhor a personalidade de Iris.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/vnjnJGpJwRzC8agrYhxLnaEcFvn.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-3.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-3.mp4"
           },
           {
-            "id": "konosuba_dub-s03e04",
+            "id": "konosuba-s03e04",
             "index": 4,
             "titulo": "04. Punição Divina Para Este Ladrão Charmoso!",
             "descricao": "Kazuma e suas companheiras passam um tempo na mansão de Alderp para investigar o roubo de ricos!",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/hEGbqP0rLz0mtbapdzhidT0Nhre.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-4.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-4.mp4"
           },
           {
-            "id": "konosuba_dub-s03e05",
+            "id": "konosuba-s03e05",
             "index": 5,
             "titulo": "05. Más Influências Para Essa Princesa Reclusa!",
             "descricao": "O grupo de Kazuma se junta aos demais aventureiros para proteger a capital! Kazuma, no entanto, não se sai tão bem como esperava...",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/x0dROPxjKquGl3VTQ9zAt2vcbRD.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-5.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-5.mp4"
           },
           {
-            "id": "konosuba_dub-s03e06",
+            "id": "konosuba-s03e06",
             "index": 6,
             "titulo": "06. O Adeus à Essa Vida de Luxo!",
             "descricao": "Após o efeito do Tesouro Divino passar, a reputação de Kazuma piora mais ainda! Chris mais uma vez recorre ao aventureiro para ajudá-la. Convencido dos perigos dos Tesouros Divinos, Kazuma e Chris invadem o castelo para roubar o colar de Iris!",
             "thumb": "https://image.tmdb.org/t/p/w640_and_h360_face/a4fdVIXtgt4OFaxlTZ48aqEJj64.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-6.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-6.mp4"
           },
           {
-            "id": "konosuba_dub-s03e07",
+            "id": "konosuba-s03e07",
             "index": 7,
             "titulo": "07. Um Descanso Para Esse Aventureiro Promissor!",
             "descricao": "Após voltarem para Axel, Kazuma e suas companheiras aproveitam a vida mansa após receberem as recompensas. Vanir faz uma previsão sombria para Darkness.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/1cicdwcTUTdJGtSdofZ0X5Jhw87.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-7.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-7.mp4"
           },
           {
-            "id": "konosuba_dub-s03e08",
+            "id": "konosuba-s03e08",
             "index": 8,
             "titulo": "08. Um Descanso Eterno Para o Mestre Desse Lago!",
             "descricao": "O grupo de Kazuma falha em subjugar a hidra, resultando na morte do aventureiro. Não satisfeitas com o desfecho da batalha, Darkness e Megumin passam dia após dia tentando derrotar o monstro do lado.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/ssRvgkGubVUF4TB4q870VCPMwIt.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-8.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-8.mp4"
           },
           {
-            "id": "konosuba_dub-s03e09",
+            "id": "konosuba-s03e09",
             "index": 9,
             "titulo": "09. Um Sermão Para Essa Fujona!",
             "descricao": "Após derrotarem a hidra, Darkness deixa uma carta e vai embora. Kazuma tenta encontrar um novo parceiro pro grupo, mas Megumin estraga tudo!",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/xXiVMqzhvnZJe7qMtdqPASTPm8v.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-9.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-9.mp4"
           },
           {
-            "id": "konosuba_dub-s03e10",
+            "id": "konosuba-s03e10",
             "index": 10,
             "titulo": "10. Bênçãos Para Essa Noiva Egoísta!",
             "descricao": "O dia do casamento se aproxima, mas Kazuma insiste em esperar Darkness pedir ajuda. Quando o grande dia chega, Vanir o visita na mansão, trazendo a verdade sobre a dívida dos Dustiness.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/5wuv4j5LvdYFifhk9tsNfK9kVFV.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-10.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-10.mp4"
           },
           {
-            "id": "konosuba_dub-s03e11",
+            "id": "konosuba-s03e11",
             "index": 11,
             "titulo": "11. Bênçãos Divinas Para Esses Dias Sem Mudanças!",
             "descricao": "Kazuma invade a cerimônia de casamento entre Darkness e Aldarp, levando a quantia em dinheiro para pagar as dívidas da Crusader! Agora, os aventureiros precisam fugir da ira dos nobres!",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/nh7VQYNLw9oCT7oqIFoGIzYDmIE.jpg",
             "duracao": "24 min",
-            "video": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-11.mp4"
+            "url_dub": "https://ia600700.us.archive.org/27/items/SubaDubLeg/Terceira-Dub-11.mp4"
           }
         ]
       }
@@ -1921,10 +1908,8 @@
     "tipo": "serie",
     "titulo": "100 Namoradas Que Te Amam Muuuuuito",
     "ano": "2023",
-    "classificacao": "",
-    "genero": [
-      "", ""
-    ],
+    "classificacao": "14 Anos",
+    "generos": ["Comédia Romântica", "Comédia", "Romance"],
     "sinopse": "Rentaro Aijo levou 100 foras ao longo do ensino fundamental. Então, ele visita um santuário e reza por melhor sorte no ensino médio. O Deus do Amor aparece para ele e lhe promete que em breve conhecerá 100 pessoas que está destinado a namorar. Mas há um problema: uma vez que o destino apresenta alguém a ele, os dois precisam se amar alegremente. Caso contrário, eles morrerão. O que acontecerá com Rentaro e suas 100 namoradas no ensino médio?",
     "banner": "",
     "poster": "https://media.themoviedb.org/t/p/w440_and_h660_face/kBiPU7I7TEJdDXu8tHgVrgL5zAU.jpg",
@@ -1939,7 +1924,8 @@
             "descricao": "Rentaro, um garoto cansado de levar rejeições na vida vai a um santuário e descobre algo surpreendente sobre sua vida amorosa.",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/7czlU4yZTGaYGaBK1TyQxaak7nz.jpg",
             "duracao": "24 min",
-            "video": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-1.mp4"
+            "url_dub": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-1.mp4",
+            "url_leg": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Leg-1.mp4"
           },
           {
             "id": "100-Namoradas-Que-Te-Amam-Muuuuuito_s01e02",
@@ -1947,7 +1933,8 @@
             "titulo": "02 Primeiro beijo",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/8OhHXcb7HJw1Z2BANJGZW1vJN98.jpg",
             "duracao": "24 min",
-            "video": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-2.mp4"
+            "url_dub": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-2.mp4",
+            "url_leg": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Leg-2.mp4"
           },
           {
             "id": "100-Namoradas-Que-Te-Amam-Muuuuuito_s01e03",
@@ -1955,7 +1942,7 @@
             "titulo": "03 A princesa calada, o cavaleiro e o samurai",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/pX8ElXIZHyQLbgA4HOjMWiDZDDq.jpg",
             "duracao": "24 min",
-            "video": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-3.mp4"
+            "url_dub": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-3.mp4"
           },
           {
             "id": "100-Namoradas-Que-Te-Amam-Muuuuuito_s01e04",
@@ -1963,7 +1950,7 @@
             "titulo": "04. Pensei que era só um momento de flerte",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/1BkvKJB0cQGNNxoIGtyfR24dhr7.jpg",
             "duracao": "24 min",
-            "video": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-4.mp4"
+            "url_dub": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-4.mp4"
           },
           {
             "id": "100-Namoradas-Que-Te-Amam-Muuuuuito_s01e05",
@@ -1971,7 +1958,7 @@
             "titulo": "05. A namorada eficiente",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/d11ozhBG09YrQakGAw8mbA9Fs7S.jpg",
             "duracao": "24 min",
-            "video": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-5.mp4"
+            "url_dub": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-5.mp4"
           },
           {
             "id": "100-Namoradas-Que-Te-Amam-Muuuuuito_s01e06",
@@ -1979,7 +1966,7 @@
             "titulo": "06. O episódio com biquínis que todos amam",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/bEGda6rYMChclgiIiUfYAsxuPrP.jpg",
             "duracao": "24 min",
-            "video": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-6.mp4"
+            "url_dub": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-6.mp4"
           },
           {
             "id": "100-Namoradas-Que-Te-Amam-Muuuuuito_s01e07",
@@ -1987,7 +1974,7 @@
             "titulo": "07. Apresentando a garota das drogas",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/6cxCrb8hdk5K59y1P2t2uediiNb.jpg",
             "duracao": "24 min",
-            "video": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-7.mp4"
+            "url_dub": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-7.mp4"
           },
           {
             "id": "100-Namoradas-Que-Te-Amam-Muuuuuito_s01e08",
@@ -1995,7 +1982,7 @@
             "titulo": "08. O pânico das zumbis do beijo",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/fgKVGiAmu7s7ISb1zazCJCsehxj.jpg",
             "duracao": "24 min",
-            "video": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-8.mp4"
+            "url_dub": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-8.mp4"
           },
           {
             "id": "100-Namoradas-Que-Te-Amam-Muuuuuito_s01e09",
@@ -2003,7 +1990,7 @@
             "titulo": "09 A guerra santa com o amor e alma em jogo",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/38g8ajL1Goyvrgzum8MA7n5v8pR.jpg",
             "duracao": "24 min",
-            "video": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-9.mp4"
+            "url_dub": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-9.mp4"
           },
           {
             "id": "100-Namoradas-Que-Te-Amam-Muuuuuito_s01e10",
@@ -2011,7 +1998,7 @@
             "titulo": "10 Missão impossível de amor",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/zNPw1CAtLs2ypyJhLiFQxZZK6de.jpg",
             "duracao": "24 min",
-            "video": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-10.mp4"
+            "url_dub": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-10.mp4"
           },
           {
             "id": "100-Namoradas-Que-Te-Amam-Muuuuuito_s01e11",
@@ -2019,7 +2006,7 @@
             "titulo": "11 Mesmo que arrisque minha vida",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/r3QLxukT6epv273G45R4QW2ludW.jpg",
             "duracao": "24 min",
-            "video": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-11.mp4"
+            "url_dub": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-11.mp4"
           },
           {
             "id": "100-Namoradas-Que-Te-Amam-Muuuuuito_s01e12",
@@ -2027,7 +2014,7 @@
             "titulo": "12 100 namoradas que te amam muuuuuito (faltam 94)",
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/oOh36MUXeK0hKx0VIwU5Oga6vEj.jpg",
             "duracao": "24 min",
-            "video": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-12.mp4"
+            "url_dub": "https://ia903209.us.archive.org/21/items/NamoradasDubLeg/Primeira-Dub-12.mp4"
           }
         ]
       }

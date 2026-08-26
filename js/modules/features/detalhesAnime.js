@@ -1,4 +1,4 @@
-// js/modules/features/info.js
+// js/modules/features/detalhesAnime.js
 
 import { buscarTodoProgressoDB, buscarProgressoDB, alternarConcluidoDB } from '../database/db.js';
 import { obterAnimePorId } from '../database/repository.js';
@@ -12,6 +12,14 @@ let currentAnimeId = "";
 
 // Trava global para evitar múltiplos disparos seguidos (evita popup duplicado)
 let isProcessingAction = false;
+
+/**
+ * Verifica se um episódio ou filme possui algum link de vídeo válido (video, url_dub, url_leg, etc)
+ */
+function temVideoDisponivel(ep) {
+    if (!ep) return false;
+    return Boolean(ep.video || ep.url_dub || ep.url_leg || ep.video_dub || ep.video_leg);
+}
 
 /**
  * Zera o mapeamento de episódios da memória.
@@ -190,7 +198,6 @@ export function renderizarListaEpisodios(listaEpisodios, container, modelo, anim
         if (durationEl) durationEl.textContent = ep.duracao || "";
         if (titleEl) titleEl.textContent = displayTitle;
         
-        // Insere a descrição envelopada no span para acionar o efeito marquee vertical
         if (subtitleEl) {
             const textoDescricao = ep.descricao || "Sem descrição disponível.";
             subtitleEl.innerHTML = `<span class="marquee-content">${textoDescricao}</span>`;
@@ -338,7 +345,7 @@ export async function gerenciarTelaInfo() {
             const card = e.target.closest(".card-ep");
             if (card && card.dataset.epId) {
                 const meta = episodesMap[card.dataset.epId];
-                if (meta && meta.ep?.video) {
+                if (meta && temVideoDisponivel(meta.ep)) {
                     window.location.hash = `#player?anime=${encodeURIComponent(meta.animeId)}&ep=${encodeURIComponent(meta.ep.id)}`;
                 } else {
                     alert("Vídeo indisponível para este episódio.");
@@ -367,7 +374,7 @@ export async function gerenciarTelaInfo() {
 
         preencherMetadados(item, containerGeneros);
 
-        if (item.tipo === "filme" || item.video) {
+        if (item.tipo === "filme" || temVideoDisponivel(item)) {
             configurarModoFilme(item, itemId, blocoFilme, blocoEpisodios);
         } else {
             await configurarModoSerie(item, itemId, tempParam, {
@@ -392,10 +399,8 @@ function preencherMetadados(item, containerGeneros) {
     const infoSinopse = document.getElementById("info-sinopse");
 
     if (infoBanner) {
-        // Detecta diretamente a largura da tela no carregamento
         const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
 
-        // Desktop exibe o Banner (horizontal), Mobile exibe o Poster (vertical)
         if (isDesktop) {
             infoBanner.src = item.banner || item.poster || "";
         } else {
@@ -430,8 +435,9 @@ function configurarModoFilme(item, itemId, blocoFilme, blocoEpisodios) {
     if (btnPlay) {
         btnPlay.onclick = (e) => {
             e.preventDefault();
+            const epFilme = item.episodios?.[0] || item;
             const epId = item.episodios?.[0]?.id || itemId;
-            if (item.video || item.episodios?.[0]?.video) {
+            if (temVideoDisponivel(item) || temVideoDisponivel(epFilme)) {
                 window.location.hash = `#player?anime=${encodeURIComponent(itemId)}&ep=${encodeURIComponent(epId)}`;
             } else {
                 alert("Vídeo indisponível para este filme.");
@@ -522,7 +528,7 @@ async function configurarModoSerie(item, itemId, tempParam, dom) {
 
             btnPlay.onclick = (e) => {
                 e.preventDefault();
-                if (epAlvo.video) {
+                if (temVideoDisponivel(epAlvo)) {
                     window.location.hash = `#player?anime=${encodeURIComponent(itemId)}&ep=${encodeURIComponent(epAlvo.id)}`;
                 } else {
                     alert("Vídeo indisponível para este episódio.");

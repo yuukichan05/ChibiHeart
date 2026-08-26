@@ -1,4 +1,4 @@
-// js/modules/repository.js
+// js/modules//database/repository.js
 
 let cacheInfo = null;
 let cacheRecomendados = null;
@@ -12,8 +12,8 @@ export async function obterInfoCompleta() {
   if (cacheInfo) return cacheInfo;
 
   try {
-    const resposta = await fetch('./dados/info.json');
-    if (!resposta.ok) throw new Error(`Erro ao carregar info.json: status ${resposta.status}`);
+    const resposta = await fetch('./dados/animes.json');
+    if (!resposta.ok) throw new Error(`Erro ao carregar animes.json: status ${resposta.status}`);
     cacheInfo = await resposta.json();
     return cacheInfo;
   } catch (erro) {

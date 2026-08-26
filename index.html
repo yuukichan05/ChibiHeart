@@ -228,74 +228,77 @@
     </section>
 
     <!-- VIEW DO PLAYER -->
-    <section id="player" class="app-view">
-      <div class="player-media-block">
-        <div id="custom-player-container" class="custom-player-wrapper">
-          <video id="player-video" playsinline poster="" src=""></video>
+    <!-- VIEW DO PLAYER -->
+<section id="player" class="app-view">
+  <div class="player-media-block">
+    <div id="custom-player-container" class="custom-player-wrapper">
+      <video id="player-video" playsinline poster="" src=""></video>
 
-          <div id="custom-player-controls" class="custom-player-controls">
-            <button type="button" id="btn-player-rewind" class="btn-player-center btn-rewind" aria-label="Voltar 10s" tabindex="0">
-              <span class="material-symbols-outlined">replay_10</span>
+      <div id="custom-player-controls" class="custom-player-controls">
+        <button type="button" id="btn-player-rewind" class="btn-player-center btn-rewind" aria-label="Voltar 10s" tabindex="0">
+          <span class="material-symbols-outlined">replay_10</span>
+        </button>
+
+        <button type="button" id="btn-player-play" class="btn-player-center btn-play" aria-label="Reproduzir/Pausar" tabindex="0">
+          <span class="material-symbols-outlined">play_arrow</span>
+        </button>
+
+        <button type="button" id="btn-player-forward" class="btn-player-center btn-fast-forward" aria-label="Avançar 10s" tabindex="0">
+          <span class="material-symbols-outlined">forward_10</span>
+        </button>
+
+        <div class="custom-bottom-bar">
+          <div class="custom-progress-wrapper">
+            <input type="range" id="player-progress" class="custom-progress-slider" min="0" max="100" value="0" step="0.1" tabindex="0">
+          </div>
+          <div class="custom-controls-row">
+            <span id="player-time-display" class="custom-time-display">00:00 • 00:00</span>
+            <button type="button" id="btn-player-fullscreen" class="btn-player-icon" aria-label="Tela Cheia" tabindex="0">
+              <span class="material-symbols-outlined">fullscreen</span>
             </button>
-
-            <button type="button" id="btn-player-play" class="btn-player-center btn-play" aria-label="Reproduzir/Pausar" tabindex="0">
-              <span class="material-symbols-outlined">play_arrow</span>
-            </button>
-
-            <button type="button" id="btn-player-forward" class="btn-player-center btn-fast-forward" aria-label="Avançar 10s" tabindex="0">
-              <span class="material-symbols-outlined">forward_10</span>
-            </button>
-
-            <div class="custom-bottom-bar">
-              <div class="custom-progress-wrapper">
-                <input type="range" id="player-progress" class="custom-progress-slider" min="0" max="100" value="0" step="0.1" tabindex="0">
-              </div>
-              <div class="custom-controls-row">
-                <span id="player-time-display" class="custom-time-display">00:00 • 00:00</span>
-                <button type="button" id="btn-player-fullscreen" class="btn-player-icon" aria-label="Tela Cheia" tabindex="0">
-                  <span class="material-symbols-outlined">fullscreen</span>
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
 
-      <div class="player-episode-detail">
-        <span id="player-meta-tag" class="player-meta">K-ON!! T01E01</span>
-        <h2 id="player-titulo-ep">Carregando...</h2>
-        <div class="player-badges">
-          <span class="badge-tag">Legendado</span>
-        </div>
-      </div>
+  <div class="player-episode-detail">
+    <span id="player-meta-tag" class="player-meta">K-ON!! T01E01</span>
+    <h2 id="player-titulo-ep">Carregando...</h2>
+    <div class="player-badges">
+      <button type="button" id="btn-player-audio" class="badge-tag btn-toggle-audio" tabindex="0">
+        Dublado
+      </button>
+    </div>
+  </div>
 
-      <div class="proximos-container">
-        <div class="proximos-header">
-          <h3 class="titulo-proximos">Próximos episódios</h3>
-          <a href="#info" id="lnk-ver-todos" class="btn-ver-todos" tabindex="0">Ver todos</a>
-        </div>
+  <div class="proximos-container">
+    <div class="proximos-header">
+      <h3 class="titulo-proximos">Próximos episódios</h3>
+      <a href="#info" id="lnk-ver-todos" class="btn-ver-todos" tabindex="0">Ver todos</a>
+    </div>
 
-        <div id="player-lista-proximos" class="proximos-grid"></div>
+    <div id="player-lista-proximos" class="proximos-grid"></div>
 
-        <template id="modelo-card-player">
-          <div class="card-player-ep" tabindex="0" role="button">
-            <div class="player-ep-media">
-              <img src="" alt="" class="player-ep-thumb">
+    <template id="modelo-card-player">
+      <div class="card-player-ep" tabindex="0" role="button">
+        <div class="player-ep-media">
+          <img src="" alt="" class="player-ep-thumb">
 
-              <div class="barra-progresso-container" style="display: none;">
-                <div class="barra-progresso-preenchimento"></div>
-              </div>
-
-              <div class="player-play-overlay">
-                <span class="material-symbols-outlined">play_arrow</span>
-              </div>
-              <span class="player-ep-duration">--min</span>
-            </div>
-            <h4 class="player-card-title">Episódio --</h4>
+          <div class="barra-progresso-container" style="display: none;">
+            <div class="barra-progresso-preenchimento"></div>
           </div>
-        </template>
+
+          <div class="player-play-overlay">
+            <span class="material-symbols-outlined">play_arrow</span>
+          </div>
+          <span class="player-ep-duration">--min</span>
+        </div>
+        <h4 class="player-card-title">Episódio --</h4>
       </div>
-    </section>
+    </template>
+  </div>
+</section>
 
     <!-- OUTRAS SEÇÕES DA APLICAÇÃO -->
     <section id="lista" class="app-view">

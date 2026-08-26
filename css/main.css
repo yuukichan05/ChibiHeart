@@ -3,7 +3,7 @@
    ========================================================================== */
 
 
-@import url("modules/trakt.css");
+@import url("modules/inicio.css");
 @import url("modules/player.css");
 @import url("modules/views.css");
 @import url("modules/perfil.css");
@@ -19,7 +19,7 @@
 
 @import url("modules/media/base-desktop.css");
 @import url("modules/media/player-desktop.css"); 
-@import url("modules/media/trakt-desktop.css");
+@import url("modules/media/inicio-desktop.css");
 @import url("modules/media/perfil-desktop.css");
 @import url("modules/media/views-desktop.css");
 @import url("modules/media/historico-desktop.css");
