@@ -137,18 +137,24 @@ export async function gerenciarTelaInfo() {
 
 function preencherMetadados(item, containerGeneros) {
     const infoBanner = document.getElementById("info-banner");
+    const infoBackdrop = document.getElementById("info-backdrop");
     const infoTitulo = document.getElementById("info-titulo");
     const infoAno = document.getElementById("info-ano");
     const infoSinopse = document.getElementById("info-sinopse");
 
-    if (infoBanner) {
+    if (infoBanner || infoBackdrop) {
         const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+        
+        // Tenta usar poster_detalhes primeiro; se não existir ou estiver vazio, usa poster
+        const posterEfetiov = item.poster_detalhes || item.poster;
 
-        if (isDesktop) {
-            infoBanner.src = item.banner || item.poster || "";
-        } else {
-            infoBanner.src = item.poster || item.banner || "";
-        }
+        const imagemSrc = isDesktop 
+            ? (item.banner || posterEfetiov || "") 
+            : (posterEfetiov || item.banner || "");
+
+        // Sincroniza o banner principal e a imagem de fundo desfocada
+        if (infoBanner) infoBanner.src = imagemSrc;
+        if (infoBackdrop) infoBackdrop.src = imagemSrc;
     }
 
     if (infoTitulo) infoTitulo.textContent = item.titulo || "Sem título";

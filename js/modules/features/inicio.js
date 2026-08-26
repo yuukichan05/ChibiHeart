@@ -189,46 +189,46 @@ export async function carregarAnimesPorGenero() { //[cite: 1]
     containerPrincipal.querySelectorAll(".secao-genero-placeholder").forEach(el => el.remove()); //[cite: 1]
     containerPrincipal.querySelectorAll(".secao-genero-container:not(.secao-genero-placeholder)").forEach(el => el.remove()); //[cite: 1]
 
-    const setGeneros = new Set(); //[cite: 1]
-    Object.values(infoCompleta).forEach(anime => { //[cite: 1]
-      if (Array.isArray(anime.generos)) { //[cite: 1]
-        anime.generos.forEach(g => setGeneros.add(g)); //[cite: 1]
+    const setGeneros = new Set();
+    Object.values(infoCompleta).forEach(anime => {
+      if (Array.isArray(anime.generos)) { 
+        anime.generos.forEach(g => setGeneros.add(g)); 
       }
     });
 
-    const listaGeneros = embaralharLista(Array.from(setGeneros)); //[cite: 1]
+    const listaGeneros = embaralharLista(Array.from(setGeneros));
 
-    listaGeneros.forEach(generoAlvo => { //[cite: 1]
-      const cloneSecao = modeloSecao.content.cloneNode(true); //[cite: 1]
-      const tituloSecao = cloneSecao.querySelector(".titulo-categoria"); //[cite: 1]
-      const gradeCards = cloneSecao.querySelector(".cards-grid"); //[cite: 1]
+    listaGeneros.forEach(generoAlvo => { 
+      const cloneSecao = modeloSecao.content.cloneNode(true);
+      const tituloSecao = cloneSecao.querySelector(".titulo-categoria");
+      const gradeCards = cloneSecao.querySelector(".cards-grid");
 
-      if (!tituloSecao || !gradeCards) return; //[cite: 1]
+      if (!tituloSecao || !gradeCards) return;
 
-      tituloSecao.textContent = generoAlvo; //[cite: 1]
-      const animesEmbaralhados = embaralharLista(Object.keys(infoCompleta)); //[cite: 1]
+      tituloSecao.textContent = generoAlvo;
+      const animesEmbaralhados = embaralharLista(Object.keys(infoCompleta));
 
-      animesEmbaralhados.forEach(animeId => { //[cite: 1]
-        const anime = infoCompleta[animeId]; //[cite: 1]
-        if (anime.generos && anime.generos.includes(generoAlvo)) { //[cite: 1]
-          gradeCards.appendChild(criarElementoCard(animeId, anime, modeloCard)); //[cite: 1]
+      animesEmbaralhados.forEach(animeId => { 
+        const anime = infoCompleta[animeId]; 
+        if (anime.generos && anime.generos.includes(generoAlvo)) { 
+          gradeCards.appendChild(criarElementoCard(animeId, anime, modeloCard));
         }
       });
 
-      if (gradeCards.children.length > 0) { //[cite: 1]
-        containerPrincipal.appendChild(cloneSecao); //[cite: 1]
+      if (gradeCards.children.length > 0) { 
+        containerPrincipal.appendChild(cloneSecao); 
       }
     });
   } catch (erro) {
-    console.error("❌ [Gêneros] Falha crítica:", erro); //[cite: 1]
+    console.error("❌ [Gêneros] Falha crítica:", erro); 
   }
 }
 
-function embaralharLista(array) { //[cite: 1]
-  let copia = [...array]; //[cite: 1]
-  for (let i = copia.length - 1; i > 0; i--) { //[cite: 1]
-    const j = Math.floor(Math.random() * (i + 1)); //[cite: 1]
-    [copia[i], copia[j]] = [copia[j], copia[i]]; //[cite: 1]
+function embaralharLista(array) { 
+  let copia = [...array]; 
+  for (let i = copia.length - 1; i > 0; i--) { 
+    const j = Math.floor(Math.random() * (i + 1)); 
+    [copia[i], copia[j]] = [copia[j], copia[i]];
   }
-  return copia; //[cite: 1]
+  return copia;
 }
