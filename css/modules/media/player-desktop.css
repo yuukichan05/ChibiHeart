@@ -1,4 +1,12 @@
 /* ==========================================================================
+   OCULTAR CURSOR DO MOUSE (APENAS SOBRE O CONTÊINER DO PLAYER)
+   ========================================================================== */
+#custom-player-container.hide-cursor,
+#custom-player-container.hide-cursor * {
+    cursor: none !important;
+}
+
+/* ==========================================================================
    ADAPTAÇÃO DESKTOP: APENAS PARA A TELA DO PLAYER (#PLAYER)
    ========================================================================== */
 
