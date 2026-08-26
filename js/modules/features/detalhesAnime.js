@@ -513,7 +513,7 @@ async function configurarModoSerie(item, itemId, tempParam, dom) {
                 epAlvo = ep;
                 const rawTitle = epAlvo.titulo || `Episódio ${epAlvo.index}`;
                 const baseTitle = stripLeadingNumber(rawTitle) || rawTitle;
-                textoBotao = `CONTINUAR ASSISTINDO: EP. ${epAlvo.index} - ${baseTitle}`;
+                textoBotao = `Resume:  ${epAlvo.index} • ${baseTitle}`;
             }
         } else {
             epAlvo = todosEpisodios[0];
