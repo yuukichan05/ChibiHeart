@@ -5,7 +5,7 @@ import {
   carregarAnimesPorGenero 
 } from './modules/features/inicio.js';
 
-import { gerenciarTelaInfo } from './modules/features/detalhesAnime.js';
+import { gerenciarTelaInfo } from './modules/features/index-detalhes.js';
 import { gerenciarTelaPlayer, verificarESincronizarAoSairDoPlayer } from './modules/features/index-player.js';
 import { inicializarPesquisa } from './modules/features/pesquisa.js';
 import { gerenciarTelaHistorico } from './modules/features/historico.js';
