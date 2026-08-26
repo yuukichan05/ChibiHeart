@@ -1,5 +1,3 @@
-// js/modules/features/playerControls.js
-
 import { 
   salvarProgressoDB, 
   buscarProgressoDB, 
@@ -10,6 +8,7 @@ import {
   limparTimersSync, 
   iniciarTimerCincoMinutos, 
   agendarSyncPausaCincoSegundos, 
+  getAssistiuAlgo,
   setAssistiuAlgo 
 } from "./playerSync.js";
 
@@ -45,6 +44,30 @@ export function limparPlayer() {
   urlDubAtual = '';
   urlLegAtual = '';
   idiomaAtual = 'dub';
+}
+
+// Chamado ao trocar de rota para verificar se algo foi assistido e sincronizar
+export async function verificarESincronizarAoSairDoPlayer() {
+  limparTimersSync();
+
+  if (getAssistiuAlgo()) {
+    console.log("🚪 [Player Exit] Algo foi assistido. Sincronizando dados com a nuvem...");
+    setAssistiuAlgo(false);
+
+    const videoElement = document.getElementById("player-video");
+    if (videoElement && epIdAtual) {
+      const tempoAtual = Math.floor(videoElement.currentTime);
+      const duracaoTotal = Math.floor(videoElement.duration || 0);
+      if (tempoAtual > 0) {
+        await salvarProgressoDB(epIdAtual, tempoAtual, duracaoTotal);
+      }
+    }
+
+    limparPlayer();
+    await sincronizarUploadGithub();
+  } else {
+    limparPlayer();
+  }
 }
 
 export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios }) {
@@ -127,7 +150,6 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
     function ocultarControles() {
       if (controlsOverlay && !videoElement.paused) {
         controlsOverlay.classList.add("controls-hidden");
-        // Oculta o cursor APENAS se o ponteiro estiver atualmente dentro do contêiner do vídeo
         if (isHoveringContainer && containerPlayer) {
           containerPlayer.classList.add("hide-cursor");
         }
@@ -153,7 +175,6 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
     if (btnPlay) btnPlay.addEventListener("click", togglePlay);
     videoElement.addEventListener("click", togglePlay);
 
-    // Alternância de áudio (DUB / LEG) com Toast em caso de ausência
     const alternarAudioHandler = () => {
       if (!urlDubAtual || !urlLegAtual) {
         let nomeAudioFaltante = "alternativo";
@@ -394,7 +415,6 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
       containerPlayer.addEventListener("mousemove", resetAutoOcultarControles);
       containerPlayer.addEventListener("touchstart", resetAutoOcultarControles, { passive: true });
 
-      // Detecta quando o mouse entra e sai do contêiner do player
       containerPlayer.addEventListener("mouseenter", () => {
         isHoveringContainer = true;
       });

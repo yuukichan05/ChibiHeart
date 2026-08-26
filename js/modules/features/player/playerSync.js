@@ -1,5 +1,3 @@
-// js/modules/features/playerSync.js
-
 import { 
   salvarProgressoDB, 
   sincronizarUploadGithub 
@@ -63,32 +61,4 @@ export function agendarSyncPausaCincoSegundos(videoElement, epIdAtual) {
       await sincronizarUploadGithub();
     }
   }, 5000);
-}
-
-// Chamado ao trocar de rota para verificar se algo foi assistido
-export async function verificarESincronizarAoSairDoPlayer(epIdAtual, callbackLimparPlayer) {
-  limparTimersSync();
-
-  if (assistiuAlgo) {
-    console.log("🚪 [Player Exit] Algo foi assistido. Sincronizando dados com a nuvem...");
-    assistiuAlgo = false;
-
-    const videoElement = document.getElementById("player-video");
-    if (videoElement && epIdAtual) {
-      const tempoAtual = Math.floor(videoElement.currentTime);
-      const duracaoTotal = Math.floor(videoElement.duration || 0);
-      if (tempoAtual > 0) {
-        await salvarProgressoDB(epIdAtual, tempoAtual, duracaoTotal);
-      }
-    }
-
-    if (typeof callbackLimparPlayer === "function") {
-      callbackLimparPlayer();
-    }
-    await sincronizarUploadGithub();
-  } else {
-    if (typeof callbackLimparPlayer === "function") {
-      callbackLimparPlayer();
-    }
-  }
 }
