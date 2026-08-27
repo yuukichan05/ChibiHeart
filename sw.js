@@ -1,45 +1,71 @@
-const CACHE_NAME = 'chibiheart-v2026/08/22';
+const CACHE_NAME = 'chibiheart-v2026/08/26';
 
-// Arquivos para guardar em cache estático (sincronizados com a estrutura do projeto)
+// Arquivos para guardar em cache estático (sincronizados com a arvore do projeto)
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
+  './animes.json',
   
   // CSS
   './css/main.css',
   './css/modules/animacoes.css',
+  './css/modules/config.css',
+  './css/modules/conta.css',
+  './css/modules/explorar.css',
   './css/modules/historico.css',
+  './css/modules/inicio.css',
   './css/modules/notifi.css',
   './css/modules/perfil.css',
   './css/modules/pesquisa.css',
   './css/modules/player.css',
-  './css/modules/trakt.css',
   './css/modules/views.css',
 
-  //DESKTOP CSS
-  './css/modules/media/trakt-desktop.css',
-  './css/modules/media/views-desktop.css',
-  './css/modules/media/player-desktop.css',
-  './css/modules/media/pesquisa-desktop.css',
+  // DESKTOP CSS
   './css/modules/media/base-desktop.css',
   './css/modules/media/historico-desktop.css',
+  './css/modules/media/inicio-desktop.css',
   './css/modules/media/perfil-desktop.css',
-  // JSON
-  './dados/info.json',
+  './css/modules/media/pesquisa-desktop.css',
+  './css/modules/media/player-desktop.css',
+  './css/modules/media/views-desktop.css',
 
-  // JS
+  // JSON
+  './dados/animes.json',
+
+  // JS Main
   './js/main.js',
-  './js/modules/continuarAssistindo.js',
-  './js/modules/db.js',
-  './js/modules/historico.js',
-  './js/modules/info.js',
-  './js/modules/inicio.js',
-  './js/modules/notificacoes.js',
-  './js/modules/perfil.js',
-  './js/modules/pesquisa.js',
-  './js/modules/playerView.js',
-  './js/modules/repository.js',
+
+  // JS Database
+  './js/modules/database/db.js',
+  './js/modules/database/dbCore.js',
+  './js/modules/database/dbProgresso.js',
+  './js/modules/database/dbSync.js',
+  './js/modules/database/repository.js',
+
+  // JS Features
+  './js/modules/features/conta.js',
+  './js/modules/features/continuarAssistindo.js',
+  './js/modules/features/explorar.js',
+  './js/modules/features/historico.js',
+  './js/modules/features/index-detalhes.js',
+  './js/modules/features/index-player.js',
+  './js/modules/features/inicio.js',
+  './js/modules/features/notificacoes.js',
+  './js/modules/features/perfil.js',
+  './js/modules/features/pesquisa.js',
+
+  // JS Features - Detalhes
+  './js/modules/features/detalhes/detalhesEpisodes.js',
+  './js/modules/features/detalhes/detalhesSeasons.js',
+  './js/modules/features/detalhes/detalhesUtils.js',
+  './js/modules/features/detalhes/detalhesView.js',
+
+  // JS Features - Player
+  './js/modules/features/player/playerControls.js',
+  './js/modules/features/player/playerSync.js',
+  './js/modules/features/player/playerUiUtils.js',
+  './js/modules/features/player/playerView.js',
 
   // Imagens (Ícones PWA)
   './imagem/icon_solid_192.png',
@@ -52,7 +78,7 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[SW] Cache v2026/08/22: Guardando arquivos atualizados...');
+      console.log('[SW] Cache v2026/08/26: Guardando arquivos atualizados...');
       return Promise.all(
         ASSETS_TO_CACHE.map(url => {
           return cache.add(url).catch(err => console.error(`[SW] Erro ao cachear: ${url}`, err));
