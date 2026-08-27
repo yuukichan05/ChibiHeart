@@ -1,7 +1,7 @@
 import { 
   salvarProgressoDB, 
   sincronizarUploadGithub 
-} from "../../database/db.js";
+} from "../../data/database/db.js";
 
 let timerCincoMinutos = null;
 let timerPausaCincoSegundos = null;

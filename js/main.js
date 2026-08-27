@@ -3,17 +3,17 @@ import {
   carregarAnimesRecomendados, 
   carregarAnimesRecentes, 
   carregarAnimesPorGenero 
-} from './modules/features/inicio.js';
+} from './features/inicio.js';
 
-import { gerenciarTelaExplorar } from './modules/features/explorar.js';
-import { gerenciarTelaInfo } from './modules/features/index-detalhes.js';
-import { gerenciarTelaPlayer, verificarESincronizarAoSairDoPlayer } from './modules/features/index-player.js';
-import { inicializarPesquisa } from './modules/features/pesquisa.js';
-import { gerenciarTelaHistorico } from './modules/features/historico.js';
-import { renderizarContinuarAssistindo } from './modules/features/continuarAssistindo.js';
-import { inicializarPerfil, gerenciarTelaPerfil } from './modules/features/perfil.js';
-import { inicializarConta, autoSincronizarGithub } from './modules/features/conta.js';
-import { gerenciarTelaNotificacoes, atualizarBadgeNotificacao } from './modules/features/notificacoes.js';
+import { gerenciarTelaExplorar } from './features/explorar.js';
+import { gerenciarTelaInfo } from './features/index-detalhes.js';
+import { gerenciarTelaPlayer, verificarESincronizarAoSairDoPlayer } from './features/index-player.js';
+import { inicializarPesquisa } from './features/pesquisa.js';
+import { gerenciarTelaHistorico } from './features/historico.js';
+import { renderizarContinuarAssistindo } from './features/continuarAssistindo.js';
+import { inicializarPerfil, gerenciarTelaPerfil } from './features/perfil.js';
+import { inicializarConta, autoSincronizarGithub } from './features/conta.js';
+import { gerenciarTelaNotificacoes, atualizarBadgeNotificacao } from './features/notificacoes.js';
 
 /* ==========================================================================
    CAPTURA GLOBAL DE IMAGENS

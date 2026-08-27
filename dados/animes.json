@@ -2343,6 +2343,7 @@
     "titulo_pt": "A Fragrante Flor Desabrocha com Dignidade",
     "ano": "2025",
     "temporada": "spring",
+    "status": "Finalizado",
     "classificacao": "",
     "generos": ["Animação", "Romance", "Drama"],
     "sinopse": "Quando o intimidante Rintaro conhece a fofa Kaoruko, essa dupla inusitada se aproxima. Mas o problema é que eles estudam em escolas rivais.",
@@ -2481,7 +2482,10 @@
             "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/b2VkB6Opvx2Fv6LblXmDok0Km9b.jpg",
             "duracao": "24 min",
             "url_dub": "https://ia803109.us.archive.org/21/items/KaoruDubLeg/Dub-13.mp4",
-            "url_leg": "https://ia803109.us.archive.org/21/items/KaoruDubLeg/Leg-13.mp4"
+            "url_leg": "https://ia803109.us.archive.org/21/items/KaoruDubLeg/Leg-13.mp4",
+            "data_lancamento": "2026-08-26T18:13:00Z",
+            "skip_intro": { "inicio": 90, "fim": 180},
+            "skip_outro": { "inicio": 1350, "fim": 1440}
           }
         ]
       }

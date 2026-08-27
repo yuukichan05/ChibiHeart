@@ -1,4 +1,4 @@
-import { obterInfoCompleta } from '../database/repository.js';
+import { obterInfoCompleta } from '../data/database/repository.js';
 
 const cardObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {

@@ -2,7 +2,7 @@ import {
   buscarPerfilDB,
   salvarPerfilDB,
   sincronizarUploadGithub
-} from '../database/db.js';
+} from '../data/database/db.js';
 
 import {
   adicionarNotificacao,

@@ -2,7 +2,7 @@ import {
   salvarProgressoDB, 
   buscarProgressoDB, 
   sincronizarUploadGithub 
-} from "../../database/db.js";
+} from "../../data/database/db.js";
 import { formatarTempo, exibirToast, atualizarBotaoAudio } from "./playerUiUtils.js";
 import { 
   limparTimersSync, 

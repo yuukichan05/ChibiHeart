@@ -2,6 +2,17 @@
    4. VIEWS E PÁGINAS (#info, EPISÓDIOS E #pesquisa) - ESTILO NETFLIX MOBILE
    ========================================================================== */
 
+/* TRAVA DE ROLAGEM E TAB-BAR QUANDO O POP-UP DE TEMPORADAS ESTIVER ATIVO */
+body:has(#popup-temporadas.ativo),
+body:has(.menu-popup-temporadas.ativo) {
+    overflow: hidden !important;
+    touch-action: none;
+}
+
+body:has(#popup-temporadas.ativo) .tab-bar,
+body:has(.menu-popup-temporadas.ativo) .tab-bar {
+    display: none !important;
+}
 
 /* CONTAINER DA IMAGEM DE FUNDO */
 .info-hero {
@@ -12,9 +23,22 @@
     box-sizing: border-box;
     z-index: 1;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    overflow: hidden; /* Evita que o blur vaze das bordas da tela */
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center;    /* Centraliza verticalmente o pôster */
+    overflow: hidden;
+}
+
+/* POSTER CENTRAL */
+.banner-img {
+    position: relative;
+    z-index: 2; /* Mantém acima do fundo */
+    width: 100%;
+    max-width: 16.25rem;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: 24px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+    margin: 0 auto; /* Força o alinhamento central */
 }
 
 /* IMAGEM DE FUNDO (BACKDROP DESFOCADO) */
@@ -44,31 +68,18 @@
     background: linear-gradient(to bottom, transparent 40%, var(--bg-main, #141414) 100%);
 }
 
-/* POSTER CENTRAL */
-.banner-img {
-    position: relative;
-    z-index: 2; /* Fica acima do backdrop e do overlay */
-    width: 100%;
-    max-width: 16.25rem;
-    aspect-ratio: 2 / 3;
-    object-fit: cover;
-    border-radius: 24px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
-    content: var(--img-poster); 
-}
-
-
 /* VIEW DE DETALHES (#info) */
 #info {
     background-color: var(--bg-main, #141414);
-    min-height: 100vh;
+    min-height: auto !important;
     position: relative;
-    overflow-x: hidden;
     color: var(--text-main, #ffffff);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* CONTAINER DA IMAGEM DE FUNDO (ESTILO CARD CENTRALIZADO) */
+/* 1. Remove a altura mínima forçada que estica o fundo da tela além do conteúdo */
+#info {
+
 
 /* BOTÃO DE VOLTAR */
 .btn-voltar, 
@@ -107,7 +118,7 @@
 .btn-voltar .material-symbols-outlined { font-size: 20px; }
 .btn-voltar:active, .btn-voltar-player:active { transform: scale(0.92); }
 
-/* CONTEÚDO PRINCIPAL (POSICIONADO ABAIXO DO POSTER) */
+/* CONTEÚDO PRINCIPAL */
 .info-content {
     position: relative;
     z-index: 2;
@@ -128,19 +139,83 @@
     font-size: 1.8rem; 
     font-weight: 800; 
     line-height: 1.15; 
-    margin-bottom: 6px; 
+    margin-bottom: 4px; 
     color: #ffffff; 
     letter-spacing: -0.3px; 
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
 }
 
+/* SUBTÍTULO (TÍTULOS ALTERNATIVOS) */
+.info-subtitle {
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: #a3a3a3;
+    margin: 0 0 8px 0;
+    line-height: 1.25;
+}
+
 .info-meta { 
     display: flex; 
     align-items: center; 
+    flex-wrap: wrap;
     gap: 6px; 
     font-size: 0.78rem; 
     font-weight: 600; 
     color: #a3a3a3; 
+}
+
+/* ESTILIZAÇÃO DAS BADGES DE METADADOS */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.badge-tipo {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.badge-status {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #cccccc;
+}
+
+.badge-status.status-em-exibição,
+.badge-status.status-em-exibicao {
+    background-color: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.badge-status.status-finalizado {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #b3b3b3;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.badge-status.status-anunciado {
+    background-color: rgba(241, 196, 15, 0.15);
+    color: #f1c40f;
+    border: 1px solid rgba(241, 196, 15, 0.3);
+}
+
+.badge-estacao {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #b3b3b3;
+}
+
+.badge-classificacao {
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: #ffffff;
+    font-size: 0.65rem;
 }
 
 .info-separator { 
@@ -151,7 +226,7 @@
     display: flex; 
     flex-wrap: wrap; 
     gap: 4px; 
-    margin-top: 4px;
+    margin-top: 6px;
     margin-bottom: 14px; 
     font-size: 0.78rem; 
     color: #e5e5e5; 
@@ -164,7 +239,7 @@
     color: #666666;
 }
 
-/* BOTÃO PLAY */
+/* BOTÃO PLAY E ESTADO DESATIVADO */
 .acao-principal-container { 
     width: 100%; 
     margin-bottom: 12px; 
@@ -192,11 +267,50 @@
     transform: scale(0.98);
 }
 
+.btn-disney-play.disabled {
+    background-color: #333333;
+    color: #888888;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.btn-disney-play.disabled:active {
+    background-color: #333333;
+    transform: none;
+}
+
 .btn-disney-play .material-symbols-outlined {
     font-size: 24px;
 }
 
-/* SINOPSE COMPACTA (NÃO OCUPA O BANNER) */
+/* CAIXA DE AVISO DE STATUS */
+.status-aviso-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-left: 3px solid #e50914;
+    border-radius: 0 4px 4px 0;
+    box-sizing: border-box;
+}
+
+.status-aviso-container .icon-aviso {
+    font-size: 18px;
+    color: #e50914;
+    flex-shrink: 0;
+}
+
+.status-aviso-container p {
+    font-size: 0.75rem;
+    color: #d1d1d1;
+    margin: 0;
+    line-height: 1.35;
+}
+
+/* SINOPSE COMPACTA */
 .info-synopsis-container { 
     width: 100%;
     max-height: auto; 
@@ -209,7 +323,6 @@
     color: #c9c9c9; 
     text-align: left; 
     margin: 0;
-    /* Corta o texto longo em até 3 linhas no mobile */
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -219,7 +332,7 @@
 /* SEÇÃO DE EPISÓDIOS E TEMPORADAS */
 .info-episodes-container { 
     width: 100%;
-    padding: 0 6px 32px 6px; /* Margem lateral 6px */
+    padding: 0 6px 32px 6px;
 }
 
 .episodes-header { 
@@ -229,6 +342,13 @@
     margin-bottom: 14px; 
 }
 
+.episodes-header-left {
+    display: flex;
+    flex-direction: column; /* Empilha o seletor acima do título */
+    align-items: flex-start; /* Alinha o conteúdo à esquerda */
+    gap: 6px;               /* Ajusta o espaçamento vertical entre eles */
+}
+
 .episodes-header .titulo-categoria { 
     font-size: 1.05rem; 
     font-weight: 700;
@@ -236,12 +356,17 @@
     color: #ffffff;
 }
 
-.custom-select-container { position: relative; display: inline-block; }
+/* SELETOR E MENU POP-UP DE TEMPORADAS */
+.seletor-temporadas-container,
+.custom-select-container { 
+    position: relative; 
+    display: inline-block; 
+}
 
 .btn-select-atual { 
     background-color: #2b2b2b; 
     color: #ffffff; 
-    padding: 6px 10px; 
+    padding: 6px 12px; 
     border: 1px solid rgba(255, 255, 255, 0.15); 
     border-radius: 4px; 
     font-size: 0.78rem; 
@@ -250,32 +375,47 @@
     display: flex; 
     align-items: center; 
     gap: 6px;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
+.btn-select-atual:active,
+.btn-select-atual[aria-expanded="true"] {
+    background-color: #383838;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.menu-popup-temporadas,
 .popup-opcoes { 
     display: none; 
     position: absolute; 
-    top: 110%; 
-    right: 0; 
-    min-width: 150px; 
+    top: calc(100% + 6px); 
+    left: 0; 
+    min-width: 170px; 
+    max-height: 250px;
+    overflow-y: auto;
     background-color: #232323; 
     border: 1px solid #333333; 
-    border-radius: 6px; 
-    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.8); 
+    border-radius: 8px; 
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.85); 
     z-index: 999; 
-    overflow: hidden; 
 }
 
-.popup-opcoes.mostrar { display: block; }
+.menu-popup-temporadas.ativo,
+.popup-opcoes.mostrar,
+.popup-opcoes.ativo { 
+    display: flex;
+    flex-direction: column;
+}
 
 .opcao-temporada { 
     color: #b3b3b3; 
     padding: 10px 14px; 
-    font-size: 0.78rem; 
+    font-size: 0.8rem; 
     cursor: pointer; 
-    transition: background 0.15s, color 0.15s; 
+    transition: background-color 0.15s ease, color 0.15s ease; 
 }
 
+.opcao-temporada:hover,
 .opcao-temporada:active { 
     background-color: #333333; 
     color: #ffffff; 
@@ -285,6 +425,36 @@
     color: #ffffff; 
     background-color: #e50914; 
     font-weight: bold; 
+}
+
+/* BOTÕES DE AÇÃO DO HEADER DE EPISÓDIOS */
+.episodes-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-ep-action {
+    background-color: #2b2b2b;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-ep-action:active {
+    background-color: #444444;
+    transform: scale(0.95);
+}
+
+.btn-ep-action .material-symbols-outlined {
+    font-size: 18px;
 }
 
 /* LISTA DE EPISÓDIOS */
@@ -304,6 +474,27 @@
     cursor: pointer;
 }
 
+/* CARD PRÓXIMO EPISÓDIO ("A SEGUIR") */
+.card-ep.card-proximo-ep .ep-media {
+    border: 2px solid #e50914;
+    box-shadow: 0 0 10px rgba(229, 9, 20, 0.4);
+}
+
+.badge-proximo-ep {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    background-color: #e50914;
+    color: #ffffff;
+    font-size: 0.58rem;
+    font-weight: 800;
+    padding: 2px 5px;
+    border-radius: 2px;
+    letter-spacing: 0.5px;
+    z-index: 3;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
 .ep-media { 
     position: relative; 
     width: 9.5rem; 
@@ -312,6 +503,7 @@
     overflow: hidden; 
     flex-shrink: 0; 
     background-color: #181818; 
+    box-sizing: border-box;
 }
 
 .ep-media img {
@@ -384,6 +576,17 @@
     color: #ffffff; 
     margin: 0; 
     line-height: 1.3; 
+}
+
+.card-descricao-ep {
+    font-size: 0.72rem;
+    color: #a3a3a3;
+    margin: 4px 0 0 0;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 /* VIEW DE PESQUISA (#pesquisa) */

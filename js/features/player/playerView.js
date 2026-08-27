@@ -1,7 +1,7 @@
 // js/modules/features/playerView.js
 
-import { obterAnimePorId } from "../../database/repository.js";
-import { buscarTodoProgressoDB } from "../../database/db.js";
+import { obterAnimePorId } from "../../data/database/repository.js";
+import { buscarTodoProgressoDB } from "../../data/database/db.js";
 import { makeEpisodeId } from "./playerUiUtils.js";
 import { limparPlayer, inicializarPlayer } from "./playerControls.js";
 

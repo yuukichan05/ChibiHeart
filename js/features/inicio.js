@@ -2,7 +2,7 @@ import {
   obterInfoCompleta, 
   obterRecomendados, 
   obterRecentes 
-} from '../database/repository.js'; //[cite: 1]
+} from '../data/database/repository.js'; //[cite: 1]
 
 // Observer Bidirecional: Gerencia pré-carregamento em RAM e desalocação dinâmica
 const cardObserver = new IntersectionObserver((entries) => {

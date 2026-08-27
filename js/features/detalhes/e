@@ -1,14 +1,29 @@
 // js/modules/features/detalhes/detalhesEpisodes.js
 
-import { buscarProgressoDB, alternarConcluidoDB } from '../../database/db.js';
-import { makeEpisodeId, stripLeadingNumber } from './detalhesUtils.js';
+import { buscarProgressoDB, alternarConcluidoDB } from '../../data/database/db.js';
+import { 
+    makeEpisodeId, 
+    stripLeadingNumber, 
+    formatarDataEpisodio, 
+    ehLancamentoRecente, 
+    ehEpisodioFuturo 
+} from './detalhesUtils.js';
 import { gerenciarTelaInfo } from './detalhesView.js';
 
 // --- ESTADO LOCAL E MAPEAMENTOS ---
 export let episodesMap = {};
+export let ordemCrescente = true;
 
 // Trava global para evitar múltiplos disparos seguidos
 let isProcessingAction = false;
+
+/**
+ * Alterna a ordem de exibição dos episódios (crescente/decrescente).
+ */
+export function alternarOrdemEpisodios() {
+    ordemCrescente = !ordemCrescente;
+    return ordemCrescente;
+}
 
 /**
  * Zera o mapeamento de episódios da memória.
@@ -37,7 +52,7 @@ export function indexEpisodes(animeId, temporadas) {
 /**
  * Renderiza a lista de episódios na DOM.
  */
-export function renderizarListaEpisodios(listaEpisodios, container, modelo, animeId, seasonIndex = 0, mapaProgresso = {}) {
+export function renderizarListaEpisodios(listaEpisodios, container, modelo, animeId, seasonIndex = 0, mapaProgresso = {}, proximoEpId = null) {
     container.innerHTML = "";
 
     if (!Array.isArray(listaEpisodios) || listaEpisodios.length === 0) {
@@ -45,11 +60,17 @@ export function renderizarListaEpisodios(listaEpisodios, container, modelo, anim
         return;
     }
 
-    listaEpisodios.sort((a, b) => (a.index || 0) - (b.index || 0));
+    // Copia o array para não alterar o original durante a ordenação
+    const listaOrdenada = [...listaEpisodios];
+    listaOrdenada.sort((a, b) => {
+        const idxA = a.index || 0;
+        const idxB = b.index || 0;
+        return ordemCrescente ? idxA - idxB : idxB - idxA;
+    });
 
     const frag = document.createDocumentFragment();
 
-    listaEpisodios.forEach((ep, epIndex) => {
+    listaOrdenada.forEach((ep, epIndex) => {
         if (typeof ep.index !== 'number') ep.index = epIndex + 1;
         if (!ep.id) ep.id = makeEpisodeId(animeId, seasonIndex + 1, ep.index);
 
@@ -60,6 +81,7 @@ export function renderizarListaEpisodios(listaEpisodios, container, modelo, anim
         const titleEl = clone.querySelector(".card-title-ep");
         const subtitleEl = clone.querySelector(".card-descricao-ep");
         const cardWrapper = clone.querySelector(".card-ep");
+        const badgeProximo = clone.querySelector(".badge-proximo-ep");
 
         const containerBarra = clone.querySelector(".barra-progresso-container");
         const preenchimentoBarra = clone.querySelector(".barra-progresso-preenchimento");
@@ -67,6 +89,10 @@ export function renderizarListaEpisodios(listaEpisodios, container, modelo, anim
         const rawTitle = ep.titulo || '';
         const baseTitle = stripLeadingNumber(rawTitle) || rawTitle;
         const displayTitle = `${String(ep.index).padStart(2, '0')}. ${baseTitle}`;
+
+        const dataFormatada = formatarDataEpisodio(ep.data_lancamento);
+        const eNovo = ehLancamentoRecente(ep.data_lancamento);
+        const eFuturo = ehEpisodioFuturo(ep.data_lancamento);
 
         if (imgEl) {
             imgEl.src = ep.thumb || "";
@@ -77,12 +103,35 @@ export function renderizarListaEpisodios(listaEpisodios, container, modelo, anim
         
         if (subtitleEl) {
             const textoDescricao = ep.descricao || "Sem descrição disponível.";
-            subtitleEl.innerHTML = `<span class="marquee-content">${textoDescricao}</span>`;
+            const sufixoData = dataFormatada ? ` • Lançado em ${dataFormatada}` : '';
+            subtitleEl.innerHTML = `<span class="marquee-content">${textoDescricao}${sufixoData}</span>`;
         }
 
         if (cardWrapper) {
             cardWrapper.dataset.epId = ep.id;
             cardWrapper.style.cursor = "pointer";
+
+            if (eFuturo) {
+                cardWrapper.classList.add("ep-bloqueado");
+                cardWrapper.style.opacity = "0.6";
+            }
+
+            // Destaque para Badges (Próximo, Novo ou Em Breve)
+            if (badgeProximo) {
+                if (proximoEpId && ep.id === proximoEpId) {
+                    cardWrapper.classList.add("card-proximo-ep");
+                    badgeProximo.style.display = "inline-block";
+                    badgeProximo.textContent = "A SEGUIR";
+                } else if (eNovo) {
+                    badgeProximo.style.display = "inline-block";
+                    badgeProximo.textContent = "NOVO";
+                    badgeProximo.style.backgroundColor = "#2ecc71";
+                } else if (eFuturo) {
+                    badgeProximo.style.display = "inline-block";
+                    badgeProximo.textContent = "EM BREVE";
+                    badgeProximo.style.backgroundColor = "#e67e22";
+                }
+            }
         }
 
         if (mapaProgresso[ep.id]) {
@@ -109,7 +158,7 @@ export function renderizarListaEpisodios(listaEpisodios, container, modelo, anim
 }
 
 /**
- * Pop-up de confirmação para marcar ou desmarcar episódio como assistido.
+ * Pop-up de confirmação para marcar ou desmarcar episódio individual.
  */
 export async function solicitarMarcaAssistido(epId) {
     if (isProcessingAction) return;
@@ -134,6 +183,44 @@ export async function solicitarMarcaAssistido(epId) {
         }
     } catch (erro) {
         console.error("Erro ao alterar progresso:", erro);
+    } finally {
+        setTimeout(() => {
+            isProcessingAction = false;
+        }, 500);
+    }
+}
+
+/**
+ * Marca ou desmarca todos os episódios da temporada selecionada de uma vez.
+ */
+export async function alternarStatusTemporada(listaEpisodios, animeId, seasonIndex, mapaProgresso = {}) {
+    if (isProcessingAction || !Array.isArray(listaEpisodios) || listaEpisodios.length === 0) return;
+    isProcessingAction = true;
+
+    try {
+        const idsEps = listaEpisodios.map((ep, idx) => {
+            const epIdx = ep.index || (idx + 1);
+            return ep.id || makeEpisodeId(animeId, seasonIndex + 1, epIdx);
+        });
+
+        // Verifica se TODOS da temporada já estão concluídos
+        const todosConcluidos = idsEps.every(id => {
+            const p = mapaProgresso[id];
+            return p?.concluido || (p?.total > 0 && (p.tempo / p.total) >= 0.85);
+        });
+
+        const novoStatus = !todosConcluidos;
+        const acaoTexto = novoStatus ? "marcar TODOS" : "desmarcar TODOS";
+        const mensagem = `Deseja ${acaoTexto} os episódios desta temporada como assistidos?`;
+
+        if (confirm(mensagem)) {
+            for (const id of idsEps) {
+                await alternarConcluidoDB(id, novoStatus);
+            }
+            await gerenciarTelaInfo();
+        }
+    } catch (erro) {
+        console.error("Erro ao alterar status da temporada:", erro);
     } finally {
         setTimeout(() => {
             isProcessingAction = false;
