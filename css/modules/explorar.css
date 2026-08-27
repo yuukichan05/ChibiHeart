@@ -271,7 +271,6 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
 
 .modal-filtro-opcoes {
     padding: 12px;
-    padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px));
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
