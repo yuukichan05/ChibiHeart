@@ -226,8 +226,64 @@
         </template>
       </div>
     </section>
-    
 
+    <!-- VIEW DA LISTA / FILTROS -->
+<!-- VIEW DA LISTA / FILTROS -->
+<!-- VIEW DA LISTA / FILTROS -->
+<section id="explorar" class="app-view">
+  <div class="filtros-container">
+    <h1 class="titulo-pagina">Explorar Animes</h1>
+
+    <div class="bar-filtros">
+      <!-- Filtro por Gênero -->
+      <div class="grupo-filtro">
+        <label>Gênero</label>
+        <button type="button" class="btn-seletor-filtro" id="btn-filtro-genero" data-tipo="genero">
+          <span class="seletor-rotulo" id="rotulo-filtro-genero">Todos os Gêneros</span>
+          <span class="material-symbols-outlined seletor-icone">expand_more</span>
+        </button>
+      </div>
+
+      <!-- Filtro por Temporada -->
+      <div class="grupo-filtro">
+        <label>Temporada</label>
+        <button type="button" class="btn-seletor-filtro" id="btn-filtro-temporada" data-tipo="temporada">
+          <span class="seletor-rotulo" id="rotulo-filtro-temporada">Todas as Temporadas</span>
+          <span class="material-symbols-outlined seletor-icone">expand_more</span>
+        </button>
+      </div>
+
+      <!-- Filtro por Ano -->
+      <div class="grupo-filtro">
+        <label>Ano</label>
+        <button type="button" class="btn-seletor-filtro" id="btn-filtro-ano" data-tipo="ano">
+          <span class="seletor-rotulo" id="rotulo-filtro-ano">Todos os Anos</span>
+          <span class="material-symbols-outlined seletor-icone">expand_more</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grade onde os cards filtrados serão exibidos -->
+  <section class="secao-categoria">
+    <div id="grade-explorar" class="cards-grid"></div>
+  </section>
+
+  <!-- POP-UP / MODAL PERSONALIZADO DOS SELETORES -->
+  <div id="modal-filtro-overlay" class="modal-filtro-overlay hidden" aria-hidden="true">
+    <div class="modal-filtro-card" role="dialog" aria-modal="true">
+      <div class="modal-filtro-header">
+        <h3 id="modal-filtro-titulo" class="modal-filtro-titulo">Selecionar Filtro</h3>
+        <button type="button" id="btn-fechar-modal-filtro" class="btn-fechar-modal" aria-label="Fechar">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div id="modal-filtro-opcoes" class="modal-filtro-opcoes">
+        <!-- Opções renderizadas dinamicamente pelo JS -->
+      </div>
+    </div>
+  </div>
+</section>
     
 
     <!-- VIEW DO PLAYER -->
@@ -704,6 +760,9 @@
   <nav class="tab-bar">
     <a href="#inicio" class="tab-item" aria-label="Início" tabindex="0">
       <span class="material-symbols-outlined">home</span>
+    </a>
+    <a href="#explorar" class="tab-item" aria-label="Explorar" tabindex="0">
+      <span class="material-symbols-outlined">explore</span>
     </a>
     <a href="#lista" class="tab-item" aria-label="Minha Lista" tabindex="0">
       <span class="material-symbols-outlined">list</span>

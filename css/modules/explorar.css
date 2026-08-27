@@ -1,0 +1,362 @@
+/* ==========================================================================
+   EXPLORAR.CSS - TELA DE FILTROS E BUSCA AVANÇADA DE ANIMES
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CONTROLE DE ESTADO GLOBAL (MODAL ABERTO)
+   -------------------------------------------------------------------------- */
+
+/* Trava a rolagem do fundo quando o modal de filtros está visível */
+body:has(#modal-filtro-overlay:not(.hidden)) {
+    overflow: hidden !important;
+    touch-action: none;
+}
+
+/* Esconde a Tab Bar automaticamente ao abrir o modal */
+body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
+    display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. CONTAINER PRINCIPAL E HEADER DA TELA
+   -------------------------------------------------------------------------- */
+
+#explorar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 12px 32px 12px;
+}
+
+#explorar .filtros-container {
+    margin-bottom: 20px;
+}
+
+#explorar .titulo-pagina {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    letter-spacing: -0.5px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#explorar .titulo-pagina::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 1.2em;
+    background: var(--accent-gradient);
+    border-radius: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   3. BARRA DE FILTROS E BOTÕES
+   -------------------------------------------------------------------------- */
+
+.bar-filtros {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    padding: 14px;
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-glass);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.grupo-filtro {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.grupo-filtro label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+}
+
+.btn-seletor-filtro {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    font-family: var(--font-main);
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 10px 12px;
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.btn-seletor-filtro:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.btn-seletor-filtro:focus,
+.btn-seletor-filtro.ativo {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 12px var(--accent-glow);
+    background-color: var(--bg-card);
+}
+
+.btn-seletor-filtro .seletor-rotulo {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-seletor-filtro .seletor-icone {
+    font-size: 20px;
+    color: var(--text-secondary);
+    transition: transform 0.2s ease;
+}
+
+.btn-seletor-filtro:hover .seletor-icone {
+    color: var(--text-main);
+}
+
+/* --------------------------------------------------------------------------
+   4. GRADE DE RESULTADOS E MENSAGEM VAZIA
+   -------------------------------------------------------------------------- */
+
+#explorar #grade-explorar {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 12px;
+    padding: 4px 0 24px 0;
+}
+
+#explorar #grade-explorar .card.poster {
+    width: 100% !important;
+}
+
+#explorar #grade-explorar .card-media {
+    aspect-ratio: 2 / 3;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease;
+}
+
+#explorar #grade-explorar .card.poster:hover .card-media,
+#explorar #grade-explorar .card.poster:focus .card-media {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 15px var(--accent-glow);
+}
+
+#explorar #grade-explorar .card-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.mensagem-vazia {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    background: var(--bg-panel);
+    border: 1px dashed var(--border-glass);
+    border-radius: 12px;
+    margin-top: 10px;
+}
+
+.mensagem-vazia::before {
+    content: 'search_off';
+    font-family: 'Material Symbols Outlined';
+    font-size: 48px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    opacity: 0.6;
+}
+
+/* --------------------------------------------------------------------------
+   5. POP-UP / MODAL DOS SELETORES DE FILTRO
+   -------------------------------------------------------------------------- */
+
+.modal-filtro-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 99999;
+    overscroll-behavior: contain;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.modal-filtro-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.modal-filtro-card {
+    width: 100%;
+    max-width: 500px;
+    max-height: 80vh;
+    background: #15151f;
+    border: 1px solid var(--border-glass);
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(0);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-filtro-overlay.hidden .modal-filtro-card {
+    transform: translateY(100%);
+}
+
+.modal-filtro-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.modal-filtro-titulo {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.btn-fechar-modal {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-fechar-modal:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+}
+
+.modal-filtro-opcoes {
+    padding: 12px;
+    padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.opcao-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text-main);
+    border: none;
+    font-family: var(--font-main);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.opcao-item:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.opcao-item.selecionado {
+    background-color: var(--accent-color, #6366f1);
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.opcao-item .icone-check {
+    font-size: 20px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.opcao-item.selecionado .icone-check {
+    opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   6. MEDIA QUERIES (DISPOSITIVOS MAIORES)
+   -------------------------------------------------------------------------- */
+
+@media (min-width: 600px) {
+    #explorar {
+        padding: 24px 20px 40px 20px;
+    }
+
+    #explorar .titulo-pagina {
+        font-size: 1.8rem;
+    }
+
+    .bar-filtros {
+        padding: 18px;
+        gap: 16px;
+    }
+
+    #explorar #grade-explorar {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 16px;
+    }
+
+    .modal-filtro-overlay {
+        align-items: center;
+    }
+
+    .modal-filtro-card {
+        border-radius: 16px;
+        transform: scale(1);
+    }
+
+    .modal-filtro-overlay.hidden .modal-filtro-card {
+        transform: scale(0.9) translateY(0);
+    }
+}
+
+@media (min-width: 900px) {
+    #explorar #grade-explorar {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 20px;
+    }
+}

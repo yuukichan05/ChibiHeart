@@ -5,6 +5,7 @@ import {
   carregarAnimesPorGenero 
 } from './modules/features/inicio.js';
 
+import { gerenciarTelaExplorar } from './modules/features/explorar.js';
 import { gerenciarTelaInfo } from './modules/features/index-detalhes.js';
 import { gerenciarTelaPlayer, verificarESincronizarAoSairDoPlayer } from './modules/features/index-player.js';
 import { inicializarPesquisa } from './modules/features/pesquisa.js';
@@ -48,6 +49,9 @@ export async function atualizarTelaAtiva() {
     case "":
       await renderizarContinuarAssistindo();
       break;
+    case "#explorar":
+      await gerenciarTelaExplorar();
+      break;
     case "#historico":
       await gerenciarTelaHistorico();
       break;
@@ -90,6 +94,9 @@ async function processarRota() {
     case "#inicio":
     case "":
       await renderizarContinuarAssistindo();
+      break;
+    case "#explorar":
+      await gerenciarTelaExplorar();
       break;
     case "#info":
       await gerenciarTelaInfo();
