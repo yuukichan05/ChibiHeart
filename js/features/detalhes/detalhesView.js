@@ -402,7 +402,7 @@ async function configurarModoSerie(item, itemId, tempParam, dom) {
                 epAlvo = todosEpisodios[idx + 1];
                 const rawTitle = epAlvo.titulo || `Episódio ${epAlvo.index}`;
                 const baseTitle = stripLeadingNumber(rawTitle) || rawTitle;
-                textoBotao = `ASSISTIR AO PRÓXIMO: EP. ${epAlvo.index} - ${baseTitle}`;
+                textoBotao = `PRÓXIMO: ${epAlvo.index} • ${baseTitle}`;
             } else {
                 epAlvo = todosEpisodios[0];
                 textoBotao = `REASSISTIR DESDE O EP. 1`;

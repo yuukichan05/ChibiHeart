@@ -1,4 +1,4 @@
-// dbCore.js - Conexão IndexedDB (com Fallback localStorage), Perfil e Notificações
+// dbCore.js - Conexão IndexedDB, Configurações Base, Perfil e Notificações
 
 export const DB_NAME = "ChibiHeartDB";
 export const DB_VERSION = 3;
@@ -29,133 +29,19 @@ export function obterDataHoraFormatada() {
   return `${agora.getFullYear()}-${pad(agora.getMonth() + 1)}-${pad(agora.getDate())}_${pad(agora.getHours())}-${pad(agora.getMinutes())}-${pad(agora.getSeconds())}`;
 }
 
-// ==========================================
-// DETECÇÃO E FALLBACK (localStorage)
-// ==========================================
-
-let avisoFallbackEnviado = false;
-
-function notificarAvisoFallback(titulo, mensagem) {
-  if (avisoFallbackEnviado) return;
-  avisoFallbackEnviado = true;
-
-  import('../../features/notificacoes.js')
-    .then(({ adicionarNotificacao }) => {
-      adicionarNotificacao({
-        titulo,
-        mensagem,
-        tipo: 'alerta'
-      });
-    })
-    .catch((err) => console.error("❌ [DB] Falha ao disparar notificação de fallback:", err));
-}
-
-export function suportaIndexedDB() {
-  try {
-    return 'indexedDB' in window && window.indexedDB !== null;
-  } catch {
-    return false;
-  }
-}
-
-function criarFallbackLocalStorage() {
-  const getItem = (storeName) => JSON.parse(localStorage.getItem(`${DB_NAME}_${storeName}`) || "{}");
-  const setItem = (storeName, data) => localStorage.setItem(`${DB_NAME}_${storeName}`, JSON.stringify(data));
-
-  return {
-    transaction: (stores, mode) => {
-      const tx = {
-        oncomplete: null,
-        onerror: null,
-        objectStore: (sName) => ({
-          get: (key) => {
-            const data = getItem(sName);
-            const req = { result: data[key] || null, target: {} };
-            setTimeout(() => {
-              req.target.result = req.result;
-              if (req.onsuccess) req.onsuccess({ target: req });
-            }, 0);
-            return req;
-          },
-          getAll: () => {
-            const data = getItem(sName);
-            const req = { result: Object.values(data), target: {} };
-            setTimeout(() => {
-              req.target.result = req.result;
-              if (req.onsuccess) req.onsuccess({ target: req });
-            }, 0);
-            return req;
-          },
-          put: (item) => {
-            const data = getItem(sName);
-            if (item && item.id) {
-              data[item.id] = item;
-              setItem(sName, data);
-            }
-            const req = { target: {} };
-            setTimeout(() => { if (req.onsuccess) req.onsuccess({ target: req }); }, 0);
-            return req;
-          },
-          delete: (key) => {
-            const data = getItem(sName);
-            delete data[key];
-            setItem(sName, data);
-            const req = { target: {} };
-            setTimeout(() => { if (req.onsuccess) req.onsuccess({ target: req }); }, 0);
-            return req;
-          },
-          clear: () => {
-            const targetStores = Array.isArray(stores) ? stores : [sName];
-            targetStores.forEach(s => setItem(s, {}));
-            const req = { target: {} };
-            setTimeout(() => { if (req.onsuccess) req.onsuccess({ target: req }); }, 0);
-            return req;
-          }
-        })
-      };
-
-      setTimeout(() => {
-        if (tx.oncomplete) tx.oncomplete();
-      }, 10);
-
-      return tx;
-    }
-  };
-}
-
 export function abrirBanco() {
-  return new Promise((resolve) => {
-    if (!suportaIndexedDB()) {
-      const msg = "Seu navegador não suporta IndexedDB. Mudando para armazenamento local (localStorage).";
-      console.warn(`⚠️ [DB] ${msg}`);
-      notificarAvisoFallback("IndexedDB Indisponível", msg);
-      return resolve(criarFallbackLocalStorage());
-    }
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
 
-    try {
-      const request = indexedDB.open(DB_NAME, DB_VERSION);
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains(STORES.PROGRESSO)) db.createObjectStore(STORES.PROGRESSO, { keyPath: "id" });
+      if (!db.objectStoreNames.contains(STORES.PERFIL)) db.createObjectStore(STORES.PERFIL, { keyPath: "id" });
+      if (!db.objectStoreNames.contains(STORES.NOTIFICACOES)) db.createObjectStore(STORES.NOTIFICACOES, { keyPath: "id" });
+    };
 
-      request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        if (!db.objectStoreNames.contains(STORES.PROGRESSO)) db.createObjectStore(STORES.PROGRESSO, { keyPath: "id" });
-        if (!db.objectStoreNames.contains(STORES.PERFIL)) db.createObjectStore(STORES.PERFIL, { keyPath: "id" });
-        if (!db.objectStoreNames.contains(STORES.NOTIFICACOES)) db.createObjectStore(STORES.NOTIFICACOES, { keyPath: "id" });
-      };
-
-      request.onsuccess = (event) => resolve(event.target.result);
-
-      request.onerror = () => {
-        const msg = "Permissão negada para o IndexedDB. Os dados serão salvos via localStorage.";
-        console.warn(`⚠️ [DB] ${msg}`);
-        notificarAvisoFallback("Acesso ao IndexedDB Bloqueado", msg);
-        resolve(criarFallbackLocalStorage());
-      };
-    } catch (erro) {
-      const msg = "Falha ao inicializar o IndexedDB. Alternando para localStorage.";
-      console.warn(`⚠️ [DB] ${msg}`, erro);
-      notificarAvisoFallback("Erro no Banco de Dados", msg);
-      resolve(criarFallbackLocalStorage());
-    }
+    request.onsuccess = (event) => resolve(event.target.result);
+    request.onerror = (event) => reject("Erro ao abrir IndexedDB: " + event.target.error);
   });
 }
 
@@ -272,7 +158,6 @@ export async function marcarNotificacoesLidasDB() {
       const store = tx.objectStore(STORES.NOTIFICACOES);
       store.clear();
       lista.forEach(item => store.put(item));
-
       tx.oncomplete = () => resolve(true);
       tx.onerror = (e) => reject(e.target.error);
     });
@@ -287,7 +172,6 @@ export async function limparNotificacoesDB() {
     return new Promise((resolve, reject) => {
       const tx = db.transaction(STORES.NOTIFICACOES, "readwrite");
       tx.objectStore(STORES.NOTIFICACOES).clear();
-
       tx.oncomplete = () => resolve(true);
       tx.onerror = (e) => reject(e.target.error);
     });

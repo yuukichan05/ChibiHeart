@@ -54,15 +54,12 @@ export async function exportarDadosDB() {
 
     const perfilSeguro = { ...perfilAtual, githubToken: "", gistId: "" };
 
-    const progressoBruto = await new Promise((resolve, reject) => {
+    const progressoData = await new Promise((resolve, reject) => {
       const tx = db.transaction(STORES.PROGRESSO, "readonly");
       const req = tx.objectStore(STORES.PROGRESSO).getAll();
       req.onsuccess = () => resolve(req.result || []);
       req.onerror = (e) => reject(e.target.error);
     });
-
-    // Filtra para garantir que itens zerados não sejam exportados
-    const progressoData = progressoBruto.filter(p => p.concluido || (p.tempo && p.tempo > 0));
 
     const notificacoesData = await buscarNotificacoesDB();
     const timestampLocal = await obterMaiorTimestampLocal();
@@ -84,18 +81,10 @@ export async function exportarDadosDB() {
 async function mesclarProgressoDB(progressoRemoto = []) {
   const db = await abrirBanco();
   const progressosLocais = await buscarTodoProgressoListaDB();
-  
-  // 1. Filtra locais zerados antes de mesclar
-  const locaisValidos = progressosLocais.filter(p => p.concluido || (p.tempo && p.tempo > 0));
-  const mapa = new Map(locaisValidos.map(p => [p.id, p]));
+  const mapa = new Map(progressosLocais.map(p => [p.id, p]));
 
   progressoRemoto.forEach(itemRemoto => {
     if (!itemRemoto || !itemRemoto.id) return;
-
-    // 2. Ignora itens remotos zerados/desmarcados
-    const ehZeradoRemoto = !itemRemoto.concluido && (!itemRemoto.tempo || itemRemoto.tempo <= 0);
-    if (ehZeradoRemoto) return;
-
     const itemLocal = mapa.get(itemRemoto.id);
 
     if (!itemLocal) {
@@ -209,12 +198,11 @@ export async function importarDadosDB(dados, mesclar = true) {
       }
 
       if (Array.isArray(dados.progresso)) {
-        const progressoValido = dados.progresso.filter(item => item && (item.concluido || (item.tempo && item.tempo > 0)));
         await new Promise((resolve, reject) => {
           const tx = db.transaction(STORES.PROGRESSO, "readwrite");
           const store = tx.objectStore(STORES.PROGRESSO);
           store.clear();
-          progressoValido.forEach((item) => store.put(item));
+          dados.progresso.forEach((item) => store.put(item));
           tx.oncomplete = () => resolve(true);
           tx.onerror = (e) => reject(e.target.error);
         });
@@ -403,4 +391,3 @@ export async function sincronizarDownloadGithub(forcar = false) {
     syncEmAndamento = false;
   }
 }
-

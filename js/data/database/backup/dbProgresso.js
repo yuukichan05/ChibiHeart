@@ -7,11 +7,6 @@ export async function salvarProgressoDB(epId, tempo, total, dispararSync = false
     const db = await abrirBanco();
     const concluido = total > 0 ? (tempo / total) >= 0.85 : false;
 
-    // Se a posição for zerada e não estiver concluído, remove em vez de salvar
-    if (!concluido && (!tempo || tempo <= 0)) {
-      return await removerProgressoDB(epId);
-    }
-
     const registro = {
       id: epId,
       tempo,
@@ -36,30 +31,8 @@ export async function salvarProgressoDB(epId, tempo, total, dispararSync = false
   }
 }
 
-export async function removerProgressoDB(epId) {
-  try {
-    const db = await abrirBanco();
-    await new Promise((resolve, reject) => {
-      const tx = db.transaction(STORES.PROGRESSO, "readwrite");
-      const req = tx.objectStore(STORES.PROGRESSO).delete(epId);
-      req.onsuccess = () => resolve(true);
-      req.onerror = (e) => reject(e.target.error);
-    });
-
-    sincronizarUploadGithub(false, true).catch(() => {});
-    return true;
-  } catch (erro) {
-    console.error("❌ [DB] Falha ao remover progresso:", erro);
-  }
-}
-
 export async function alternarConcluidoDB(epId, concluido = true) {
   try {
-    // Se o objetivo for desmarcar, remove direto do banco de dados
-    if (!concluido) {
-      return await removerProgressoDB(epId);
-    }
-
     const db = await abrirBanco();
     await new Promise((resolve, reject) => {
       const tx = db.transaction(STORES.PROGRESSO, "readwrite");
@@ -74,9 +47,9 @@ export async function alternarConcluidoDB(epId, concluido = true) {
         const registro = {
           ...existente,
           id: epId,
-          tempo: total,
+          tempo: concluido ? total : 0,
           total: total,
-          concluido: true,
+          concluido: concluido,
           atualizadoEm: Date.now()
         };
 
@@ -128,35 +101,4 @@ export async function buscarTodoProgressoDB() {
   const mapa = {};
   lista.forEach(item => { mapa[item.id] = item; });
   return mapa;
-}
-
-/**
- * Varre o banco de dados e exclui qualquer registro não-concluído com tempo zerado.
- */
-export async function limparRegistrosZeradosDB() {
-  try {
-    const db = await abrirBanco();
-    const todos = await buscarTodoProgressoListaDB();
-
-    const paraRemover = todos.filter(item => !item.concluido && (!item.tempo || item.tempo <= 0));
-
-    if (paraRemover.length === 0) return 0;
-
-    await new Promise((resolve, reject) => {
-      const tx = db.transaction(STORES.PROGRESSO, "readwrite");
-      const store = tx.objectStore(STORES.PROGRESSO);
-
-      paraRemover.forEach(item => store.delete(item.id));
-
-      tx.oncomplete = () => resolve(true);
-      tx.onerror = (e) => reject(e.target.error);
-    });
-
-    sincronizarUploadGithub(false, true).catch(() => {});
-    console.log(`🧹 [DB] ${paraRemover.length} registros zerados foram removidos com sucesso.`);
-    return paraRemover.length;
-  } catch (erro) {
-    console.error("❌ [DB] Falha ao limpar registros zerados:", erro);
-    return 0;
-  }
 }

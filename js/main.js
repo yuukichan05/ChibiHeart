@@ -14,6 +14,7 @@ import { renderizarContinuarAssistindo } from './features/continuarAssistindo.js
 import { inicializarPerfil, gerenciarTelaPerfil } from './features/perfil.js';
 import { inicializarConta, autoSincronizarGithub } from './features/conta.js';
 import { gerenciarTelaNotificacoes, atualizarBadgeNotificacao } from './features/notificacoes.js';
+import { limparRegistrosZeradosDB } from './data/database/dbProgresso.js';
 
 /* ==========================================================================
    CAPTURA GLOBAL DE IMAGENS
@@ -122,6 +123,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("btn-erro-voltar")?.addEventListener("click", () => {
     window.location.hash = "#inicio";
   });
+
+  // Limpa registros antigos com progresso zerado do banco de dados
+  await limparRegistrosZeradosDB();
 
   inicializarScrollHeader();
   gerarEsqueletosIniciais();
