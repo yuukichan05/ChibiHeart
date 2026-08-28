@@ -1,18 +1,16 @@
 /* ==========================================================================
-   EXPLORAR.CSS - TELA DE FILTROS E BUSCA AVANÇADA DE ANIMES
+   EXPLORAR.CSS - TELA DE FILTROS (ESTILO APPLE TV+ / GLASS)
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
    1. CONTROLE DE ESTADO GLOBAL (MODAL ABERTO)
    -------------------------------------------------------------------------- */
 
-/* Trava a rolagem do fundo quando o modal de filtros está visível */
 body:has(#modal-filtro-overlay:not(.hidden)) {
     overflow: hidden !important;
     touch-action: none;
 }
 
-/* Esconde a Tab Bar automaticamente ao abrir o modal */
 body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
     display: none !important;
 }
@@ -25,6 +23,11 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
     max-width: 1200px;
     margin: 0 auto;
     padding: 16px 12px 32px 12px;
+    background-color: var(--bg-main, #120b1c);
+    min-height: 100vh;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+    color: var(--text-main, #ffffff);
 }
 
 #explorar .filtros-container {
@@ -32,10 +35,10 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
 }
 
 #explorar .titulo-pagina {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: var(--text-main);
-    letter-spacing: -0.5px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.3px;
     margin-bottom: 16px;
     display: flex;
     align-items: center;
@@ -46,26 +49,26 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
     content: '';
     display: inline-block;
     width: 4px;
-    height: 1.2em;
-    background: var(--accent-gradient);
+    height: 1.1em;
+    background: #a855f7;
     border-radius: 4px;
 }
 
 /* --------------------------------------------------------------------------
-   3. BARRA DE FILTROS E BOTÕES
+   3. BARRA DE FILTROS E BOTÕES (ESTILO GLASSMORPHIC)
    -------------------------------------------------------------------------- */
 
 .bar-filtros {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px;
-    padding: 14px;
-    background-color: var(--bg-panel);
-    border: 1px solid var(--border-glass);
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+    padding: 12px;
+    background-color: rgba(30, 15, 48, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
 }
 
 .grupo-filtro {
@@ -75,11 +78,12 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
 }
 
 .grupo-filtro label {
-    font-size: 0.75rem;
+    font-size: 0.68rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.5);
+    margin-left: 2px;
 }
 
 .btn-seletor-filtro {
@@ -87,30 +91,35 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: var(--bg-card);
-    color: var(--text-main);
-    font-family: var(--font-main);
-    font-size: 0.88rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    font-size: 0.83rem;
     font-weight: 500;
     padding: 10px 12px;
-    border: 1px solid var(--border-glass);
-    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
     outline: none;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     user-select: none;
+    box-sizing: border-box;
+}
+
+.btn-seletor-filtro:active {
+    transform: scale(0.97);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .btn-seletor-filtro:hover {
-    border-color: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.2);
     background-color: rgba(255, 255, 255, 0.08);
 }
 
-.btn-seletor-filtro:focus,
-.btn-seletor-filtro.ativo {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 12px var(--accent-glow);
-    background-color: var(--bg-card);
+.btn-seletor-filtro.ativo,
+.btn-seletor-filtro:focus {
+    border-color: #a855f7;
+    background-color: rgba(168, 85, 247, 0.15);
+    box-shadow: 0 0 14px rgba(168, 85, 247, 0.3);
 }
 
 .btn-seletor-filtro .seletor-rotulo {
@@ -120,13 +129,13 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
 }
 
 .btn-seletor-filtro .seletor-icone {
-    font-size: 20px;
-    color: var(--text-secondary);
-    transition: transform 0.2s ease;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.5);
+    transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .btn-seletor-filtro:hover .seletor-icone {
-    color: var(--text-main);
+    color: #ffffff;
 }
 
 /* --------------------------------------------------------------------------
@@ -146,21 +155,28 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
 
 #explorar #grade-explorar .card-media {
     aspect-ratio: 2 / 3;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+    overflow: hidden;
+    background-color: #1a1028;
 }
 
-#explorar #grade-explorar .card.poster:hover .card-media,
-#explorar #grade-explorar .card.poster:focus .card-media {
+#explorar #grade-explorar .card.poster:active .card-media {
+    transform: scale(0.96);
+}
+
+#explorar #grade-explorar .card.poster:hover .card-media {
     transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 15px var(--accent-glow);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 15px rgba(168, 85, 247, 0.4);
 }
 
 #explorar #grade-explorar .card-title {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    margin-top: 4px;
+    margin-top: 6px;
+    color: #ffffff;
+    line-height: 1.3;
 }
 
 .mensagem-vazia {
@@ -170,26 +186,26 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 60px 20px;
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    background: var(--bg-panel);
-    border: 1px dashed var(--border-glass);
-    border-radius: 12px;
+    padding: 50px 20px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.88rem;
+    background: rgba(30, 15, 48, 0.3);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
     margin-top: 10px;
 }
 
 .mensagem-vazia::before {
     content: 'search_off';
     font-family: 'Material Symbols Outlined';
-    font-size: 48px;
-    color: var(--text-secondary);
-    margin-bottom: 12px;
-    opacity: 0.6;
+    font-size: 40px;
+    color: #a855f7;
+    margin-bottom: 10px;
+    opacity: 0.8;
 }
 
 /* --------------------------------------------------------------------------
-   5. POP-UP / MODAL DOS SELETORES DE FILTRO
+   5. POP-UP / BOTTOM SHEET ESTILO APPLE (MODAL)
    -------------------------------------------------------------------------- */
 
 .modal-filtro-overlay {
@@ -198,9 +214,9 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background-color: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     z-index: 99999;
     overscroll-behavior: contain;
     display: flex;
@@ -220,16 +236,19 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
 .modal-filtro-card {
     width: 100%;
     max-width: 500px;
-    max-height: 80vh;
-    background: #15151f;
-    border: 1px solid var(--border-glass);
-    border-radius: 20px 20px 0 0;
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+    max-height: 75vh;
+    background: rgba(24, 14, 38, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: none;
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
     display: flex;
     flex-direction: column;
     overflow: hidden;
     transform: translateY(0);
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
 }
 
 .modal-filtro-overlay.hidden .modal-filtro-card {
@@ -246,15 +265,16 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
 }
 
 .modal-filtro-titulo {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
-    color: var(--text-main);
+    color: #ffffff;
+    letter-spacing: -0.2px;
 }
 
 .btn-fechar-modal {
-    background: transparent;
+    background: rgba(255, 255, 255, 0.08);
     border: none;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.7);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -265,8 +285,8 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
 }
 
 .btn-fechar-modal:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: var(--text-main);
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
 }
 
 .modal-filtro-opcoes {
@@ -276,7 +296,7 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
     -webkit-overflow-scrolling: touch;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
 }
 
 .opcao-item {
@@ -284,12 +304,11 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
     align-items: center;
     justify-content: space-between;
     padding: 12px 16px;
-    border-radius: 10px;
+    border-radius: 12px;
     background: transparent;
-    color: var(--text-main);
+    color: rgba(255, 255, 255, 0.85);
     border: none;
-    font-family: var(--font-main);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
     text-align: left;
@@ -298,12 +317,14 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
 
 .opcao-item:hover {
     background-color: rgba(255, 255, 255, 0.06);
+    color: #ffffff;
 }
 
 .opcao-item.selecionado {
-    background-color: var(--accent-color, #6366f1);
+    background-color: #8b5cf6;
     color: #ffffff;
     font-weight: 700;
+    box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35);
 }
 
 .opcao-item .icone-check {
@@ -317,7 +338,7 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
 }
 
 /* --------------------------------------------------------------------------
-   6. MEDIA QUERIES (DISPOSITIVOS MAIORES)
+   6. MEDIA QUERIES (TABLETS E DESKTOPS)
    -------------------------------------------------------------------------- */
 
 @media (min-width: 600px) {
@@ -326,12 +347,12 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
     }
 
     #explorar .titulo-pagina {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
     }
 
     .bar-filtros {
-        padding: 18px;
-        gap: 16px;
+        padding: 16px;
+        gap: 14px;
     }
 
     #explorar #grade-explorar {
@@ -344,12 +365,13 @@ body:has(#modal-filtro-overlay:not(.hidden)) .tab-bar {
     }
 
     .modal-filtro-card {
-        border-radius: 16px;
+        border-radius: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         transform: scale(1);
     }
 
     .modal-filtro-overlay.hidden .modal-filtro-card {
-        transform: scale(0.9) translateY(0);
+        transform: scale(0.92) translateY(0);
     }
 }
 

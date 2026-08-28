@@ -1,21 +1,35 @@
 /* ==========================================================================
-   ESTILOS DA TELA DE HISTÓRICO DE ASSISTIDOS
+   ESTILOS DA TELA DE HISTÓRICO - ESTILO APPLE TV+ / PURPLE
    ========================================================================== */
 
 #historico {
-    padding: 16px 12px;
+    padding: 16px 12px 32px 12px;
+    background-color: var(--bg-main, #120b1c);
+    min-height: 100vh;
+    box-sizing: border-box;
+    color: var(--text-main, #ffffff);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
 }
 
-/* Filtros / Abas no Topo */
+#historico .titulo-categoria {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+    margin: 0 0 14px 0;
+}
+
+/* FILTROS / SEGMENTED CONTROL ESTILO APPLE */
 .historico-filtros {
     display: flex;
-    gap: 8px;
-    margin-top: 14px;
-    margin-bottom: 20px;
-    background-color: rgba(23, 23, 30, 0.6);
+    gap: 4px;
+    margin-bottom: 16px;
+    background-color: rgba(30, 15, 48, 0.55);
     padding: 4px;
-    border-radius: 12px;
-    border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08));
+    border-radius: 999px; /* Formato Pílula */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
 }
 
 .btn-filtro-historico {
@@ -24,35 +38,39 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
-    padding: 10px 14px;
+    padding: 8px 12px;
     border: none;
     background: transparent;
-    color: var(--text-secondary, #a0a0b2);
+    color: rgba(255, 255, 255, 0.65);
     font-weight: 600;
-    font-size: 0.85rem;
-    border-radius: 8px;
+    font-size: 0.8rem;
+    border-radius: 999px;
     cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-filtro-historico:active {
+    transform: scale(0.97);
 }
 
 .btn-filtro-historico .contador-badge {
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(255, 255, 255, 0.1);
     color: inherit;
-    font-size: 0.75rem;
-    padding: 2px 8px;
-    border-radius: 12px;
-    transition: background-color 0.2s ease;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+    line-height: 1;
 }
 
 .btn-filtro-historico:hover {
-    color: var(--text-main, #ffffff);
-    background-color: rgba(255, 255, 255, 0.04);
+    color: #ffffff;
 }
 
 .btn-filtro-historico.active {
-    background: var(--accent-gradient, linear-gradient(135deg, #a855f7, #8124e4));
+    background-color: #8b5cf6; /* Destaque Roxo Apple */
     color: #ffffff;
-    box-shadow: 0 4px 15px var(--accent-glow, rgba(129, 36, 228, 0.4));
+    box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4);
 }
 
 .btn-filtro-historico.active .contador-badge {
@@ -60,7 +78,7 @@
     color: #ffffff;
 }
 
-/* Seções de Conteúdo de Histórico */
+/* SEÇÕES DE CONTEÚDO */
 .historico-secao {
     display: block;
     transition: opacity 0.2s ease;
@@ -70,38 +88,42 @@
     display: none !important;
 }
 
-/* Lista de Cards */
-.episodes-list {
+/* LISTA DE CARDS */
+#historico .episodes-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
-/* Remove a aparência de caixa/card com bordas e fundo cinza/roxo */
+/* CARD DE HISTÓRICO (PADRONIZADO COM O #info) */
 .item-historico {
     display: flex;
     align-items: center;
-    gap: 10px;
-    background-color: transparent; /* Remove o fundo #1f1f2a */
-    padding: 0;                    /* Remove o padding de 10px */
-    border: none;                  /* Remove as bordas com transparência */
-    border-radius: 0;
-    transition: none;
-}
-
-/* Desativa os efeitos de hover/focus do card */
-.item-historico:hover,
-.item-historico:focus {
-    transform: none;
-    border-color: transparent;
+    gap: 12px;
     background-color: transparent;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
-/* Mantém as dimensões exatas da mídia da tela #info */
+.item-historico:active {
+    opacity: 0.85;
+    transform: scale(0.98);
+}
+
+/* MINIATURA DE MÍDIA */
 .item-historico .ep-media {
-    width: 9.5rem;
-    min-width: 9.5rem;
-    border-radius: 4px;
+    position: relative;
+    width: 11.3rem;
+    min-width: 11.3rem;
+    aspect-ratio: 16 / 9;
+    border-radius: 10px; /* Bordas arredondadas Apple */
+    overflow: hidden;
+    background-color: #1a1028;
+    flex-shrink: 0;
 }
 
 .historico-thumb {
@@ -114,16 +136,18 @@
     position: absolute;
     bottom: 4px;
     right: 4px;
-    background: rgba(0, 0, 0, 0.8);
-    color: #fff;
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 2px 6px;
-    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.75);
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    color: #ffffff;
+    font-size: 0.58rem;
+    font-weight: 600;
+    padding: 2px 5px;
+    border-radius: 4px;
+    z-index: 3;
 }
 
-/* Barra de progresso do Card */
+/* BARRA DE PROGRESSO ROXA (SUBSTITUI O VERMELHO NETFLIX) */
 .item-historico .barra-progresso-container {
     position: absolute;
     bottom: 0;
@@ -131,68 +155,71 @@
     width: 100%;
     height: 3px;
     background-color: rgba(255, 255, 255, 0.2);
+    z-index: 2;
 }
 
-/* Cor da barra de progresso do histórico igual ao da tela #info */
 .item-historico .barra-progresso-preenchimento {
     height: 100%;
-    background-color: #e50914; /* Substitui o gradiente roxo pelo vermelho Netflix/padrão */
+    background-color: #a855f7;
 }
-.ep-info {
+
+/* INFORMAÇÕES DO EPISÓDIO */
+.item-historico .ep-info {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    text-align: left;
     overflow: hidden;
     flex: 1;
 }
 
 .historico-anime-meta {
-    font-size: 0.75rem;
-    color: #ff4081;
+    font-size: 0.74rem;
+    color: #c4b5fd; /* Roxo pastel */
     font-weight: 600;
     display: block;
     margin-bottom: 2px;
-    white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .historico-titulo-ep {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-weight: 600;
     color: #ffffff;
     margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
+    line-height: 1.3;
     text-overflow: ellipsis;
 }
 
 .historico-status {
-    font-size: 0.8rem;
-    color: #aaa;
-    margin-top: 4px;
+    font-size: 0.74rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 3px 0 0 0;
+    line-height: 1.3;
+    text-overflow: ellipsis;
 }
 
-/* Mensagem de estado vazio */
+/* MENSAGEM DE ESTADO VAZIO */
 .historico-vazio-msg {
     text-align: center;
     padding: 40px 16px;
-    color: var(--text-secondary, #888888);
-    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.85rem;
+    background-color: rgba(30, 15, 48, 0.3);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    margin-top: 12px;
 }
 
-/* ==========================================================================
-   GRUPOS DE DATA NO HISTÓRICO
-   ========================================================================== */
-
+/* GRUPOS DE DATA */
 .historico-grupo-data {
-    margin-bottom: 22px;
+    margin-bottom: 20px;
 }
 
 .data-grupo-titulo {
-    font-size: 0.9rem;
+    font-size: 0.82rem;
     font-weight: 700;
-    color: #a855f7; /* Cor roxa de destaque do seu tema */
+    color: #c4b5fd;
     margin: 0 0 10px 0;
     padding-bottom: 6px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -200,14 +227,14 @@
     align-items: center;
     gap: 8px;
     text-transform: capitalize;
+    letter-spacing: 0.3px;
 }
 
-/* Indicador visual ao lado da data */
 .data-grupo-titulo::before {
     content: '';
     display: inline-block;
     width: 6px;
     height: 6px;
-    background-color: #ff4081;
+    background-color: #a855f7;
     border-radius: 50%;
 }

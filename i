@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ChibiHeart</title>
+
+  <!-- PWA: Manifest e Cor do Tema -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0d0e12">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  <!-- Ícone padrão para o navegador (Aba) -->
+  <link rel="icon" type="image/png" href="imagem/icon_solid_192.png">
+
+  <!-- Ícone para quando o usuário salva o site na tela inicial do celular (iOS/Android) -->
+  <link rel="apple-touch-icon" href="imagem/icon_solid_192.png">
+
+  <!-- CSS Externo e Fontes -->
+  <link rel="stylesheet" href="css/main.css">
+  <!-- Carrega a fonte Poppins + Material Symbols Outlined -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+
+<body>
+
+  <!-- TAB BAR SUPERIOR / MAIN HEADER -->
+  <!-- TAB BAR SUPERIOR / MAIN HEADER -->
+  <!-- TAB BAR SUPERIOR / MAIN HEADER -->
+  <header class="main-header">
+    <div class="logo">
+      <h1>Chibi<span>Heart</span></h1>
+    </div>
+
+    <!-- Container agrupando os botões de ação à direita -->
+    <div class="header-actions">
+      <a href="#pesquisa" class="header-action-btn" aria-label="Pesquisar" tabindex="0">
+        <span class="material-symbols-outlined">search</span>
+      </a>
+
+      <!-- NOVO ÍCONE DE NOTIFICAÇÕES -->
+      <a href="#notificacoes" class="header-action-btn notification-btn" aria-label="Notificações" tabindex="0">
+        <span class="material-symbols-outlined">notifications</span>
+        <span id="notificacao-badge" class="notificacao-badge" style="display: none;">0</span>
+      </a>
+
+      <!-- Ícone de Perfil -->
+      <a href="#perfil" class="header-action-btn profile-btn" aria-label="Perfil" tabindex="0">
+        <img src="https://via.placeholder.com/150" alt="Foto de Perfil" class="header-profile-avatar">
+      </a>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal (SPA) -->
+  <main class="main-content">
+
+    <!-- VIEW DE ERRO / NOT FOUND -->
+    <section id="erro" class="app-view">
+      <div class="error-container" style="text-align: center; padding: 60px 20px;">
+        <span class="material-symbols-outlined" style="font-size: 72px; color: #ff4081; margin-bottom: 16px;">error_outline</span>
+        <h2 style="font-size: 1.8rem; margin-bottom: 8px;">Conteúdo Não Encontrado</h2>
+        <p id="mensagem-erro" style="color: #aaa; max-width: 400px; margin: 0 auto 24px auto;">
+          Não encontramos o que você estava procurando ou o link está quebrado.
+        </p>
+        <button id="btn-erro-voltar" class="btn-disney-play" style="display: inline-flex; width: auto; padding: 12px 24px; font-size: 0.9rem; border: none; cursor: pointer;">
+          VOLTAR
+        </button>
+      </div>
+    </section>
+
+    <!-- VIEW DA HOME -->
+    <!-- VIEW DA HOME -->
+    <section id="inicio" class="app-view active">
+
+      <!-- Continuar Assistindo (Agora no topo) -->
+      <section id="secao-continuar-assistindo" class="secao-categoria" style="display: none;">
+        <h2 class="titulo-categoria">Continuar Assistindo</h2>
+        <div id="grade-continuar-assistindo" class="cards-grid carrossel-horizontal"></div>
+      </section>
+
+      <!-- Adicionados Recentemente -->
+      <section class="secao-categoria">
+        <h2 class="titulo-categoria">Adicionados Recentemente</h2>
+        <div id="grade-recentes" class="cards-grid carrossel-horizontal">
+          <!-- Esqueletos iniciais -->
+          <div class="card poster skeleton">
+            <div class="card-media skeleton-shimmer"></div>
+            <div class="card-title skeleton-text"></div>
+          </div>
+          <div class="card poster skeleton">
+            <div class="card-media skeleton-shimmer"></div>
+            <div class="card-title skeleton-text"></div>
+          </div>
+          <div class="card poster skeleton">
+            <div class="card-media skeleton-shimmer"></div>
+            <div class="card-title skeleton-text"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Grade de Animes Recomendados -->
+      <section class="secao-categoria">
+        <h2 class="titulo-categoria">Assista no Chibi Heart</h2>
+        <div id="grade-recomendados" class="cards-grid">
+          <!-- Esqueletos iniciais -->
+          <div class="card poster skeleton">
+            <div class="card-media skeleton-shimmer"></div>
+            <div class="card-title skeleton-text"></div>
+          </div>
+          <div class="card poster skeleton">
+            <div class="card-media skeleton-shimmer"></div>
+            <div class="card-title skeleton-text"></div>
+          </div>
+          <div class="card poster skeleton">
+            <div class="card-media skeleton-shimmer"></div>
+            <div class="card-title skeleton-text"></div>
+          </div>
+        </div>
+      </section>
+
+      <template id="modelo-card-continuar">
+        <div class="card card-continuar" tabindex="0">
+          <!-- Clique na Mídia (Imagem/Thumb) leva para o PLAYER -->
+          <a href="" class="card-media continuar-link-player">
+            <img src="" alt="" class="continuar-thumb">
+            <div class="barra-progresso-container" style="display: none;">
+              <div class="barra-progresso-preenchimento"></div>
+            </div>
+            <span class="ep-duration continuar-duracao">--:--</span>
+          </a>
+
+          <!-- Clique no Título / Info leva para a TELA DE DETALHES DO ANIME -->
+          <a href="" class="continuar-info-container continuar-link-info" style="text-decoration: none; color: inherit; display: block; margin-top: 6px;">
+            <h3 class="card-title continuar-titulo-anime"></h3>
+            <p class="continuar-subtitulo-ep" style="font-size: 0.75rem; color: #aaa; margin-top: 2px;"></p>
+          </a>
+        </div>
+      </template>
+
+      <template id="modelo-secao-genero">
+        <section class="secao-genero-container">
+          <h2 class="titulo-categoria">-- Nome do Gênero --</h2>
+          <div class="cards-grid carrossel-horizontal"></div>
+        </section>
+      </template>
+
+      <template id="modelo-card-anime">
+        <a href="" class="card poster" tabindex="0">
+          <div class="card-media">
+            <img src="" alt="">
+          </div>
+          <h3 class="card-title"></h3>
+        </a>
+      </template>
+    </section>
+
+    <!-- VIEW DE DETALHES -->
+<!-- VIEW DE DETALHES -->
+<!-- VIEW DE DETALHES -->
+<!-- VIEW DE DETALHES -->
+<section id="info" class="app-view">
+  <div class="info-hero">
+    <a href="#inicio" class="btn-voltar" aria-label="Voltar" tabindex="0">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </a>
+    <div class="hero-overlay"></div>
+    <!-- Imagem de fundo/ambiente para telas maiores -->
+    <img id="info-banner" src="" alt="Banner da Série/Filme" class="banner-img">
+  </div>
+
+  <div class="info-content">
+    <div class="info-header-block">
+      <h2 id="info-titulo">Carregando...</h2>
+      <!-- Subtítulo para Título em Português ou Inglês -->
+      <h3 id="info-subtitulo" class="info-subtitle" style="display: none;"></h3>
+
+      <div class="info-meta">
+        <!-- Temporada/Estação do ano (Ex: Primavera 2025) e Classificação -->
+        <span id="info-estacao" class="badge badge-estacao" style="display: none;"></span>
+        <span id="info-classificacao" class="badge badge-classificacao" style="display: none;"></span>
+
+        <span class="info-separator">•</span>
+        <span id="info-temporadas" class="info-seasons">-- Temporadas</span>
+
+        <!-- Badges de Tipo e Status -->
+        <span id="info-tipo" class="badge badge-tipo" style="display: none;"></span>
+        <span id="info-status" class="badge badge-status" style="display: none;"></span>
+      </div>
+    </div>
+
+    <div id="info-generos" class="info-genres"></div>
+
+    <div class="acao-principal-container">
+      <a id="btn-play-filme" href="#player" class="btn-disney-play" tabindex="0">
+        <span class="material-symbols-outlined">play_arrow</span>
+        ASSISTIR
+      </a>
+    </div>
+
+    <!-- Caixa de Aviso para Status (Em exibição / Anunciado) -->
+    <div id="info-status-aviso" class="status-aviso-container" style="display: none;">
+      <span class="material-symbols-outlined icon-aviso">info</span>
+      <p id="info-status-texto"></p>
+    </div>
+
+    <div class="info-synopsis-container">
+      <p id="info-sinopse">Carregando sinopse...</p>
+    </div>
+  </div>
+
+  <!-- Seção de Episódios -->
+  <div id="container-episodios" class="info-episodes-container">
+    <div class="episodes-header">
+      <div class="episodes-header-left">
+        <!-- Seletor Pop-up de Temporadas -->
+        <div id="container-seletor-temporadas" class="seletor-temporadas-container">
+          <button type="button" id="btn-selecionar-temporada" class="btn-select-atual" onclick="toggleMenuTemporadas(event)" aria-expanded="false" tabindex="0">
+            Carregando... ▾
+          </button>
+          <!-- Menu Pop-up flutuante -->
+          <div id="popup-temporadas" class="menu-popup-temporadas"></div>
+        </div>
+
+        <h2 class="titulo-categoria">Episódios</h2>
+      </div>
+
+      <!-- Botões de Ação na Lista de Episódios -->
+      <div class="episodes-header-actions">
+        <button type="button" id="btn-ordenar-eps" class="btn-ep-action" title="Inverter ordem dos episódios" aria-label="Inverter ordem dos episódios" tabindex="0">
+          <span class="material-symbols-outlined">swap_vert</span>
+        </button>
+        <button type="button" id="btn-marcar-temporada" class="btn-ep-action" title="Marcar temporada como assistida" aria-label="Marcar temporada como assistida" tabindex="0">
+          <span class="material-symbols-outlined">done_all</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="lista-episodios" class="episodes-list"></div>
+
+    <template id="modelo-card-ep">
+      <div class="card-ep" tabindex="0" role="button">
+        <div class="ep-media">
+          <img src="" alt="">
+
+          <!-- Badges do Card (A SEGUIR, NOVO, EM BREVE) -->
+          <span class="badge-proximo-ep" style="display: none;">A SEGUIR</span>
+
+          <div class="barra-progresso-container" style="display: none;">
+            <div class="barra-progresso-preenchimento"></div>
+          </div>
+
+          <span class="ep-duration"></span>
+        </div>
+        <div class="ep-info">
+          <h3 class="card-title-ep"></h3>
+          <!-- <p class="card-descricao-ep"></p> -->
+        </div>
+      </div>
+    </template>
+  </div>
+</section>
+
+<!-- VIEW DA EXPLORAR / FILTROS -->
+<section id="explorar" class="app-view">
+  <div class="filtros-container">
+    <h1 class="titulo-pagina">Explorar Animes</h1>
+
+    <div class="bar-filtros">
+      <!-- Filtro por Gênero -->
+      <div class="grupo-filtro">
+        <label>Gênero</label>
+        <button type="button" class="btn-seletor-filtro" id="btn-filtro-genero" data-tipo="genero">
+          <span class="seletor-rotulo" id="rotulo-filtro-genero">Todos os Gêneros</span>
+          <span class="material-symbols-outlined seletor-icone">expand_more</span>
+        </button>
+      </div>
+
+      <!-- Filtro por Temporada -->
+      <div class="grupo-filtro">
+        <label>Temporada</label>
+        <button type="button" class="btn-seletor-filtro" id="btn-filtro-temporada" data-tipo="temporada">
+          <span class="seletor-rotulo" id="rotulo-filtro-temporada">Todas as Temporadas</span>
+          <span class="material-symbols-outlined seletor-icone">expand_more</span>
+        </button>
+      </div>
+
+      <!-- Filtro por Ano -->
+      <div class="grupo-filtro">
+        <label>Ano</label>
+        <button type="button" class="btn-seletor-filtro" id="btn-filtro-ano" data-tipo="ano">
+          <span class="seletor-rotulo" id="rotulo-filtro-ano">Todos os Anos</span>
+          <span class="material-symbols-outlined seletor-icone">expand_more</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grade onde os cards filtrados serão exibidos -->
+  <section class="secao-categoria">
+    <div id="grade-explorar" class="cards-grid"></div>
+  </section>
+
+  <!-- POP-UP / MODAL PERSONALIZADO DOS SELETORES -->
+  <div id="modal-filtro-overlay" class="modal-filtro-overlay hidden" aria-hidden="true">
+    <div class="modal-filtro-card" role="dialog" aria-modal="true">
+      <div class="modal-filtro-header">
+        <h3 id="modal-filtro-titulo" class="modal-filtro-titulo">Selecionar Filtro</h3>
+        <button type="button" id="btn-fechar-modal-filtro" class="btn-fechar-modal" aria-label="Fechar">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div id="modal-filtro-opcoes" class="modal-filtro-opcoes">
+        <!-- Opções renderizadas dinamicamente pelo JS -->
+      </div>
+    </div>
+  </div>
+</section>
+    
+
+    <!-- VIEW DO PLAYER -->
+    <!-- VIEW DO PLAYER -->
+<section id="player" class="app-view">
+  <div class="player-media-block">
+    <div id="custom-player-container" class="custom-player-wrapper">
+      <video id="player-video" playsinline poster="" src=""></video>
+
+      <div id="custom-player-controls" class="custom-player-controls">
+        <button type="button" id="btn-player-rewind" class="btn-player-center btn-rewind" aria-label="Voltar 10s" tabindex="0">
+          <span class="material-symbols-outlined">replay_10</span>
+        </button>
+
+        <button type="button" id="btn-player-play" class="btn-player-center btn-play" aria-label="Reproduzir/Pausar" tabindex="0">
+          <span class="material-symbols-outlined">play_arrow</span>
+        </button>
+
+        <button type="button" id="btn-player-forward" class="btn-player-center btn-fast-forward" aria-label="Avançar 10s" tabindex="0">
+          <span class="material-symbols-outlined">forward_10</span>
+        </button>
+
+        <div class="custom-bottom-bar">
+          <div class="custom-progress-wrapper">
+            <input type="range" id="player-progress" class="custom-progress-slider" min="0" max="100" value="0" step="0.1" tabindex="0">
+          </div>
+          <div class="custom-controls-row">
+            <span id="player-time-display" class="custom-time-display">00:00 • 00:00</span>
+            <button type="button" id="btn-player-fullscreen" class="btn-player-icon" aria-label="Tela Cheia" tabindex="0">
+              <span class="material-symbols-outlined">fullscreen</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="player-episode-detail">
+    <span id="player-meta-tag" class="player-meta">K-ON!! T01E01</span>
+    <h2 id="player-titulo-ep">Carregando...</h2>
+    <div class="player-badges">
+      <button type="button" id="btn-player-audio" class="badge-tag btn-toggle-audio" tabindex="0">
+        Dublado
+      </button>
+    </div>
+  </div>
+
+  <div class="proximos-container">
+    <div class="proximos-header">
+      <h3 class="titulo-proximos">Próximos episódios</h3>
+      <a href="#info" id="lnk-ver-todos" class="btn-ver-todos" tabindex="0">Ver todos</a>
+    </div>
+
+    <div id="player-lista-proximos" class="proximos-grid"></div>
+
+    <template id="modelo-card-player">
+      <div class="card-player-ep" tabindex="0" role="button">
+        <div class="player-ep-media">
+          <img src="" alt="" class="player-ep-thumb">
+
+          <div class="barra-progresso-container" style="display: none;">
+            <div class="barra-progresso-preenchimento"></div>
+          </div>
+
+          <div class="player-play-overlay">
+            <span class="material-symbols-outlined">play_arrow</span>
+          </div>
+          <span class="player-ep-duration">--min</span>
+        </div>
+        <h4 class="player-card-title">Episódio --</h4>
+      </div>
+    </template>
+  </div>
+</section>
+
+    <!-- OUTRAS SEÇÕES DA APLICAÇÃO -->
+    <section id="lista" class="app-view">
+      <h2>Minha Lista</h2>
+      <p>Seus itens salvos aparecem aqui...</p>
+    </section>
+
+    <section id="pesquisa" class="app-view">
+      <div class="search-input-wrapper">
+        <span class="material-symbols-outlined search-icon">search</span>
+        <input type="text" id="input-busca" placeholder="Buscar por título ou gênero..." autocomplete="off" enterkeyhint="search" tabindex="0">
+        <button type="button" id="btn-limpar-busca" class="btn-clear-search" aria-label="Limpar busca" tabindex="0" style="display: none;">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div id="grade-resultados-busca" class="cards-grid"></div>
+
+      <div id="busca-vazia" class="badge-tag" style="display: none; margin: 40px auto; text-align: center; color: #888;">
+        Nenhum anime encontrado para a sua busca.
+      </div>
+    </section>
+
+    <!-- VIEW DO HISTÓRICO -->
+    <!-- VIEW DO HISTÓRICO -->
+    <section id="historico" class="app-view">
+      <h2 class="titulo-categoria">Histórico de Assistidos</h2>
+
+      <!-- FILTROS (ASSISTINDO / CONCLUÍDOS) -->
+      <div class="historico-filtros">
+        <button type="button" class="btn-filtro-historico active" data-filtro="assistindo">
+          Continuar Assistindo
+          <span id="qtd-assistindo" class="contador-badge">0</span>
+        </button>
+        <button type="button" class="btn-filtro-historico" data-filtro="concluidos">
+          Concluídos
+          <span id="qtd-concluidos" class="contador-badge">0</span>
+        </button>
+      </div>
+
+      <!-- SEÇÃO: CONTINUAR ASSISTINDO -->
+      <div id="secao-assistindo" class="historico-secao">
+        <div id="grade-historico-assistindo" class="episodes-list"></div>
+        <div id="historico-vazio-assistindo" class="historico-vazio-msg" style="display: none;">
+          Você não tem nenhum episódio em andamento no momento.
+        </div>
+      </div>
+
+      <!-- SEÇÃO: CONCLUÍDOS -->
+      <div id="secao-concluidos" class="historico-secao hidden">
+        <div id="grade-historico-concluidos" class="episodes-list"></div>
+        <div id="historico-vazio-concluidos" class="historico-vazio-msg" style="display: none;">
+          Você ainda não concluiu nenhum episódio.
+        </div>
+      </div>
+
+      <!-- TEMPLATE DO CARD DE HISTÓRICO -->
+      <template id="modelo-card-historico">
+        <a href="" class="card-ep item-historico" tabindex="0" style="text-decoration: none; color: inherit;">
+          <div class="ep-media">
+            <img src="" alt="" class="historico-thumb">
+            <div class="barra-progresso-container" style="display: none;">
+              <div class="barra-progresso-preenchimento"></div>
+            </div>
+            <span class="ep-duration historico-duracao">--:--</span>
+          </div>
+          <div class="ep-info">
+            <span class="historico-anime-meta"></span>
+            <h3 class="card-title-ep historico-titulo-ep"></h3>
+            <p class="card-descricao-ep historico-status"></p>
+          </div>
+        </a>
+      </template>
+    </section>
+
+    <!-- VIEW DE PERFIL -->
+    <!-- VIEW DE PERFIL -->
+    <!-- VIEW DE PERFIL -->
+    <section id="perfil" class="app-view">
+      <div class="perfil-bg-blur">
+        <img id="perfil-bg-img" src="" alt="" />
+      </div>
+
+      <div class="perfil-header">
+        <div class="perfil-avatar-large">
+          <img id="perfil-foto" src="" alt="Foto do Usuário">
+          <label for="input-foto-perfil" class="btn-trocar-foto" aria-label="Alterar Foto">
+            <span class="material-symbols-outlined">photo_camera</span>
+          </label>
+          <!-- Input invisível para upload da foto -->
+          <input type="file" id="input-foto-perfil" accept="image/*" style="display: none;">
+        </div>
+
+        <!-- Bloco de textos ao lado da foto -->
+        <div class="perfil-dados-texto">
+          <h2 id="perfil-nome" class="perfil-nome">Usuário Chibi</h2>
+          <span id="perfil-localizacao" class="perfil-localizacao">Brazil</span>
+        </div>
+
+        <!-- Engrenagem isolada no canto superior direito -->
+        <a href="#configuracoes" class="btn-config-header" aria-label="Configurações">
+          <span class="material-symbols-outlined">settings</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- VIEW DE CONFIGURAÇÕES -->
+    <!-- TELA DE CONFIGURAÇÕES -->
+    <section id="configuracoes" class="app-view">
+      <!-- Header Topo Navegação -->
+      <div class="notificacoes-header-topo" style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+        <a href="#perfil" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+        <h2 class="titulo-categoria" style="margin: 0;">Configurações</h2>
+      </div>
+
+      <!-- Mini Card de Perfil (Atualiza dinamicamente via JS) -->
+      <div class="config-perfil-mini">
+        <div class="config-avatar-mini">
+          <!-- Mudado o id para "config-foto" para sincronizar via JS -->
+          <img id="config-foto" src="" alt="Avatar">
+        </div>
+        <div class="config-perfil-dados">
+          <!-- Mudado o id para "config-nome" para sincronizar via JS -->
+          <h2 id="config-nome" class="config-perfil-nome">Usuário Chibi</h2>
+          <span id="config-localizacao" class="config-perfil-local">Brazil</span>
+        </div>
+      </div>
+
+      <!-- Grupo de Opções Unificadas -->
+      <div class="config-grupo">
+        <!-- Item Geral -->
+        <a href="#geral" class="config-item">
+          <div class="config-info">
+            <span class="material-symbols-outlined" style="color: #a855f7;">settings</span>
+            <span>Geral</span>
+          </div>
+          <span class="material-symbols-outlined config-chevron">chevron_right</span>
+        </a>
+
+        <!-- Item Conta -->
+        <a href="#conta" class="config-item">
+          <div class="config-info">
+            <span class="material-symbols-outlined" style="color: #a855f7;">account_circle</span>
+            <span>Conta</span>
+          </div>
+          <span class="material-symbols-outlined config-chevron">chevron_right</span>
+        </a>
+
+        <!-- Item Dados -->
+        <a href="#dados" class="config-item">
+          <div class="config-info">
+            <span class="material-symbols-outlined" style="color: #a855f7;">database</span>
+            <span>Dados</span>
+          </div>
+          <span class="material-symbols-outlined config-chevron">chevron_right</span>
+        </a>
+
+        <!-- Item Aplicativos -->
+        <a href="#aplicativos" class="config-item">
+          <div class="config-info">
+            <span class="material-symbols-outlined" style="color: #a855f7;">apps</span>
+            <span>Aplicativos</span>
+          </div>
+          <span class="material-symbols-outlined config-chevron">chevron_right</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- NOVA TELA DE CONTA -->
+    <section id="conta" class="app-view">
+      <div class="notificacoes-header-topo" style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+        <a href="#configuracoes" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+        <h2 class="titulo-categoria" style="margin: 0;">Conta</h2>
+      </div>
+
+      <div class="perfil-opcoes">
+        <!-- Opção: Editar Nome -->
+        <div class="opcao-item" id="btn-editar-nome">
+          <div class="opcao-info">
+            <span class="material-symbols-outlined">edit</span>
+            <span>Editar Nome</span>
+          </div>
+          <span class="material-symbols-outlined chevron">chevron_right</span>
+        </div>
+
+        <!-- Opção: Sincronização GitHub -->
+        <div class="opcao-item" id="btn-config-github">
+          <div class="opcao-info">
+            <span class="status-dot-wrapper">
+              <span id="github-status-dot" class="status-dot off" title="Desconectado"></span>
+            </span>
+            <span>Sincronização GitHub</span>
+          </div>
+          <span class="material-symbols-outlined chevron">chevron_right</span>
+        </div>
+
+        <!-- Opção: Sincronizar Agora Manualmente -->
+        <div class="opcao-item" id="btn-sincronizar-agora">
+          <div class="opcao-info">
+            <span class="material-symbols-outlined">sync</span>
+            <span>Sincronizar Agora</span>
+          </div>
+          <span class="material-symbols-outlined chevron">chevron_right</span>
+        </div>
+
+        <!-- Opção: Salvar dados da conta -->
+        <div class="opcao-item" id="btn-exportar-dados">
+          <div class="opcao-info">
+            <span class="material-symbols-outlined">download</span>
+            <span>Salvar dados da conta</span>
+          </div>
+          <span class="material-symbols-outlined chevron">chevron_right</span>
+        </div>
+
+        <!-- Opção: Restaurar dados da conta -->
+        <div class="opcao-item" id="btn-restaurar-dados">
+          <div class="opcao-info">
+            <span class="material-symbols-outlined">upload</span>
+            <span>Restaurar dados da conta</span>
+          </div>
+          <span class="material-symbols-outlined chevron">chevron_right</span>
+        </div>
+        <!-- Input invisível para restauração de backup -->
+        <input type="file" id="input-restaurar-dados" style="display: none;">
+
+        <!-- Opção: Sair da conta -->
+        <div class="opcao-item logout">
+          <div class="opcao-info">
+            <span class="material-symbols-outlined">logout</span>
+            <span>Sair da Conta</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAIS VINCULADOS À CONTA -->
+
+      <!-- MODAL CUSTOMIZADO: EDITAR NOME -->
+      <div id="modal-editar-nome" class="modal-overlay">
+        <div class="modal-container">
+          <div class="modal-header">
+            <h3>Editar Nome</h3>
+            <button id="btn-fechar-modal-nome" class="btn-fechar-modal" aria-label="Fechar">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <label for="input-novo-nome" class="modal-label">Nome de Exibição</label>
+            <input type="text" id="input-novo-nome" class="modal-input" placeholder="Digite seu nome" autocomplete="off">
+          </div>
+          <div class="modal-footer">
+            <button id="btn-cancelar-nome" class="btn-modal btn-cancelar">Cancelar</button>
+            <button id="btn-salvar-nome" class="btn-modal btn-salvar">Salvar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL CUSTOMIZADO: CONFIGURAR GITHUB TOKEN -->
+      <div id="modal-github-token" class="modal-overlay">
+        <div class="modal-container">
+          <div class="modal-header">
+            <h3>Sincronização GitHub</h3>
+            <button id="btn-fechar-modal-github" class="btn-fechar-modal" aria-label="Fechar">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p class="modal-texto">Cole seu <strong>Personal Access Token</strong> do GitHub (com permissão de <code>gist</code>) para sincronizar seu histórico e conta em múltiplos dispositivos.</p>
+            <label for="input-github-token" class="modal-label">Chave de API / Token GitHub</label>
+            <input type="password" id="input-github-token" class="modal-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+            <p id="github-modal-msg" class="modal-msg-status"></p>
+          </div>
+          <div class="modal-footer">
+            <button id="btn-remover-github-token" class="btn-modal btn-danger-outline" style="display: none;">Desconectar</button>
+            <button id="btn-cancelar-github" class="btn-modal btn-cancelar">Cancelar</button>
+            <button id="btn-salvar-github" class="btn-modal btn-salvar">Salvar e Conectar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL 1: RECOMENDAÇÃO DE BACKUP -->
+      <div id="modal-alerta-backup" class="modal-overlay">
+        <div class="modal-container">
+          <div class="modal-header">
+            <h3>Atenção</h3>
+            <button id="btn-fechar-modal-alerta" class="btn-fechar-modal" aria-label="Fechar">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p class="modal-texto">Antes desta ação, recomendamos que faça backup dos seus dados para não perder seu histórico.</p>
+          </div>
+          <div class="modal-footer modal-footer-stack">
+            <button id="btn-ja-fiz-backup" class="btn-modal btn-cancelar">Já fiz backup, prosseguir</button>
+            <button id="btn-fazer-backup-agora" class="btn-modal btn-salvar">Fazer backup agora</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL 2: CONFIRMAÇÃO FINAL DE LOGOUT -->
+      <div id="modal-confirmar-logout" class="modal-overlay">
+        <div class="modal-container">
+          <div class="modal-header">
+            <h3>Sair da Conta</h3>
+          </div>
+          <div class="modal-body">
+            <p class="modal-texto">Tem certeza que deseja sair da conta? Seu perfil e histórico local serão apagados.</p>
+          </div>
+          <div class="modal-footer">
+            <button id="btn-cancelar-logout" class="btn-modal btn-cancelar">Não</button>
+            <button id="btn-confirmar-logout" class="btn-modal btn-danger">Sim, sair</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW DE NOTIFICAÇÕES -->
+    <section id="notificacoes" class="app-view">
+      <div class="notificacoes-header-topo">
+        <h2 class="titulo-categoria">Central de Notificações</h2>
+        <button type="button" id="btn-limpar-notificacoes" class="btn-limpar-notif">
+          <span class="material-symbols-outlined">delete_sweep</span>
+          Limpar
+        </button>
+      </div>
+
+      <!-- Lista Agrupada por Data (Dia/Mês/Ano) -->
+      <div id="container-lista-notificacoes" class="notificacoes-lista-container"></div>
+
+      <div id="notificacoes-vazio" class="historico-vazio-msg" style="display: none;">
+        Sua central de notificações está vazia.
+      </div>
+
+      <!-- TEMPLATE DO CARD DE NOTIFICAÇÃO -->
+      <template id="modelo-card-notificacao">
+        <div class="notificacao-card">
+          <div class="notificacao-icone-wrapper">
+            <span class="material-symbols-outlined notificacao-icone">info</span>
+          </div>
+          <div class="notificacao-conteudo">
+            <div class="notificacao-topo-info">
+              <h4 class="notificacao-titulo"></h4>
+              <span class="notificacao-hora"></span>
+            </div>
+            <p class="notificacao-mensagem"></p>
+          </div>
+        </div>
+      </template>
+    </section>
+
+  </main>
+
+  <!-- SIDEBAR NATIVA DESKTOP (Aparece apenas em telas grandes) -->
+  <aside class="sidebar">
+    <!-- 1. TOPO: LOGO DA PLATAFORMA -->
+    <div class="sidebar-top">
+      <div class="logo">
+        <h1>Chibi<span>Heart</span></h1>
+      </div>
+    </div>
+
+    <!-- 2. MEIO: NAVEGAÇÃO PRINCIPAL (EX-TAB BAR) -->
+    <nav class="sidebar-nav">
+      <a href="#inicio" class="sidebar-item active" aria-label="Início">
+        <span class="material-symbols-outlined">home</span>
+        <span class="sidebar-label">Início</span>
+      </a>
+      <a href="#lista" class="sidebar-item" aria-label="Minha Lista">
+        <span class="material-symbols-outlined">list</span>
+        <span class="sidebar-label">Minha Lista</span>
+      </a>
+      <a href="#historico" class="sidebar-item" aria-label="Histórico">
+        <span class="material-symbols-outlined">history</span>
+        <span class="sidebar-label">Histórico</span>
+      </a>
+    </nav>
+
+    <!-- 3. BASE: AÇÕES E PERFIL (EX-HEADER ACTIONS) -->
+    <div class="sidebar-bottom">
+      <a href="#pesquisa" class="sidebar-item" aria-label="Pesquisar">
+        <span class="material-symbols-outlined">search</span>
+        <span class="sidebar-label">Pesquisar</span>
+      </a>
+      <a href="#notificacoes" class="sidebar-item" aria-label="Notificações">
+        <span class="material-symbols-outlined">notifications</span>
+        <span id="notificacao-badge-desktop" class="notifi-badge"></span>
+        <span class="sidebar-label">Notificações</span>
+      </a>
+      <a href="#perfil" class="sidebar-item sidebar-profile" aria-label="Perfil">
+        <img src="https://via.placeholder.com/150" class="header-profile-avatar" alt="Perfil">
+        <span class="sidebar-label">Perfil</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- TAB BAR DE NAVEGAÇÃO -->
+  <nav class="tab-bar">
+    <a href="#inicio" class="tab-item" aria-label="Início" tabindex="0">
+      <span class="material-symbols-outlined">home</span>
+    </a>
+    <a href="#explorar" class="tab-item" aria-label="Explorar" tabindex="0">
+      <span class="material-symbols-outlined">explore</span>
+    </a>
+    <a href="#lista" class="tab-item" aria-label="Minha Lista" tabindex="0">
+      <span class="material-symbols-outlined">list</span>
+    </a>
+    <a href="#historico" class="tab-item" aria-label="Histórico" tabindex="0">
+      <span class="material-symbols-outlined">history</span>
+    </a>
+  </nav>
+
+  <!-- Script Principal da Aplicação -->
+  <script type="module" src="js/main.js"></script>
+
+  <!-- Registro do Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => console.log('[SW] Registrado com sucesso! Escopo:', reg.scope))
+          .catch((err) => console.error('[SW] Falha ao registrar:', err));
+      });
+    }
+  </script>
+
+</body>
+
+</html>
