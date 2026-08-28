@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (document.visibilityState === "visible") {
       await autoSincronizarGithub();
     }
-  }, 45 * 1000);
+  }, 25 * 1000);
 
   try {
     await Promise.all([

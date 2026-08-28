@@ -20,7 +20,7 @@ let timerReSincronizacao = null;
 
 let ultimoSyncTimestamp = 0;
 let syncEmAndamento = false;
-const SYNC_LOCK_MS = 5 * 1000;
+const SYNC_LOCK_MS = 2 * 1000;
 
 function sincronizacaoBloqueada() {
   const agora = Date.now();
@@ -263,7 +263,7 @@ export function agendarReSincronizacaoCincoMinutos() {
 
   timerReSincronizacao = setTimeout(async () => {
     await sincronizarDownloadGithub(true);
-  }, 5 * 60 * 1000);
+  }, 3 * 60 * 1000);
 }
 
 export async function sincronizarUploadGithub(forcar = false, silencioso = true) {

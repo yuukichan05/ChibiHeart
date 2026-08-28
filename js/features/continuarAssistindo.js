@@ -1,5 +1,6 @@
-import { buscarTodoProgressoDB } from "../data/database/db.js";
+import { buscarTodoProgressoDB, alternarConcluidoDB } from "../data/database/db.js";
 import { obterInfoCompleta } from "../data/database/repository.js";
+import { makeEpisodeId } from "./detalhes/detalhesUtils.js"; // Ajuste o caminho relativo se necessário
 
 // Formata segundos em MM:SS ou HH:MM:SS
 function formatarTempo(segundos) {
@@ -30,17 +31,16 @@ function obterListaLinearEpisodios(anime, idAnimeKey) {
     const eps = Array.isArray(temp.episodios) ? temp.episodios : [];
     eps.forEach((ep, eIdx) => {
       const indexEp = typeof ep.index === "number" ? ep.index : eIdx + 1;
-      const s = String(tIdx + 1).padStart(2, "0");
-      const e = String(indexEp).padStart(2, "0");
 
-      const epId = ep.id || `${idAnimeKey}_s${s}e${e}`;
+      // Gera o ID sincronizado com a tela de detalhes
+      const epId = ep.id || makeEpisodeId(idAnimeKey, tIdx + 1, indexEp);
 
       episodiosLinear.push({
         ep,
         epId,
         animeId: idAnimeKey,
         temporadaNome: temp.nome || `${tIdx + 1}ª Temporada`,
-        tempIndex: tIdx + 1 // Salva o número da temporada
+        tempIndex: tIdx + 1
       });
     });
   });
@@ -150,6 +150,7 @@ export async function renderizarContinuarAssistindo() {
       const elDuracao = clone.querySelector(".continuar-duracao");
       const elTituloAnime = clone.querySelector(".continuar-titulo-anime");
       const elSubtituloEp = clone.querySelector(".continuar-subtitulo-ep");
+      const btnMarcar = clone.querySelector(".btn-marcar-home");
 
       if (cardRoot) {
         cardRoot.dataset.id = animeId;
@@ -162,13 +163,28 @@ export async function renderizarContinuarAssistindo() {
 
       // 2. Link do Texto -> Direciona para a TELA DE DETALHES do anime
       if (linkInfo) {
-        // NOVO (padrão exato esperado pela view de detalhes #info):
         linkInfo.href = `#info?anime=${encodeURIComponent(animeId)}`;
+      }
+
+      // 3. Ação do Botão Check: Sincronizado com alternarConcluidoDB
+      if (btnMarcar) {
+        btnMarcar.addEventListener("click", async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          // Salva como concluído utilizando a função padrão
+          await alternarConcluidoDB(epAlvo.epId, true);
+
+          // Atualiza a interface instantaneamente
+          await renderizarContinuarAssistindo();
+        });
       }
 
       if (img) {
         img.src = epAlvo.ep.thumb || anime.poster || anime.banner || "";
         img.alt = anime.titulo || "Anime";
+        img.onload = () => img.classList.add("loaded");
+        if (img.complete) img.classList.add("loaded");
       }
 
       if (elTituloAnime) {
@@ -179,7 +195,6 @@ export async function renderizarContinuarAssistindo() {
         const tempNum = epAlvo.tempIndex || 1;
         const epNum = epAlvo.ep.index || (indexEpAtual + 1);
 
-        // Obtém o título do EP e remove prefixos numéricos (ex: "01. Nome" -> "Nome")
         let nomeEp = epAlvo.ep.titulo || epAlvo.ep.nome || "Episódio";
         nomeEp = nomeEp.replace(/^\d+[\.\s-]+\s*/, '');
 

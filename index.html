@@ -121,24 +121,32 @@
         </div>
       </section>
 
-      <template id="modelo-card-continuar">
-        <div class="card card-continuar" tabindex="0">
-          <!-- Clique na Mídia (Imagem/Thumb) leva para o PLAYER -->
-          <a href="" class="card-media continuar-link-player">
-            <img src="" alt="" class="continuar-thumb">
-            <div class="barra-progresso-container" style="display: none;">
-              <div class="barra-progresso-preenchimento"></div>
-            </div>
-            <span class="ep-duration continuar-duracao">--:--</span>
-          </a>
+<template id="modelo-card-continuar">
+  <div class="card card-continuar" tabindex="0">
+    <!-- Clique na Mídia (Imagem/Thumb) leva para o PLAYER -->
+    <a href="" class="card-media continuar-link-player">
+      <img src="" alt="" class="continuar-thumb">
+      <div class="barra-progresso-container" style="display: none;">
+        <div class="barra-progresso-preenchimento"></div>
+      </div>
+      <span class="ep-duration continuar-duracao">--:--</span>
+    </a>
 
-          <!-- Clique no Título / Info leva para a TELA DE DETALHES DO ANIME -->
-          <a href="" class="continuar-info-container continuar-link-info" style="text-decoration: none; color: inherit; display: block; margin-top: 6px;">
-            <h3 class="card-title continuar-titulo-anime"></h3>
-            <p class="continuar-subtitulo-ep" style="font-size: 0.75rem; color: #aaa; margin-top: 2px;"></p>
-          </a>
-        </div>
-      </template>
+    <!-- Wrapper flexível alinhando texto à esquerda e botão check à direita -->
+    <div class="continuar-detalhes-wrapper">
+      <!-- Clique no Título / Info leva para a TELA DE DETALHES DO ANIME -->
+      <a href="" class="continuar-info-container continuar-link-info">
+        <h3 class="card-title continuar-titulo-anime"></h3>
+        <p class="continuar-subtitulo-ep"></p>
+      </a>
+
+      <!-- Botão Check Roxo -->
+      <button type="button" class="btn-marcar-home" title="Marcar como assistido" aria-label="Marcar como assistido" tabindex="0">
+        <span class="material-symbols-outlined">check</span>
+      </button>
+    </div>
+  </div>
+</template>
 
       <template id="modelo-secao-genero">
         <section class="secao-genero-container">
