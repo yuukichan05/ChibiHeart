@@ -7,6 +7,7 @@ body:has(#popup-temporadas.ativo),
 body:has(.menu-popup-temporadas.ativo) {
     overflow: hidden !important;
     touch-action: none;
+    overscroll-behavior: none; /* Otimização: Impede o efeito elástico vazado */
 }
 
 body:has(#popup-temporadas.ativo) .tab-bar,
@@ -40,6 +41,9 @@ body:has(.menu-popup-temporadas.ativo) .tab-bar {
     box-shadow: 0 12px 36px rgba(0, 0, 0, 0.75), 0 0 1px rgba(255, 255, 255, 0.2) inset;
     margin: 0 auto;
     transition: transform 0.3s ease;
+    /* Otimização de GPU */
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 /* GRADIENTE DE SUAVIZAÇÃO NA PARTE INFERIOR */
@@ -53,12 +57,28 @@ body:has(.menu-popup-temporadas.ativo) .tab-bar {
 }
 
 /* VIEW DE DETALHES (#info) */
+/* ISOLAMENTO PARA TELAS EM TELA CHEIA (SEM TAB BAR) */
 #info {
-    background-color: var(--bg-main, #120b1c);
-    min-height: auto !important;
-    position: relative;
-    color: var(--text-main, #ffffff);
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 999;
+    box-sizing: border-box;
+    isolation: isolate;
+    -webkit-overflow-scrolling: touch;
+    
+    /* OTIMIZAÇÕES MÁXIMAS DE ACELERAÇÃO DE HARDWARE E SCROLL */
+    transform: translate3d(0, 0, 0); /* Força a criação de uma camada na GPU */
+    backface-visibility: hidden; /* Reduz piscadas/artefatos no iOS */
+    perspective: 1000px;
+    will-change: scroll-position, transform; /* Prepara o navegador para o scroll */
+    overscroll-behavior-y: contain; /* Trava a física do scroll apenas neste elemento */
 }
 
 /* BOTÃO DE VOLTAR (GLASSMORPHISM ROXO ESCURO) */
@@ -75,6 +95,10 @@ body:has(.menu-popup-temporadas.ativo) .tab-bar {
     justify-content: center; 
     text-decoration: none;
     transition: transform 0.15s ease, background-color 0.2s ease;
+    
+    /* Otimização de GPU para o Glassmorphism */
+    transform: translateZ(0); 
+    will-change: transform;
 }
 
 .btn-voltar { 
@@ -96,7 +120,7 @@ body:has(.menu-popup-temporadas.ativo) .tab-bar {
 }
 
 .btn-voltar .material-symbols-outlined { font-size: 20px; }
-.btn-voltar:active, .btn-voltar-player:active { transform: scale(0.92); }
+.btn-voltar:active, .btn-voltar-player:active { transform: scale(0.92) translateZ(0); }
 
 /* CONTEÚDO PRINCIPAL (PADDINGS LATERAIS AJUSTADOS PARA 6px) */
 .info-content {
@@ -123,6 +147,8 @@ body:has(.menu-popup-temporadas.ativo) .tab-bar {
     color: #ffffff; 
     letter-spacing: -0.4px; 
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+    /* Otimização de texto com sombra */
+    transform: translateZ(0);
 }
 
 /* SUBTÍTULO (TÍTULOS ALTERNATIVOS) */
@@ -165,6 +191,9 @@ body:has(.menu-popup-temporadas.ativo) .tab-bar {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     color: #e2d9f3;
+    
+    /* Otimização de GPU para o Glassmorphism */
+    transform: translateZ(0);
 }
 
 /* STATUS COM ACENTOS DE COR VIBRANTES NO TEXTO */
@@ -243,11 +272,15 @@ body:has(.menu-popup-temporadas.ativo) .tab-bar {
     text-decoration: none;
     transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 0 0 12px rgba(255, 255, 255, 0.2);
+    
+    /* Otimização de animação na GPU */
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 .btn-disney-play:active {
     background-color: #e2e2e8;
-    transform: scale(0.97);
+    transform: scale(0.97) translateZ(0);
 }
 
 .btn-disney-play.disabled {
@@ -258,7 +291,7 @@ body:has(.menu-popup-temporadas.ativo) .tab-bar {
 }
 
 .btn-disney-play.disabled:active {
-    transform: none;
+    transform: translateZ(0);
 }
 
 .btn-disney-play .material-symbols-outlined {
@@ -319,6 +352,8 @@ body:has(.menu-popup-temporadas.ativo) .tab-bar {
     bottom: 0;
     background: linear-gradient(90deg, transparent 0%, var(--bg-main, #120b1c) 45%);
     padding-left: 28px;
+    /* Otimização de performance visual */
+    transform: translateZ(0);
 }
 
 /* QUANDO EXPANDIDO: Texto completo com o botão "menos" no final */
@@ -400,12 +435,16 @@ body:has(.menu-popup-temporadas.ativo) .tab-bar {
     gap: 6px;
     backdrop-filter: blur(10px);
     transition: background-color 0.2s ease, transform 0.1s ease;
+    
+    /* Otimização de GPU */
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 .btn-select-atual:active,
 .btn-select-atual[aria-expanded="true"] {
     background-color: rgba(75, 35, 120, 0.8);
-    transform: scale(0.97);
+    transform: scale(0.97) translateZ(0);
 }
 
 .menu-popup-temporadas,
@@ -423,7 +462,11 @@ body:has(.menu-popup-temporadas.ativo) .tab-bar {
     border: 1px solid rgba(255, 255, 255, 0.12); 
     border-radius: 14px; 
     box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.85); 
-    z-index: 999; 
+    z-index: 999;
+    
+    /* Otimização de GPU para pop-ups complexos */
+    transform: translateZ(0); 
+    will-change: transform, opacity;
 }
 
 .menu-popup-temporadas.ativo,
@@ -473,11 +516,15 @@ body:has(.menu-popup-temporadas.ativo) .tab-bar {
     cursor: pointer;
     backdrop-filter: blur(10px);
     transition: background-color 0.2s, transform 0.1s;
+    
+    /* Otimização de GPU */
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 .btn-ep-action:active {
     background-color: rgba(85, 40, 135, 0.8);
-    transform: scale(0.93);
+    transform: scale(0.93) translateZ(0);
 }
 
 .btn-ep-action .material-symbols-outlined {
@@ -496,6 +543,10 @@ body:has(.menu-popup-temporadas.ativo) .tab-bar {
     flex-shrink: 0; 
     background-color: #1a1028; 
     box-sizing: border-box;
+    /* Suaviza o arredondamento nas bordas em vídeo/imagem na GPU */
+    transform: translateZ(0);
+    mask-image: radial-gradient(white, black);
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 .ep-media img {
@@ -511,7 +562,7 @@ body:has(.menu-popup-temporadas.ativo) .tab-bar {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) translateZ(0);
     font-size: 24px;
     color: #ffffff;
     background-color: rgba(18, 10, 28, 0.55);
@@ -595,6 +646,8 @@ body:has(.menu-popup-temporadas.ativo) .tab-bar {
     border-radius: 4px; 
     font-weight: 600; 
     z-index: 3;
+    /* Otimização de GPU para o blur */
+    transform: translateZ(0);
 }
 
 #info .ep-info { 
@@ -645,6 +698,8 @@ body:has(.menu-popup-temporadas.ativo) .tab-bar {
     border-radius: 8px; 
     overflow: hidden; 
     background-color: #1a1028;
+    /* Suaviza as bordas na renderização rápida */
+    transform: translateZ(0);
 }
 
 #grade-resultados-busca .card-title { 

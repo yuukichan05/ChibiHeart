@@ -1,19 +1,35 @@
 /* ==========================================================================
-   5. PLAYER DE VÍDEO CUSTOMIZADO E PRÓXIMOS EPISÓDIOS - ESTILO NETFLIX
+   5. PLAYER DE VÍDEO CUSTOMIZADO - ESTILO APPLE TV+ / GLASS
    ========================================================================== */
 
-/* ESTRUTURA GLOBAL DO PLAYER */
+/* ESTRUTURA GLOBAL DO PLAYER (ISOLAMENTO E ACELERAÇÃO GPU) */
 #player { 
-    width: 100%; 
-    min-height: 100vh; 
-    background-color: var(--bg-main, #141414); 
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 999;
+    background-color: var(--bg-main, #120b1c); 
     color: var(--text-main, #ffffff); 
     margin: 0; 
-    padding: 0; 
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 0 0 32px 0; 
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+    isolation: isolate;
+
+    /* Otimizações de Scroll e Hardware */
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    will-change: scroll-position, transform;
+    overscroll-behavior-y: contain;
 }
 
-/* BLOCO DO VÍDEO (FIXADO NO TOPO DURANTE O SCROLL) */
+/* BLOCO DO VÍDEO (FIXADO NO TOPO COM GPU LAYER) */
 .player-media-block { 
     width: 100%; 
     background-color: #000000; 
@@ -21,46 +37,60 @@
     top: 0; 
     z-index: 10; 
     aspect-ratio: 16 / 9; 
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+
+    /* Impede lag durante rolagem com player fixo */
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 /* INFORMAÇÕES DO EPISÓDIO */
 .player-episode-detail { 
-    padding: 16px 6px 12px 6px; 
+    padding: 16px 12px 12px 12px; 
     max-width: 1200px; 
     margin: 0 auto; 
+    box-sizing: border-box;
 }
 
 .player-meta { 
-    color: #e50914; 
-    font-weight: 800; 
-    font-size: 0.78rem; 
+    color: #c4b5fd; 
+    font-weight: 700; 
+    font-size: 0.75rem; 
     text-transform: uppercase; 
     letter-spacing: 0.5px;
 }
 
 .player-episode-detail h2 { 
-    font-size: 1.3rem; 
+    font-size: 1.25rem; 
     margin: 4px 0 10px 0; 
-    font-weight: 800; 
+    font-weight: 700; 
     color: #ffffff;
-    line-height: 1.25;
+    line-height: 1.3;
+    letter-spacing: -0.3px;
+    transform: translateZ(0);
 }
 
+/* BADGES EM PÍLULA ESTILO APPLE */
 .badge-tag { 
-    background-color: #262626; 
-    color: #b3b3b3; 
-    padding: 3px 8px; 
-    border-radius: 3px; 
+    background-color: rgba(255, 255, 255, 0.08); 
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.85); 
+    padding: 4px 10px; 
+    border-radius: 999px; 
     font-size: 0.7rem; 
     font-weight: 600;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    transform: translateZ(0);
 }
 
 /* CONTAINER DOS PRÓXIMOS EPISÓDIOS */
 .proximos-container { 
-    padding: 12px 6px 40px 6px; 
+    padding: 12px 0 24px 12px; 
     max-width: 1200px; 
     margin: 0 auto; 
+    box-sizing: border-box;
 }
 
 .proximos-header { 
@@ -68,48 +98,61 @@
     justify-content: space-between; 
     align-items: center; 
     margin-bottom: 12px; 
+    padding-right: 12px; 
 }
 
 .titulo-proximos { 
-    font-size: 1.05rem; 
+    font-size: 1rem; 
     font-weight: 700; 
     margin: 0; 
     color: #ffffff;
+    letter-spacing: -0.2px;
 }
 
 .btn-ver-todos { 
-    color: #b3b3b3; 
+    color: #a855f7; 
     text-decoration: none; 
     font-size: 0.8rem; 
     font-weight: 600; 
-    transition: color 0.2s;
+    transition: opacity 0.2s;
 }
 
-.btn-ver-todos:active { color: #ffffff; }
+.btn-ver-todos:active { opacity: 0.7; }
 
-/* CARROSSEL / GRID DE PRÓXIMOS EPISÓDIOS */
+/* CARROSSEL DE PRÓXIMOS EPISÓDIOS */
 .proximos-grid { 
     display: flex; 
-    gap: 10px; 
+    gap: 12px; 
     overflow-x: auto; 
+    padding-right: 12px; 
     padding-bottom: 8px; 
-    scrollbar-width: none; /* Oculta scrollbar no mobile */
+    scrollbar-width: none; 
+    -webkit-overflow-scrolling: touch;
 }
 
 .proximos-grid::-webkit-scrollbar { display: none; }
 
+/* CARD AUMENTADO PARA 210px E OTIMIZADO */
 .card-player-ep { 
-    flex: 0 0 150px; /* Largura perfeita para carrossel no celular */
+    flex: 0 0 210px; /* Aumentado de 150px para 210px */
     cursor: pointer; 
+    transition: transform 0.15s ease;
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+.card-player-ep:active {
+    transform: scale(0.96) translateZ(0);
 }
 
 .player-ep-media { 
     position: relative; 
     width: 100%; 
     aspect-ratio: 16 / 9; 
-    border-radius: 4px; 
+    border-radius: 10px; 
     overflow: hidden; 
-    background-color: #181818; 
+    background-color: #1a1028; 
+    transform: translateZ(0);
 }
 
 .player-ep-thumb {
@@ -118,7 +161,7 @@
     object-fit: cover;
 }
 
-/* BARRA DE PROGRESSO DO EPISÓDIO EM ANDAMENTO */
+/* BARRA DE PROGRESSO DO CARD */
 .barra-progresso-container { 
     position: absolute; 
     bottom: 0; 
@@ -131,52 +174,59 @@
 
 .barra-progresso-preenchimento { 
     height: 100%; 
-    background: #e50914; 
+    background: #a855f7; 
     width: 0%; 
     transition: width 0.3s ease; 
 }
 
-/* SOBREPOSIÇÃO DE PLAY NOS CARDS */
+/* OVERLAY DE PLAY NOS CARDS */
 .player-play-overlay { 
     position: absolute; 
     inset: 0; 
-    background: rgba(0, 0, 0, 0.3); 
+    background: rgba(18, 11, 28, 0.35); 
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
     display: flex; 
     align-items: center; 
     justify-content: center; 
     transition: background 0.2s ease; 
+    transform: translateZ(0);
 }
 
 .player-play-overlay span { 
     color: #ffffff; 
-    font-size: 1.4rem; 
-    background: rgba(0, 0, 0, 0.65); 
-    border: 1px solid rgba(255, 255, 255, 0.7);
+    font-size: 1.3rem; 
+    background: rgba(139, 92, 246, 0.65); 
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%; 
     width: 32px; 
     height: 32px; 
     display: flex; 
     align-items: center; 
     justify-content: center; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .player-ep-duration { 
     position: absolute; 
     bottom: 4px; 
     right: 4px; 
-    background-color: rgba(0, 0, 0, 0.85); 
+    background-color: rgba(0, 0, 0, 0.75); 
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     font-size: 0.6rem; 
-    padding: 1px 4px; 
-    border-radius: 2px; 
+    padding: 2px 5px; 
+    border-radius: 4px; 
     color: #ffffff; 
     font-weight: 600;
+    transform: translateZ(0);
 }
 
 .player-card-title { 
     margin: 6px 0 0 0; 
-    font-size: 0.8rem; 
-    font-weight: 500; 
-    color: #d2d2d2; 
+    font-size: 0.85rem; 
+    font-weight: 600; 
+    color: rgba(255, 255, 255, 0.9); 
     line-height: 1.25; 
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -185,16 +235,19 @@
 }
 
 @media (min-width: 768px) {
+    .proximos-container { padding-right: 12px; }
+    .proximos-header { padding-right: 0; }
     .proximos-grid { 
         display: grid; 
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); 
         overflow-x: visible; 
+        padding-right: 0;
     }
     .card-player-ep { flex: none; width: 100%; }
 }
 
 /* ==========================================================================
-   ESTILOS DO CONTROLE DO PLAYER CUSTOMIZADO (NETFLIX STYLE)
+   CONTROLES CUSTOMIZADOS DO PLAYER (ESTILO APPLE GLASS)
    ========================================================================== */
 
 .custom-player-wrapper {
@@ -206,6 +259,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transform: translateZ(0);
 }
 
 .custom-player-wrapper:fullscreen,
@@ -221,16 +275,16 @@
     display: block;
 }
 
-/* OVERLAY DE CONTROLES SOBRE O VÍDEO */
+/* OVERLAY DE CONTROLES OTIMIZADO */
 .custom-player-controls {
     position: absolute;
     inset: 0;
     background: linear-gradient(
         180deg, 
-        rgba(0, 0, 0, 0.6) 0%, 
-        rgba(0, 0, 0, 0.2) 40%, 
-        rgba(0, 0, 0, 0.2) 60%, 
-        rgba(0, 0, 0, 0.85) 100%
+        rgba(18, 11, 28, 0.6) 0%, 
+        transparent 35%, 
+        transparent 60%, 
+        rgba(18, 11, 28, 0.85) 100%
     );
     display: flex;
     flex-direction: column;
@@ -239,6 +293,8 @@
     z-index: 5;
     opacity: 1;
     transition: opacity 0.25s ease;
+    transform: translateZ(0);
+    will-change: opacity;
 }
 
 .custom-player-controls.controls-hidden {
@@ -246,7 +302,7 @@
     pointer-events: none;
 }
 
-/* BOTÕES DE NAVEGAÇÃO CENTRAL (PLAY, +10s, -10s) */
+/* BOTÕES CENTRAIS EM VIDRO TRANSLÚCIDO */
 .btn-player-center {
     position: absolute;
     top: 50%;
@@ -255,81 +311,59 @@
     cursor: pointer;
     outline: none;
     color: #ffffff;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: transform 0.15s ease, background-color 0.2s ease;
+    will-change: transform;
 }
 
-/* PLAY CENTRAL */
 .btn-player-center.btn-play {
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) translateZ(0);
     width: 56px;
     height: 56px;
-    background: rgba(0, 0, 0, 0.65);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(139, 92, 246, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
 }
 
 .btn-player-center.btn-play .material-symbols-outlined {
-    font-size: 36px;
+    font-size: 34px;
     color: #ffffff;
 }
 
-/* BOTÕES REWIND (-10S) E FAST FORWARD (+10S) */
 .btn-player-center.btn-rewind {
     left: calc(50% - 70px);
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) translateZ(0);
     width: 42px;
     height: 42px;
 }
 
 .btn-player-center.btn-fast-forward {
     left: calc(50% + 70px);
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) translateZ(0);
     width: 42px;
     height: 42px;
 }
 
 .btn-player-center.btn-rewind .material-symbols-outlined,
 .btn-player-center.btn-fast-forward .material-symbols-outlined {
-    font-size: 24px;
+    font-size: 22px;
     color: #ffffff;
 }
 
 .btn-player-center:active {
-    transform: translate(-50%, -50%) scale(0.9);
+    transform: translate(-50%, -50%) scale(0.9) translateZ(0);
     background: rgba(255, 255, 255, 0.25);
 }
 
-/* ANIMAÇÕES 360 AO CLICAR NOS BOTÕES DE AVANÇO/RECUO */
-@keyframes spinRewind {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(-360deg); }
-}
-
-@keyframes spinForward {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.btn-player-center.btn-rewind:active .material-symbols-outlined {
-    animation: spinRewind 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.btn-player-center.btn-fast-forward:active .material-symbols-outlined {
-    animation: spinForward 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-/* REMOVE ÍCONE CAST NATIVO */
-video::-webkit-media-controls-cast-button { display: none !important; }
-
-/* BARRA INFERIOR DE NAVEGAÇÃO */
+/* SLIDER DE PROGRESSO ROXO APPLE */
 .custom-bottom-bar {
     width: 100%;
     display: flex;
@@ -343,13 +377,12 @@ video::-webkit-media-controls-cast-button { display: none !important; }
     align-items: center;
 }
 
-/* SLIDER DE PROGRESSO (ESTILO NETFLIX RED) */
 .custom-progress-slider {
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
     height: 3px;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.25);
     border-radius: 2px;
     outline: none;
     cursor: pointer;
@@ -366,22 +399,21 @@ video::-webkit-media-controls-cast-button { display: none !important; }
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: #e50914;
+    background: #a855f7;
     cursor: pointer;
-    box-shadow: 0 0 6px rgba(229, 9, 20, 0.8);
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.9);
 }
 
 .custom-progress-slider::-moz-range-thumb {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: #e50914;
+    background: #a855f7;
     cursor: pointer;
     border: none;
-    box-shadow: 0 0 6px rgba(229, 9, 20, 0.8);
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.9);
 }
 
-/* MOSTRADOR DE TEMPO E BOTÃO TELA CHEIA */
 .custom-controls-row {
     display: flex;
     justify-content: space-between;
@@ -390,8 +422,8 @@ video::-webkit-media-controls-cast-button { display: none !important; }
 }
 
 .custom-time-display {
-    font-size: 0.75rem;
-    color: #b3b3b3;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.65);
     font-weight: 600;
 }
 
@@ -405,6 +437,7 @@ video::-webkit-media-controls-cast-button { display: none !important; }
     align-items: center;
     justify-content: center;
     outline: none;
+    will-change: transform;
 }
 
 .btn-player-icon .material-symbols-outlined {
@@ -412,5 +445,5 @@ video::-webkit-media-controls-cast-button { display: none !important; }
 }
 
 .btn-player-icon:active {
-    transform: scale(0.9);
+    transform: scale(0.9) translateZ(0);
 }
