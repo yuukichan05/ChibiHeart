@@ -21,82 +21,6 @@ import {
     alternarStatusTemporada
 } from './detalhesEpisodes.js';
 
-// =========================================================================
-// GERENCIADOR DE MEMÓRIA E RENDERIZAÇÃO DE IMAGENS (IntersectionObserver)
-// =========================================================================
-function inicializarObservadorEpisodios(containerEps) {
-    if (!containerEps) return;
-
-    if (window.observadorDetalhesThumbs) {
-        window.observadorDetalhesThumbs.disconnect();
-    }
-
-    const observador = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            const img = entry.target;
-            const urlOriginal = img.dataset.src;
-            if (!urlOriginal) return;
-
-            if (entry.isIntersecting) {
-                // ENTROU NA TELA: carrega a imagem do cache/rede
-                if (img.getAttribute("src") !== urlOriginal) {
-                    img.onload = () => img.classList.add("loaded");
-                    img.onerror = () => {
-                        const fallback = img.dataset.fallback;
-                        if (fallback && img.src !== fallback) {
-                            img.src = fallback;
-                        } else {
-                            img.classList.add("loaded");
-                        }
-                    };
-
-                    img.src = urlOriginal;
-
-                    if (img.complete && img.naturalWidth !== 0) {
-                        img.classList.add("loaded");
-                    }
-                }
-            } else {
-                // SAIU DA TELA: descarrega a imagem da RAM/GPU mantendo a tag e a estrutura intactas
-                if (img.hasAttribute("src")) {
-                    img.removeAttribute("src");
-                    img.classList.remove("loaded");
-                }
-            }
-        });
-    }, {
-        rootMargin: "250px 0px" // Pré-carrega 250px antes do usuário rolar até a imagem
-    });
-
-    window.observadorDetalhesThumbs = observador;
-
-    // Varre as imagens dentro da lista de episódios e prepara os atributos data-src
-    const imagens = containerEps.querySelectorAll("img");
-    imagens.forEach((img) => {
-        const currentSrc = img.getAttribute("src") || img.src;
-        if (currentSrc && !img.dataset.src) {
-            img.dataset.src = currentSrc;
-            img.removeAttribute("src");
-            img.classList.remove("loaded");
-        }
-        if (img.dataset.src) {
-            observador.observe(img);
-        }
-    });
-}
-
-function observarMudancasContainer(containerEps) {
-    if (containerEps.dataset.mutationObserved) return;
-    containerEps.dataset.mutationObserved = "true";
-
-    // Observa alterações no DOM do container para reaplicar o descarte automático
-    const mutationObs = new MutationObserver(() => {
-        inicializarObservadorEpisodios(containerEps);
-    });
-
-    mutationObs.observe(containerEps, { childList: true });
-}
-
 // --- GERENCIADOR PRINCIPAL DA TELA INFO ---
 
 export async function gerenciarTelaInfo() {
@@ -114,9 +38,8 @@ export async function gerenciarTelaInfo() {
 
     if (!containerEps || !modeloEp) return;
 
-    // --- OUVINTES DE EVENTO DOS EPISÓDIOS E MONITOR DE MEMÓRIA ---
+    // --- OUVINTES DE EVENTO DOS EPISÓDIOS ---
     configurarOuvintesEventos(containerEps);
-    observarMudancasContainer(containerEps);
 
     const params = new URLSearchParams(queryString);
     const itemId = params.get("anime") || params.get("id");
@@ -268,19 +191,8 @@ function preencherMetadados(item, containerGeneros) {
             ? (item.banner || posterEfetivo || "") 
             : (posterEfetivo || item.banner || "");
 
-        const aplicarCarregamentoSuave = (img, src) => {
-            if (!img || !src) return;
-            img.classList.remove("loaded");
-            img.onload = () => img.classList.add("loaded");
-            img.onerror = () => img.classList.add("loaded");
-            img.src = src;
-            if (img.complete && img.naturalWidth !== 0) {
-                img.classList.add("loaded");
-            }
-        };
-
-        if (infoBanner) aplicarCarregamentoSuave(infoBanner, imagemSrc);
-        if (infoBackdrop) aplicarCarregamentoSuave(infoBackdrop, imagemSrc);
+        if (infoBanner) infoBanner.src = imagemSrc;
+        if (infoBackdrop) infoBackdrop.src = imagemSrc;
     }
 
     if (infoTitulo) infoTitulo.textContent = item.titulo || "Sem título";
@@ -554,7 +466,6 @@ async function configurarModoSerie(item, itemId, tempParam, dom) {
             mapaProgresso,
             epAlvo?.id
         );
-        inicializarObservadorEpisodios(dom.containerEps);
     } else {
         dom.containerEps.innerHTML = "<p style='color: #888; padding: 10px;'>Nenhum episódio disponível nesta temporada.</p>";
     }
@@ -578,7 +489,6 @@ function configurarBotoesAcaoEpisodios(itemId, temporadaIndex, temporadasAtuais,
                     mapaProgresso,
                     proximoEpId
                 );
-                inicializarObservadorEpisodios(dom.containerEps);
             }
         };
     }
@@ -588,7 +498,6 @@ function configurarBotoesAcaoEpisodios(itemId, temporadaIndex, temporadasAtuais,
             const tempAtiva = temporadasAtuais[temporadaIndex];
             if (tempAtiva && tempAtiva.episodios) {
                 alternarStatusTemporada(tempAtiva.episodios, itemId, temporadaIndex, mapaProgresso);
-                inicializarObservadorEpisodios(dom.containerEps);
             }
         };
     }

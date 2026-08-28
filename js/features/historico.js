@@ -214,6 +214,52 @@ export async function gerenciarTelaHistorico() {
       }
     });
 
+    // =========================================================================
+    // GERENCIADOR DE MEMÓRIA E RENDERIZAÇÃO DE IMAGENS (IntersectionObserver)
+    // =========================================================================
+    if (window.observadorHistoricoThumbs) {
+      window.observadorHistoricoThumbs.disconnect();
+    }
+
+    const observadorThumbs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const img = entry.target;
+        const urlOriginal = img.dataset.src;
+        if (!urlOriginal) return;
+
+        if (entry.isIntersecting) {
+          // ENTROU NA TELA: carrega a imagem do cache/rede
+          if (img.getAttribute("src") !== urlOriginal) {
+            img.onload = () => img.classList.add("loaded");
+            img.onerror = () => {
+              const fallback = img.dataset.fallback;
+              if (fallback && img.src !== fallback) {
+                img.src = fallback;
+              } else {
+                img.classList.add("loaded");
+              }
+            };
+
+            img.src = urlOriginal;
+
+            if (img.complete && img.naturalWidth !== 0) {
+              img.classList.add("loaded");
+            }
+          }
+        } else {
+          // SAIOU DA TELA: descarrega a imagem da RAM/GPU mantendo a tag e o container
+          if (img.hasAttribute("src")) {
+            img.removeAttribute("src");
+            img.classList.remove("loaded");
+          }
+        }
+      });
+    }, {
+      rootMargin: "250px 0px" // Pré-carrega 250px antes do usuário rolar até ela
+    });
+
+    window.observadorHistoricoThumbs = observadorThumbs;
+
     const renderizarGrupos = (listaItens, containerPai) => {
       const grupos = agruparPorData(listaItens);
       const frag = document.createDocumentFragment();
@@ -248,8 +294,17 @@ export async function gerenciarTelaHistorico() {
           }
 
           if (img) {
-            img.src = ep.thumb || anime.poster || anime.banner || "";
+            const urlMedia = ep.thumb || anime.poster || anime.banner || "";
+            const urlFallback = anime.poster || "";
+
+            img.dataset.src = urlMedia;
+            if (urlFallback && urlFallback !== urlMedia) {
+              img.dataset.fallback = urlFallback;
+            }
             img.alt = ep.titulo || anime.titulo || "Episódio";
+
+            // Registra a imagem no observador de viewport
+            observadorThumbs.observe(img);
           }
 
           if (elMeta) elMeta.textContent = `${anime.titulo || "Anime"} • ${temporadaNome}`;
