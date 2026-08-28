@@ -211,6 +211,22 @@ function preencherMetadados(item, containerGeneros) {
     if (infoAno) infoAno.textContent = item.ano || "----";
     if (infoSinopse) infoSinopse.textContent = item.sinopse || "Sem sinopse disponível.";
 
+    // --- CONTROLE DA SINOPSE (EXPANDIR / RECOLHER) ---
+    const containerSinopse = document.querySelector(".info-synopsis-container");
+    const btnToggleSinopse = document.getElementById("btn-toggle-sinopse");
+
+    if (containerSinopse && btnToggleSinopse) {
+        // Reseta o estado para recolhido sempre que carregar um novo anime
+        containerSinopse.classList.remove("expandido");
+        btnToggleSinopse.textContent = "mais";
+
+        // Adiciona a ação de clique
+        btnToggleSinopse.onclick = () => {
+            const estaExpandido = containerSinopse.classList.toggle("expandido");
+            btnToggleSinopse.textContent = estaExpandido ? "menos" : "mais";
+        };
+    }
+
     // Preenchimento de Badges
     if (badgeTipo) {
         const textoTipo = formatarTipo(item.tipo);
