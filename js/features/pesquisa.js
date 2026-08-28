@@ -1,51 +1,15 @@
-// js/modules/pesquisa.js
+// js/features/pesquisa.js
 
 import { obterInfoCompleta } from '../data/database/repository.js';
+import { observarImagem } from '../core/imageObserver.js';
 
 let bancoDadosCache = null;
-let observerImagensBusca = null;
 
 function normalizarTexto(texto) {
     return (texto || "")
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase();
-}
-
-/**
- * Cria ou reutiliza o IntersectionObserver com gestão ativa de memória RAM/GPU.
- * Carrega a imagem ao entrar na tela e descarrega a tag src ao sair do viewport.
- */
-function obterObserverImagens() {
-    if (!observerImagensBusca && 'IntersectionObserver' in window) {
-        observerImagensBusca = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const img = entry.target;
-                const urlOriginal = img.dataset.src;
-                if (!urlOriginal) return;
-
-                if (entry.isIntersecting) {
-                    // ENTROU NA TELA: carrega a imagem do cache/rede
-                    if (img.getAttribute("src") !== urlOriginal) {
-                        img.onload = () => img.classList.add("loaded");
-                        img.onerror = () => img.classList.add("loaded");
-                        img.src = urlOriginal;
-
-                        if (img.complete && img.naturalWidth !== 0) {
-                            img.classList.add("loaded");
-                        }
-                    }
-                } else {
-                    // SAIU DA TELA: descarrega a imagem da RAM/GPU mantendo o dataset e container
-                    if (img.hasAttribute("src")) {
-                        img.removeAttribute("src");
-                        img.classList.remove("loaded");
-                    }
-                }
-            });
-        }, { rootMargin: '200px 0px' }); // Pré-carrega 200px antes de visível
-    }
-    return observerImagensBusca;
 }
 
 export async function inicializarPesquisa() {
@@ -115,7 +79,6 @@ function executarFiltro(termo, bancoDados, container, template, feedbackVazio) {
     let totalEncontrados = 0;
 
     const frag = document.createDocumentFragment();
-    const observer = obterObserverImagens();
 
     Object.keys(bancoDados).forEach(animeId => {
         const anime = bancoDados[animeId];
@@ -154,17 +117,8 @@ function executarFiltro(termo, bancoDados, container, template, feedbackVazio) {
                     imgCard.dataset.src = urlCapa;
                     imgCard.classList.remove('loaded');
 
-                    if (observer) {
-                        observer.observe(imgCard);
-                    } else {
-                        // Fallback de carregamento direto caso IntersectionObserver não esteja disponível
-                        imgCard.src = urlCapa;
-                        if (imgCard.complete) {
-                            imgCard.classList.add('loaded');
-                        } else {
-                            imgCard.onload = () => imgCard.classList.add('loaded');
-                        }
-                    }
+                    // Registra a imagem no observador centralizado
+                    observarImagem(imgCard);
                 }
 
                 frag.appendChild(clone);
