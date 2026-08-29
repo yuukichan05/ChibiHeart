@@ -10,8 +10,10 @@ import konosubaS02 from './animes/konosubaS02.js';
 import konosubaS03 from './animes/konosubaS03.js';
 import konosubaS04 from './animes/konosubaS04.js';
 import oshiNoKo from './animes/oshiNoKo.js';
+import plastic_memo from './animes/plastic memo.js';
 import reiDemonioDaimao from './animes/reiDemonioDaimao.js';
 import seihantaiNaKimiToBoku from './animes/seihantaiNaKimiToBoku.js';
+import tamako_marker from './animes/tamako marker.js';
 import tensuraS01 from './animes/tensuraS01.js';
 import tensuraS04 from './animes/tensuraS04.js';
 
@@ -28,8 +30,10 @@ export const animesData = {
   "konosubaS03": konosubaS03,
   "konosubaS04": konosubaS04,
   "oshiNoKo": oshiNoKo,
+  "plastic memo": plastic_memo,
   "reiDemonioDaimao": reiDemonioDaimao,
   "seihantaiNaKimiToBoku": seihantaiNaKimiToBoku,
+  "tamako marker": tamako_marker,
   "tensuraS01": tensuraS01,
   "tensuraS04": tensuraS04
 };
