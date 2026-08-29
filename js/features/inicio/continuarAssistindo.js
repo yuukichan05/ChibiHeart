@@ -74,6 +74,13 @@ export async function renderizarContinuarAssistindo() {
     listaRegistros.forEach((reg) => {
       if (!reg || !reg.id) return;
 
+      const total = reg.total || 0;
+      const tempo = reg.tempo || 0;
+      const estaConcluido = reg.concluido || (total > 0 && (tempo / total) >= 0.85);
+
+      // Desconsidera registros de episódios não concluídos com 15 segundos ou menos assistidos
+      if (!estaConcluido && tempo <= 15) return;
+
       for (const [idAnimeKey, anime] of Object.entries(infoCompleta)) {
         const episodiosLinear = obterListaLinearEpisodios(anime, idAnimeKey);
         const indexAchado = episodiosLinear.findIndex(item => item.epId === reg.id);
@@ -121,6 +128,9 @@ export async function renderizarContinuarAssistindo() {
       const estaConcluido = registro.concluido || (registro.total > 0 && (registro.tempo / registro.total) >= 0.85);
 
       if (!estaConcluido) {
+        // Validação adicional: garante que episódios não concluídos só apareçam se assistidos por mais de 15s
+        if ((registro.tempo || 0) <= 15) return;
+
         epAlvo = itemAtual;
         tempoRestante = registro.tempo;
         totalTempo = registro.total;
