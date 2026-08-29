@@ -4,22 +4,21 @@ export default {
   "tipo": "serie",
   "titulo": "Yamada-kun to 7-nin no Majo",
   "titulo_en": "Yamada and the Seven Witches",
-  "titulo_pt": "Yamada-kun e as Sete Bruxas",
+  "titulo_pt": "",
   "ano": "2015",
   "temporada": "spring",
   "status": "Finalizado",
-  "classificacao": "+14",
+  "classificacao": "Livre",
   "generos": [
-  	"Animação",
     "Comédia",
     "Mistério",
     "Romance",
     "Sobrenatural"
   ],
   "sinopse": "Ryu Yamada é um estudante do segundo ano da Suzaku High. Ryu está sempre atrasado para a escola, cochila nas aulas e tira notas péssimas. Sua vida é uma chatice mortal. A bela Urara Shiraishi, por outro lado, é a aluna mais brilhante da Suzaku High. Um dia, sem explicação, seus corpos são trocados! Ryu acaba no corpo de Urara, e Urara no corpo de Ryu.",
-  "banner": "https://media.themoviedb.org/t/p/w1000_and_h563_face/udCwCPDlWTfKDxXIqMNqxXcibfu.jpg",
-  "poster": "https://media.themoviedb.org/t/p/w440_and_h660_face/y7j7cptjQvaMX2l12EkatqC54Q9.jpg",
-  "poster_detalhes": "",
+  "banner": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/20966-0KwHGdCF9Ie1.jpg",
+  "poster": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx20966-HboUtUzEKWl6.jpg",
+  "poster_detalhes": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20966-HboUtUzEKWl6.jpg",
   "temporadas": [
     {
       "nome": "1ª Temporada",
@@ -27,9 +26,9 @@ export default {
         {
           "id": "Yamada-kun to 7-nin no Majo_s01e01",
           "index": 1,
-          "titulo": "01. Eu Virei Ela!!",
+          "titulo": "01. Eu me transformei nela!",
           "descricao": "",
-          "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/19kMPsTfIrPNJO4sYpYphXYCBFo.jpg",
+          "thumb": "https://img1.ak.crunchyroll.com/i/spire4-tmb/f3afaa648d94eb6d5f264077515529751428839375_full.jpg",
           "duracao": "24 min",
           "data_lancamento": "2015-04-12T14:00:00.000Z",
           "skip_intro": {
@@ -46,9 +45,9 @@ export default {
         {
           "id": "Yamada-kun to 7-nin no Majo_s01e02",
           "index": 2,
-          "titulo": "02. Me Beija, Tá?",
+          "titulo": "02. Beije-me, ok?",
           "descricao": "",
-          "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/xTY8V6BEDGeuW5dIpYzRLVZIe7O.jpg",
+          "thumb": "https://img1.ak.crunchyroll.com/i/spire2-tmb/c7d340bc1eb37456b4b30fefed095e131429440750_full.jpg",
           "duracao": "24 min",
           "data_lancamento": "2015-04-19T14:00:00.000Z",
           "skip_intro": {
@@ -65,7 +64,7 @@ export default {
         {
           "id": "Yamada-kun to 7-nin no Majo_s01e03",
           "index": 3,
-          "titulo": "03. Você Vai Aceitar ou Não?",
+          "titulo": "03. Você aceitará? Ou não?",
           "descricao": "",
           "thumb": "https://img1.ak.crunchyroll.com/i/spire1-tmb/2d14baa2d73b59ec4ba4991ace55c3ed1429923103_full.jpg",
           "duracao": "24 min",
@@ -84,7 +83,7 @@ export default {
         {
           "id": "Yamada-kun to 7-nin no Majo_s01e04",
           "index": 4,
-          "titulo": "04. Parece Que Eu Me Apaixonei Por Yamada!",
+          "titulo": "04. Parece que me apaixonei por Yamada!",
           "descricao": "",
           "thumb": "https://img1.ak.crunchyroll.com/i/spire2-tmb/7c89bad4ba5e5fa7109840ab997110e61430524593_full.jpg",
           "duracao": "24 min",
@@ -103,7 +102,7 @@ export default {
         {
           "id": "Yamada-kun to 7-nin no Majo_s01e05",
           "index": 5,
-          "titulo": "05. Você Não Pode Beijá-la, Tá?",
+          "titulo": "05. Você não deve beijá-la, ok?",
           "descricao": "",
           "thumb": "https://img1.ak.crunchyroll.com/i/spire2-tmb/5ff7e5fe3d3346a67a60ace40f7958161431258059_full.jpg",
           "duracao": "24 min",
@@ -122,7 +121,7 @@ export default {
         {
           "id": "Yamada-kun to 7-nin no Majo_s01e06",
           "index": 6,
-          "titulo": "06. Responda!",
+          "titulo": "06. Responder!",
           "descricao": "",
           "thumb": "https://img1.ak.crunchyroll.com/i/spire1-tmb/86c81d3737ba910cfb1b3b8304ecaadc1431732173_full.jpg",
           "duracao": "24 min",
@@ -141,7 +140,7 @@ export default {
         {
           "id": "Yamada-kun to 7-nin no Majo_s01e07",
           "index": 7,
-          "titulo": "07. Qualquer Coisa, Menos Tempura!",
+          "titulo": "07. Qualquer coisa menos Tempura!",
           "descricao": "",
           "thumb": "https://img1.ak.crunchyroll.com/i/spire1-tmb/477636dd7b3ab38aa10a0db2114aaa9a1432461078_full.jpg",
           "duracao": "24 min",
@@ -160,7 +159,7 @@ export default {
         {
           "id": "Yamada-kun to 7-nin no Majo_s01e08",
           "index": 8,
-          "titulo": "08. Você é Tão Irritante",
+          "titulo": "08. Você é tão irritante",
           "descricao": "",
           "thumb": "https://img1.ak.crunchyroll.com/i/spire1-tmb/81ca00372234e2a2966295b488095e8e1432939616_full.jpg",
           "duracao": "24 min",
@@ -179,7 +178,7 @@ export default {
         {
           "id": "Yamada-kun to 7-nin no Majo_s01e09",
           "index": 9,
-          "titulo": "09. Mude o Futuro",
+          "titulo": "09. Certifique-se de mudar o futuro",
           "descricao": "",
           "thumb": "https://img1.ak.crunchyroll.com/i/spire2-tmb/d1c31b71631331595503bdcc1bc3b8d51433686546_full.jpg",
           "duracao": "24 min",
@@ -217,7 +216,7 @@ export default {
         {
           "id": "Yamada-kun to 7-nin no Majo_s01e11",
           "index": 11,
-          "titulo": "11. O Que Você Fez Com a Shiraishi?!",
+          "titulo": "11. O que você fez com Shiraishi?!",
           "descricao": "",
           "thumb": "https://img1.ak.crunchyroll.com/i/spire1-tmb/1fa5a4a97698ff252dba2391d401e45d1434675562_full.jpg",
           "duracao": "24 min",
@@ -236,7 +235,7 @@ export default {
         {
           "id": "Yamada-kun to 7-nin no Majo_s01e12",
           "index": 12,
-          "titulo": "12. Eu Te Amo, Shiraishi",
+          "titulo": "12. Eu te amo, Shiraishi",
           "descricao": "",
           "thumb": "https://img1.ak.crunchyroll.com/i/spire3-tmb/42978aab7b016fcdf05e5f1ade4d08aa1435472596_full.jpg",
           "duracao": "24 min",
