@@ -1,28 +1,31 @@
 export default {
-  "adicionado_em": "2026-08-29T10:49:28.685Z",
+  "adicionado_em": "2026-08-29T11:30:06.782Z",
   "destaque": true,
   "tipo": "serie",
-  "titulo": "Romantic Killer",
-  "titulo_en": "",
+  "titulo": "Yofukashi no Uta 2nd Season",
+  "titulo_en": "Call of the Night Season 2",
   "titulo_pt": "",
-  "ano": "2022",
-  "temporada": "fall",
+  "ano": "2025",
+  "temporada": "spring",
   "status": "Finalizado",
   "classificacao": "Livre",
   "generos": [
     "Comédia",
-    "Romance"
+    "Psychological",
+    "Romance",
+    "Sci-Fi",
+    "Sobrenatural"
   ],
-  "sinopse": "Anzu Hoshino é uma estudante do ensino médio do tipo “não-heroína” que não presta atenção à moda ou romance e passa todos os dias jogando videogame. Quando o mago Riri aparece de repente, Anzu é forçado a participar do projeto do Mundo Mágico para impedir o declínio populacional. Esta comédia romântica retrata o que acontece quando Anzu deixa de viver uma vida imersa em suas três coisas favoritas – videogame, chocolate e gatos – e passa a estar cercada por caras bonitos. Anzu é firme em sua afirmação de que nunca quis viver em um jogo de simulação de namoro. Ela conhece um cara bonito que é tão popular que chega a doer, um amigo de infância bem-apessoado e atlético, e um lindo jovem rico que é ingênuo em relação ao mundo exterior. Ao conhecer Anzu, todos eles começam a mudar gradualmente.",
-  "banner": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/153930-UeuRgi2I3vO6.jpg",
-  "poster": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx153930-uTRxaIcNa26E.jpg",
-  "poster_detalhes": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx153930-uTRxaIcNa26E.jpg",
+  "sinopse": "A segunda temporada de Yofukashi no Uta.\n\nKo supera sua confusão sobre se tornar um vampiro e decide \"gostar\" de Nazuna, enquanto Nazuna resolve fazer Ko \"se apaixonar\" por ela. Sem entender o que é “amor”, os dois passam as noites juntos em frenesi. Enquanto isso, a Detetive Uguisu Anko está se aproximando de seu plano para matar vampiros, não apenas Nazuna. A fraqueza de um vampiro é “qualquer coisa a que eles estavam apegados quando eram humanos” e então todos eles tentam se livrar dessa fraqueza antes que seja tarde demais. Mas Nazuna não tem memória de sua vida humana. Qual é o passado oculto de Nazuna? Por que Anko começou a matar vampiros? E qual é o “segredo” que Nazuna e Anko compartilham? Para Ko, Nazuna e Anko, uma \"tarde de noite\" divertida não termina aqui... uma nova \"noite\" começa!",
+  "banner": "https://media.kitsu.app/anime/48611/cover_image/large-2a828d568ced480ca55f2529ba87bcf3.jpeg",
+  "poster": "https://media.kitsu.app/anime/48611/poster_image/medium-fa44447496d100150d86d7b232cb33a1.jpeg",
+  "poster_detalhes": "https://media.kitsu.app/anime/48611/poster_image/6c565ad3b85aae20d978e48e053ad5a6.jpg",
   "temporadas": [
     {
-      "nome": "1ª Temporada",
+      "nome": "2ª Temporada",
       "episodios": [
         {
-          "id": "romantic killer_s01e01",
+          "id": "Yofukashi no Uta_S02_s01e01",
           "index": 1,
           "titulo": "01. Episódio 1",
           "descricao": "",
@@ -37,11 +40,10 @@ export default {
             "inicio": "",
             "fim": ""
           },
-          "url_dub": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Dub-1.mp4",
-          "url_leg": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Leg-1.mp4"
+          "url_leg": "https://ia800500.us.archive.org/28/items/UtaLeg/Segunda-1.mp4"
         },
         {
-          "id": "romantic killer_s01e02",
+          "id": "Yofukashi no Uta_S02_s01e02",
           "index": 2,
           "titulo": "02. Episódio 2",
           "descricao": "",
@@ -56,11 +58,10 @@ export default {
             "inicio": "",
             "fim": ""
           },
-          "url_dub": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Dub-2.mp4",
-          "url_leg": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Leg-2.mp4"
+          "url_leg": "https://ia800500.us.archive.org/28/items/UtaLeg/Segunda-2.mp4"
         },
         {
-          "id": "romantic killer_s01e03",
+          "id": "Yofukashi no Uta_S02_s01e03",
           "index": 3,
           "titulo": "03. Episódio 3",
           "descricao": "",
@@ -75,11 +76,10 @@ export default {
             "inicio": "",
             "fim": ""
           },
-          "url_dub": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Dub-3.mp4",
-          "url_leg": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Leg-3.mp4"
+          "url_leg": "https://ia800500.us.archive.org/28/items/UtaLeg/Segunda-3.mp4"
         },
         {
-          "id": "romantic killer_s01e04",
+          "id": "Yofukashi no Uta_S02_s01e04",
           "index": 4,
           "titulo": "04. Episódio 4",
           "descricao": "",
@@ -94,11 +94,10 @@ export default {
             "inicio": "",
             "fim": ""
           },
-          "url_dub": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Dub-4.mp4",
-          "url_leg": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Leg-4.mp4"
+          "url_leg": "https://ia800500.us.archive.org/28/items/UtaLeg/Segunda-4.mp4"
         },
         {
-          "id": "romantic killer_s01e05",
+          "id": "Yofukashi no Uta_S02_s01e05",
           "index": 5,
           "titulo": "05. Episódio 5",
           "descricao": "",
@@ -113,11 +112,10 @@ export default {
             "inicio": "",
             "fim": ""
           },
-          "url_dub": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Dub-5.mp4",
-          "url_leg": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Leg-5.mp4"
+          "url_leg": "https://ia800500.us.archive.org/28/items/UtaLeg/Segunda-5.mp4"
         },
         {
-          "id": "romantic killer_s01e06",
+          "id": "Yofukashi no Uta_S02_s01e06",
           "index": 6,
           "titulo": "06. Episódio 6",
           "descricao": "",
@@ -132,11 +130,10 @@ export default {
             "inicio": "",
             "fim": ""
           },
-          "url_dub": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Dub-6.mp4",
-          "url_leg": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Leg-6.mp4"
+          "url_leg": "https://ia800500.us.archive.org/28/items/UtaLeg/Segunda-6.mp4"
         },
         {
-          "id": "romantic killer_s01e07",
+          "id": "Yofukashi no Uta_S02_s01e07",
           "index": 7,
           "titulo": "07. Episódio 7",
           "descricao": "",
@@ -151,11 +148,10 @@ export default {
             "inicio": "",
             "fim": ""
           },
-          "url_dub": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Dub-7.mp4",
-          "url_leg": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Leg-7.mp4"
+          "url_leg": "https://ia800500.us.archive.org/28/items/UtaLeg/Segunda-7.mp4"
         },
         {
-          "id": "romantic killer_s01e08",
+          "id": "Yofukashi no Uta_S02_s01e08",
           "index": 8,
           "titulo": "08. Episódio 8",
           "descricao": "",
@@ -170,11 +166,10 @@ export default {
             "inicio": "",
             "fim": ""
           },
-          "url_dub": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Dub-8.mp4",
-          "url_leg": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Leg-8.mp4"
+          "url_leg": "https://ia800500.us.archive.org/28/items/UtaLeg/Segunda-8.mp4"
         },
         {
-          "id": "romantic killer_s01e09",
+          "id": "Yofukashi no Uta_S02_s01e09",
           "index": 9,
           "titulo": "09. Episódio 9",
           "descricao": "",
@@ -189,11 +184,10 @@ export default {
             "inicio": "",
             "fim": ""
           },
-          "url_dub": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Dub-9.mp4",
-          "url_leg": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Leg-9.mp4"
+          "url_leg": "https://ia800500.us.archive.org/28/items/UtaLeg/Segunda-9.mp4"
         },
         {
-          "id": "romantic killer_s01e10",
+          "id": "Yofukashi no Uta_S02_s01e10",
           "index": 10,
           "titulo": "10. Episódio 10",
           "descricao": "",
@@ -208,11 +202,10 @@ export default {
             "inicio": "",
             "fim": ""
           },
-          "url_dub": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Dub-10.mp4",
-          "url_leg": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Leg-10.mp4"
+          "url_leg": "https://ia800500.us.archive.org/28/items/UtaLeg/Segunda-10.mp4"
         },
         {
-          "id": "romantic killer_s01e11",
+          "id": "Yofukashi no Uta_S02_s01e11",
           "index": 11,
           "titulo": "11. Episódio 11",
           "descricao": "",
@@ -227,11 +220,10 @@ export default {
             "inicio": "",
             "fim": ""
           },
-          "url_dub": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Dub-11.mp4",
-          "url_leg": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Leg-11.mp4"
+          "url_leg": "https://ia800500.us.archive.org/28/items/UtaLeg/Segunda-11.mp4"
         },
         {
-          "id": "romantic killer_s01e12",
+          "id": "Yofukashi no Uta_S02_s01e12",
           "index": 12,
           "titulo": "12. Episódio 12",
           "descricao": "",
@@ -246,8 +238,7 @@ export default {
             "inicio": "",
             "fim": ""
           },
-          "url_dub": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Dub-12.mp4",
-          "url_leg": "https://ia801402.us.archive.org/35/items/RomanticDubLeg/Leg-12.mp4"
+          "url_leg": "https://ia800500.us.archive.org/28/items/UtaLeg/Segunda-12.mp4"
         }
       ]
     }

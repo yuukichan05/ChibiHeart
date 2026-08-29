@@ -10,8 +10,8 @@ export default {
   "status": "Finalizado",
   "classificacao": "Livre",
   "generos": [
-    "Comedy",
-    "Slice of Life"
+    "Comédia",
+    "Sci-Fi"
   ],
   "sinopse": "Tamako sabe tudo sobre mochi, a tradicional sobremesa japonesa - ela até trabalha na Tama-ya, a loja de mochi de sua família. No entanto, amizades, rivalidades e novos sentimentos estranhos estão começando a tornar a vida dela uma bagunça complicada e pegajosa!",
   "banner": "https://media.kitsu.app/anime/cover_images/7425/large.jpg",
