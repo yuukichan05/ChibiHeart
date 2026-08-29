@@ -259,12 +259,12 @@ export default {
       "episodios": [
         {
           "id": "Yamada-kun to 7-nin no Majo_s00e01",
-          "index": 1,
-          "titulo": "01. Episódio 1",
+          "index": 13,
+          "titulo": "01. O Festival Suzaku Está Próximo: Fontes Termais?! Reúnam Todos!",
           "descricao": "",
-          "thumb": "",
-          "duracao": "24 min",
-          "data_lancamento": "",
+          "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/bWSz7zAvHQ11dhRY31ScDhMZJC6.jpg",
+          "duracao": "30 min",
+          "data_lancamento": "2014-12-17T00:00:00Z",
           "skip_intro": {
             "inicio": "",
             "fim": ""
@@ -278,11 +278,11 @@ export default {
         {
           "id": "Yamada-kun to 7-nin no Majo_s00e02",
           "index": 2,
-          "titulo": "02. Episódio 2",
+          "titulo": "02. Mais Um Festival Suzaku: Cante! Dance! Clube de Estudos Sobrenaturais!",
           "descricao": "",
-          "thumb": "",
-          "duracao": "24 min",
-          "data_lancamento": "",
+          "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/7vAay0q6JtndQxSu0ghupi9AKx.jpg",
+          "duracao": "30 min",
+          "data_lancamento": "2015-05-15T00:00:00Z",
           "skip_intro": {
             "inicio": "",
             "fim": ""
@@ -292,24 +292,6 @@ export default {
             "fim": ""
           },
           "url_leg": "https://ia800108.us.archive.org/15/items/Yamada-kunDubLeg/OVA-2.mp4"
-        },
-        {
-          "id": "Yamada-kun to 7-nin no Majo_s00e03",
-          "index": 3,
-          "titulo": "03. Episódio 3",
-          "descricao": "",
-          "thumb": "",
-          "duracao": "24 min",
-          "data_lancamento": "",
-          "skip_intro": {
-            "inicio": "",
-            "fim": ""
-          },
-          "skip_outro": {
-            "inicio": "",
-            "fim": ""
-          },
-          "url_leg": "https://ia800108.us.archive.org/15/items/Yamada-kunDubLeg/OVA-3.mp4"
         }
       ]
     }
