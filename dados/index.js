@@ -21,8 +21,8 @@ import reiDemonioDaimao from './animes/reiDemonioDaimao.js';
 import romantic_killer from './animes/romantic killer.js';
 import seihantaiNaKimiToBoku from './animes/seihantaiNaKimiToBoku.js';
 import tamako_marker from './animes/tamako marker.js';
-import tensuraS01 from './animes/tensuraS01.js';
-import tensuraS04 from './animes/tensuraS04.js';
+import that_time_i_got_s01 from './animes/that time i got_s01.js';
+import that_time_i_got_s04 from './animes/that-time-i-got_s04.js';
 
 export const animesData = {
   "100NamoradasQueTeAmamMuuuuuito": _100NamoradasQueTeAmamMuuuuuito,
@@ -48,6 +48,6 @@ export const animesData = {
   "romantic killer": romantic_killer,
   "seihantaiNaKimiToBoku": seihantaiNaKimiToBoku,
   "tamako marker": tamako_marker,
-  "tensuraS01": tensuraS01,
-  "tensuraS04": tensuraS04
+  "that time i got_s01": that_time_i_got_s01,
+  "that-time-i-got_s04": that_time_i_got_s04
 };

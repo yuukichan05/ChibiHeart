@@ -183,7 +183,7 @@ export default {
           "descricao": "",
           "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/r6RC0IP6OWMqKKUs9u4UpBe65IX.jpg",
           "duracao": "24 min",
-          "data_lancamento": "2026-08-30T00:00:00Z",
+          "data_lancamento": "2026-08-30T00:11:00Z",
           "skip_intro": {
             "inicio": "",
             "fim": ""
