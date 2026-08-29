@@ -12,6 +12,7 @@ import konosubaS04 from './animes/konosubaS04.js';
 import oshiNoKo from './animes/oshiNoKo.js';
 import plastic_memo from './animes/plastic memo.js';
 import reiDemonioDaimao from './animes/reiDemonioDaimao.js';
+import romantic_killer from './animes/romantic killer.js';
 import seihantaiNaKimiToBoku from './animes/seihantaiNaKimiToBoku.js';
 import tamako_marker from './animes/tamako marker.js';
 import tensuraS01 from './animes/tensuraS01.js';
@@ -32,6 +33,7 @@ export const animesData = {
   "oshiNoKo": oshiNoKo,
   "plastic memo": plastic_memo,
   "reiDemonioDaimao": reiDemonioDaimao,
+  "romantic killer": romantic_killer,
   "seihantaiNaKimiToBoku": seihantaiNaKimiToBoku,
   "tamako marker": tamako_marker,
   "tensuraS01": tensuraS01,

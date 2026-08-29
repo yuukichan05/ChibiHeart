@@ -1,5 +1,3 @@
-// js/modules/features/detalhes/detalhesView.js
-
 import { buscarTodoProgressoDB } from '../../data/database/db.js';
 import { obterAnimePorId } from '../../data/database/repository.js';
 import { observarImagem, observarContainer } from '../../core/imageObserver.js';
@@ -22,7 +20,7 @@ import {
     alternarStatusTemporada
 } from './detalhesEpisodes.js';
 
-// --- GERENCIADOR PRINCIPAL DA TELA INFO ---
+const DEFAULT_FALLBACK_IMAGE = "assets/images/placeholder.jpg";
 
 export async function gerenciarTelaInfo() {
     const rawHash = window.location.hash || "#inicio";
@@ -39,7 +37,6 @@ export async function gerenciarTelaInfo() {
 
     if (!containerEps || !modeloEp) return;
 
-    // --- OUVINTES DE EVENTO E DELEGADOR DE MEMÓRIA CENTRALIZADO ---
     configurarOuvintesEventos(containerEps);
     observarContainer(containerEps);
 
@@ -63,7 +60,6 @@ export async function gerenciarTelaInfo() {
 
         preencherMetadados(item, containerGeneros);
 
-        // Determina se deve tratar como Filme/Mídia Única ou Série
         const ehConteudoUnico = item.tipo === "filme" ||
             (item.tipo !== "serie" && (!item.temporadas || item.temporadas.length === 0) && (!item.episodios || item.episodios.length <= 1));
 
@@ -102,7 +98,6 @@ function configurarOuvintesEventos(containerEps) {
         }
     };
 
-    // 1. Toque Longo no Mobile
     containerEps.addEventListener("touchstart", (e) => {
         const card = e.target.closest(".card-ep");
         if (!card || !card.dataset.epId) return;
@@ -124,7 +119,6 @@ function configurarOuvintesEventos(containerEps) {
     containerEps.addEventListener("touchmove", cancelarTouch);
     containerEps.addEventListener("touchcancel", cancelarTouch);
 
-    // 2. Clique com Botão Direito no Desktop
     containerEps.addEventListener("contextmenu", (e) => {
         const card = e.target.closest(".card-ep");
         if (!card || !card.dataset.epId) return;
@@ -139,7 +133,6 @@ function configurarOuvintesEventos(containerEps) {
         solicitarMarcaAssistido(card.dataset.epId);
     });
 
-    // 3. Clique Normal
     containerEps.addEventListener("click", (e) => {
         if (isLongPress) {
             isLongPress = false;
@@ -151,7 +144,6 @@ function configurarOuvintesEventos(containerEps) {
         if (card && card.dataset.epId) {
             const meta = episodesMap[card.dataset.epId];
 
-            // Bloqueio para episódios não lançados
             if (meta?.ep?.data_lancamento && ehEpisodioFuturo(meta.ep.data_lancamento)) {
                 const dataFmt = formatarDataEpisodio(meta.ep.data_lancamento);
                 alert(`Este episódio estará disponível em ${dataFmt || 'breve'}.`);
@@ -175,25 +167,23 @@ function preencherMetadados(item, containerGeneros) {
     const infoAno = document.getElementById("info-ano");
     const infoSinopse = document.getElementById("info-sinopse");
 
-    // Elementos de Badges
     const badgeTipo = document.getElementById("info-tipo");
     const badgeStatus = document.getElementById("info-status");
     const badgeEstacao = document.getElementById("info-estacao");
     const badgeClassificacao = document.getElementById("info-classificacao");
 
-    // Aviso de Status
     const statusAvisoBox = document.getElementById("info-status-aviso");
     const statusAvisoTexto = document.getElementById("info-status-texto");
 
     if (infoBanner || infoBackdrop) {
         const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
-        const posterEfetivo = item.poster_detalhes || item.poster;
+        
+        // Encadeamento de fallback do banner principal
+        const posterEfetivo = item.poster_detalhes || item.poster || DEFAULT_FALLBACK_IMAGE;
+        const bannerEfetivo = item.banner || posterEfetivo;
 
-        const imagemSrc = isDesktop 
-            ? (item.banner || posterEfetivo || "") 
-            : (posterEfetivo || item.banner || "");
+        const imagemSrc = isDesktop ? bannerEfetivo : posterEfetivo;
 
-        // Otimização aplicada ao Banner e Backdrop usando o core
         const otimizarImagemMetadado = (img, src) => {
             if (!img || !src) return;
             img.dataset.src = src;
@@ -208,7 +198,6 @@ function preencherMetadados(item, containerGeneros) {
 
     if (infoTitulo) infoTitulo.textContent = item.titulo || "Sem título";
 
-    // Título secundário (Português ou Inglês)
     if (infoSubtitulo) {
         const sub = item.titulo_pt || item.titulo_en || "";
         if (sub && sub !== item.titulo) {
@@ -222,7 +211,6 @@ function preencherMetadados(item, containerGeneros) {
     if (infoAno) infoAno.textContent = item.ano || "----";
     if (infoSinopse) infoSinopse.textContent = item.sinopse || "Sem sinopse disponível.";
 
-    // --- CONTROLE DA SINOPSE (EXPANDIR / RECOLHER) ---
     const containerSinopse = document.querySelector(".info-synopsis-container");
     const btnToggleSinopse = document.getElementById("btn-toggle-sinopse");
 
@@ -236,7 +224,6 @@ function preencherMetadados(item, containerGeneros) {
         };
     }
 
-    // Preenchimento de Badges
     if (badgeTipo) {
         const textoTipo = formatarTipo(item.tipo);
         if (textoTipo) {
@@ -276,7 +263,6 @@ function preencherMetadados(item, containerGeneros) {
         }
     }
 
-    // Caixa de aviso por Status
     if (statusAvisoBox && statusAvisoTexto) {
         if (item.status === "Em exibição") {
             statusAvisoTexto.textContent = "Novos episódios são adicionados periodicamente assim que lançados.";
@@ -289,7 +275,6 @@ function preencherMetadados(item, containerGeneros) {
         }
     }
 
-    // Gêneros
     if (containerGeneros) {
         containerGeneros.innerHTML = "";
         if (Array.isArray(item.generos)) {
@@ -361,6 +346,9 @@ async function configurarModoSerie(item, itemId, tempParam, dom) {
     if (dom.blocoFilme) dom.blocoFilme.style.display = "block";
     if (dom.blocoEpisodios) dom.blocoEpisodios.style.display = "block";
 
+    // Define a capa padrão do anime para usar como fallback na thumb do episódio
+    const capaPadraoAnime = item.banner || item.poster_detalhes || item.poster || "";
+
     const { temporadasAtuais, temporadaIndex } = inicializarTemporadas(
         item,
         tempParam,
@@ -385,7 +373,6 @@ async function configurarModoSerie(item, itemId, tempParam, dom) {
         });
     });
 
-    // Identificação do Próximo Episódio a ser assistido
     let epAlvo = null;
     let textoBotao = "";
     let ultimoInteragido = null;
@@ -460,10 +447,8 @@ async function configurarModoSerie(item, itemId, tempParam, dom) {
         }
     }
 
-    // Configuração dos Botões do Cabeçalho de Episódios
-    configurarBotoesAcaoEpisodios(itemId, temporadaIndex, temporadasAtuais, mapaProgresso, dom, epAlvo?.id);
+    configurarBotoesAcaoEpisodios(itemId, temporadaIndex, temporadasAtuais, mapaProgresso, dom, epAlvo?.id, capaPadraoAnime);
 
-    // Renderiza a temporada ativa com destaque no 'epAlvo'
     const tempAtiva = temporadasAtuais[temporadaIndex];
     if (tempAtiva && tempAtiva.episodios) {
         renderizarListaEpisodios(
@@ -473,14 +458,15 @@ async function configurarModoSerie(item, itemId, tempParam, dom) {
             itemId, 
             temporadaIndex, 
             mapaProgresso,
-            epAlvo?.id
+            epAlvo?.id,
+            capaPadraoAnime
         );
     } else {
         dom.containerEps.innerHTML = "<p style='color: #888; padding: 10px;'>Nenhum episódio disponível nesta temporada.</p>";
     }
 }
 
-function configurarBotoesAcaoEpisodios(itemId, temporadaIndex, temporadasAtuais, mapaProgresso, dom, proximoEpId) {
+function configurarBotoesAcaoEpisodios(itemId, temporadaIndex, temporadasAtuais, mapaProgresso, dom, proximoEpId, capaPadraoAnime = "") {
     const btnOrdenar = document.getElementById("btn-ordenar-eps");
     const btnMarcarTemporada = document.getElementById("btn-marcar-temporada");
 
@@ -496,7 +482,8 @@ function configurarBotoesAcaoEpisodios(itemId, temporadaIndex, temporadasAtuais,
                     itemId,
                     temporadaIndex,
                     mapaProgresso,
-                    proximoEpId
+                    proximoEpId,
+                    capaPadraoAnime
                 );
             }
         };

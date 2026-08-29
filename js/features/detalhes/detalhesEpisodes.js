@@ -1,5 +1,3 @@
-// js/modules/features/detalhes/detalhesEpisodes.js
-
 import { buscarProgressoDB, alternarConcluidoDB } from '../../data/database/db.js';
 import { 
     makeEpisodeId, 
@@ -10,31 +8,22 @@ import {
 } from './detalhesUtils.js';
 import { gerenciarTelaInfo } from './detalhesView.js';
 
-// --- ESTADO LOCAL E MAPEAMENTOS ---
+const DEFAULT_EP_THUMB = "assets/images/placeholder.jpg";
+
 export let episodesMap = {};
 export let ordemCrescente = true;
 
-// Trava global para evitar múltiplos disparos seguidos
 let isProcessingAction = false;
 
-/**
- * Alterna a ordem de exibição dos episódios (crescente/decrescente).
- */
 export function alternarOrdemEpisodios() {
     ordemCrescente = !ordemCrescente;
     return ordemCrescente;
 }
 
-/**
- * Zera o mapeamento de episódios da memória.
- */
 export function limparMapaEpisodios() {
     episodesMap = {};
 }
 
-/**
- * Mapeia todos os episódios de todas as temporadas
- */
 export function indexEpisodes(animeId, temporadas) {
     limparMapaEpisodios();
     if (!Array.isArray(temporadas)) return;
@@ -52,7 +41,16 @@ export function indexEpisodes(animeId, temporadas) {
 /**
  * Renderiza a lista de episódios na DOM.
  */
-export function renderizarListaEpisodios(listaEpisodios, container, modelo, animeId, seasonIndex = 0, mapaProgresso = {}, proximoEpId = null) {
+export function renderizarListaEpisodios(
+    listaEpisodios, 
+    container, 
+    modelo, 
+    animeId, 
+    seasonIndex = 0, 
+    mapaProgresso = {}, 
+    proximoEpId = null,
+    capaPadraoAnime = ""
+) {
     container.innerHTML = "";
 
     if (!Array.isArray(listaEpisodios) || listaEpisodios.length === 0) {
@@ -60,7 +58,6 @@ export function renderizarListaEpisodios(listaEpisodios, container, modelo, anim
         return;
     }
 
-    // Copia o array para não alterar o original durante a ordenação
     const listaOrdenada = [...listaEpisodios];
     listaOrdenada.sort((a, b) => {
         const idxA = a.index || 0;
@@ -94,7 +91,10 @@ export function renderizarListaEpisodios(listaEpisodios, container, modelo, anim
         const eFuturo = ehEpisodioFuturo(ep.data_lancamento);
 
         if (imgEl) {
-            imgEl.src = ep.thumb || "";
+            // Encadeamento: ep.thumb -> capa do anime (banner/poster) -> placeholder
+            const imagemEfetiva = ep.thumb || capaPadraoAnime || DEFAULT_EP_THUMB;
+            imgEl.src = imagemEfetiva;
+            imgEl.dataset.src = imagemEfetiva;
             imgEl.alt = ep.titulo || `Episódio ${epIndex + 1}`;
         }
         if (durationEl) durationEl.textContent = ep.duracao || "";
@@ -115,7 +115,6 @@ export function renderizarListaEpisodios(listaEpisodios, container, modelo, anim
                 cardWrapper.style.opacity = "0.6";
             }
 
-            // Destaque para Badges (Próximo ou Em Breve)
             if (badgeProximo) {
                 if (proximoEpId && ep.id === proximoEpId) {
                     cardWrapper.classList.add("card-proximo-ep");
@@ -152,9 +151,6 @@ export function renderizarListaEpisodios(listaEpisodios, container, modelo, anim
     container.appendChild(frag);
 }
 
-/**
- * Pop-up de confirmação para marcar ou desmarcar episódio individual.
- */
 export async function solicitarMarcaAssistido(epId) {
     if (isProcessingAction) return;
     isProcessingAction = true;
@@ -185,9 +181,6 @@ export async function solicitarMarcaAssistido(epId) {
     }
 }
 
-/**
- * Marca ou desmarca todos os episódios da temporada selecionada de uma vez.
- */
 export async function alternarStatusTemporada(listaEpisodios, animeId, seasonIndex, mapaProgresso = {}) {
     if (isProcessingAction || !Array.isArray(listaEpisodios) || listaEpisodios.length === 0) return;
     isProcessingAction = true;
@@ -198,7 +191,6 @@ export async function alternarStatusTemporada(listaEpisodios, animeId, seasonInd
             return ep.id || makeEpisodeId(animeId, seasonIndex + 1, epIdx);
         });
 
-        // Verifica se TODOS da temporada já estão concluídos
         const todosConcluidos = idsEps.every(id => {
             const p = mapaProgresso[id];
             return p?.concluido || (p?.total > 0 && (p.tempo / p.total) >= 0.85);
