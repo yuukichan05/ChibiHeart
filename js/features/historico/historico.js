@@ -1,8 +1,8 @@
 // js/features/historico.js
 
-import { buscarTodoProgressoDB } from "../data/database/db.js";
-import { obterInfoCompleta } from "../data/database/repository.js";
-import { observarImagem } from "../core/imageObserver.js";
+import { buscarTodoProgressoDB } from "../../data/database/db.js";
+import { obterInfoCompleta } from "../../data/database/repository.js";
+import { observarImagem } from "../../core/imageObserver.js";
 
 function formatarTempo(segundos) {
   if (isNaN(segundos) || segundos <= 0) return "00:00";

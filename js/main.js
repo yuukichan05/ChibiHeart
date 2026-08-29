@@ -2,18 +2,22 @@ import {
   gerarEsqueletosIniciais,
   carregarAnimesRecomendados, 
   carregarAnimesRecentes, 
-  carregarAnimesPorGenero 
-} from './features/inicio.js';
+  carregarAnimesPorGenero,
+  renderizarContinuarAssistindo,
+  gerenciarTelaExplorar,
+  gerenciarTelaInfo,
+  gerenciarTelaPlayer,
+  verificarESincronizarAoSairDoPlayer,
+  inicializarPesquisa,
+  gerenciarTelaHistorico,
+  inicializarPerfil,
+  gerenciarTelaPerfil,
+  inicializarConta,
+  autoSincronizarGithub,
+  gerenciarTelaNotificacoes,
+  atualizarBadgeNotificacao
+} from './features/index.js';
 
-import { gerenciarTelaExplorar } from './features/explorar.js';
-import { gerenciarTelaInfo } from './features/index-detalhes.js';
-import { gerenciarTelaPlayer, verificarESincronizarAoSairDoPlayer } from './features/index-player.js';
-import { inicializarPesquisa } from './features/pesquisa.js';
-import { gerenciarTelaHistorico } from './features/historico.js';
-import { renderizarContinuarAssistindo } from './features/continuarAssistindo.js';
-import { inicializarPerfil, gerenciarTelaPerfil } from './features/perfil.js';
-import { inicializarConta, autoSincronizarGithub } from './features/conta.js';
-import { gerenciarTelaNotificacoes, atualizarBadgeNotificacao } from './features/notificacoes.js';
 import { limparRegistrosZeradosDB } from './data/database/dbProgresso.js';
 
 /* ==========================================================================

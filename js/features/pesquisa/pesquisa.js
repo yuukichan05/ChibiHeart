@@ -1,7 +1,7 @@
 // js/features/pesquisa.js
 
-import { obterInfoCompleta } from '../data/database/repository.js';
-import { observarImagem } from '../core/imageObserver.js';
+import { obterInfoCompleta } from '../../data/database/repository.js';
+import { observarImagem } from '../../core/imageObserver.js';
 
 let bancoDadosCache = null;
 

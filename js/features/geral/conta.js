@@ -7,11 +7,11 @@ import {
   sincronizarUploadGithub,
   buscarPerfilDB,
   salvarPerfilDB
-} from '../data/database/db.js';
+} from '../../data/database/db.js';
 
 import {
   adicionarNotificacao
-} from './notificacoes.js';
+} from '../notificacoes.js';
 
 import {
   atualizarInterfacePerfil,

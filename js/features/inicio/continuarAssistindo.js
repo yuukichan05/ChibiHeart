@@ -1,6 +1,6 @@
-import { buscarTodoProgressoDB, alternarConcluidoDB } from "../data/database/db.js";
-import { obterInfoCompleta } from "../data/database/repository.js";
-import { makeEpisodeId } from "./detalhes/detalhesUtils.js"; // Ajuste o caminho relativo se necessário
+import { buscarTodoProgressoDB, alternarConcluidoDB } from "../../data/database/db.js";
+import { obterInfoCompleta } from "../../data/database/repository.js";
+import { makeEpisodeId } from "../detalhes/detalhesUtils.js"; // Ajuste o caminho relativo se necessário
 
 // Formata segundos em MM:SS ou HH:MM:SS
 function formatarTempo(segundos) {

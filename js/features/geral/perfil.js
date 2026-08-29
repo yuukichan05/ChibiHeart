@@ -2,12 +2,12 @@ import {
   buscarPerfilDB,
   salvarPerfilDB,
   sincronizarUploadGithub
-} from '../data/database/db.js';
+} from '../../data/database/db.js';
 
 import {
   adicionarNotificacao,
   atualizarBadgeNotificacao
-} from './notificacoes.js';
+} from '../notificacoes.js';
 
 /**
  * Redimensiona e comprime imagens de perfil para evitar ultrapassar limites

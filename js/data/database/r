@@ -1,22 +1,23 @@
-// js/data/database/repository.js
-
-import { animesData } from '../../../dados/index.js';
+// js/modules//database/repository.js
 
 let cacheInfo = null;
 let cacheRecomendados = null;
 let cacheRecentes = null;
+let cacheNovosEpisodios = null;
 
 /**
- * Retorna os dados completos do objeto de animes
+ * Busca e armazena em cache os dados do info.json
  */
 export async function obterInfoCompleta() {
   if (cacheInfo) return cacheInfo;
 
   try {
-    cacheInfo = animesData;
+    const resposta = await fetch('./dados/animes.json');
+    if (!resposta.ok) throw new Error(`Erro ao carregar animes.json: status ${resposta.status}`);
+    cacheInfo = await resposta.json();
     return cacheInfo;
   } catch (erro) {
-    console.error('❌ [Repository] Falha crítica ao carregar info:', erro);
+    console.error('❌ [Repository] Falha crítica ao carregar info.json:', erro);
     return null;
   }
 }
@@ -31,7 +32,7 @@ export async function obterAnimePorId(animeId) {
 }
 
 /**
- * Busca a lista de animes recomendados (Destaques)
+ * Busca a lista de animes recomendados (Destaques) diretamente do info.json
  */
 export async function obterRecomendados() {
   if (cacheRecomendados) return cacheRecomendados;
@@ -53,7 +54,7 @@ export async function obterRecomendados() {
 }
 
 /**
- * Busca os 15 animes adicionados mais recentemente,
+ * Busca os 15 animes adicionados mais recentemente diretamente do info.json,
  * ordenando do mais recente para o mais antigo pela data em "adicionado_em".
  */
 export async function obterRecentes() {
@@ -78,10 +79,28 @@ export async function obterRecentes() {
 }
 
 /**
+ * Busca a lista de novos episódios
+ */
+export async function obterNovosEpisodios() {
+  if (cacheNovosEpisodios) return cacheNovosEpisodios;
+
+  try {
+    const resposta = await fetch('./dados/novos_episodios.json');
+    if (!resposta.ok) return [];
+    cacheNovosEpisodios = await resposta.json();
+    return cacheNovosEpisodios;
+  } catch (erro) {
+    console.error('❌ [Repository] Falha ao carregar novos_episodios.json:', erro);
+    return [];
+  }
+}
+
+/**
  * Limpa o cache caso precise forçar a atualização dos dados sem recarregar a página
  */
 export function limparCacheRepository() {
   cacheInfo = null;
   cacheRecomendados = null;
   cacheRecentes = null;
+  cacheNovosEpisodios = null;
 }

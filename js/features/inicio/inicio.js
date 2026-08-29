@@ -4,8 +4,8 @@ import {
   obterInfoCompleta, 
   obterRecomendados, 
   obterRecentes 
-} from '../data/database/repository.js';
-import { observarImagem } from '../core/imageObserver.js';
+} from '../../data/database/repository.js';
+import { observarImagem } from '../../core/imageObserver.js';
 
 // Auxiliar para gerar string de esqueletos temporários
 function criarEsqueletosHTML(quantidade = 6) {
