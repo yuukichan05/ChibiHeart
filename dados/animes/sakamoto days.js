@@ -252,7 +252,7 @@ export default {
             "fim": ""
           },
           "url_dub": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Dub-12.mp4",
-          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-11.mp4"
+          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-12.mp4"
         },
         {
           "id": "sakamoto days_s02e02",
@@ -271,7 +271,7 @@ export default {
             "fim": ""
           },
           "url_dub": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Dub-13.mp4",
-          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-12.mp4"
+          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-13.mp4"
         },
         {
           "id": "sakamoto days_s02e03",
@@ -290,7 +290,7 @@ export default {
             "fim": ""
           },
           "url_dub": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Dub-14.mp4",
-          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-13.mp4"
+          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-14.mp4"
         },
         {
           "id": "sakamoto days_s02e04",
@@ -309,7 +309,7 @@ export default {
             "fim": ""
           },
           "url_dub": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Dub-15.mp4",
-          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-14.mp4"
+          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-15.mp4"
         },
         {
           "id": "sakamoto days_s02e05",
@@ -328,7 +328,7 @@ export default {
             "fim": ""
           },
           "url_dub": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Dub-16.mp4",
-          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-15.mp4"
+          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-16.mp4"
         },
         {
           "id": "sakamoto days_s02e06",
@@ -347,7 +347,7 @@ export default {
             "fim": ""
           },
           "url_dub": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Dub-17.mp4",
-          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-16.mp4"
+          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-17.mp4"
         },
         {
           "id": "sakamoto days_s02e07",
@@ -366,7 +366,7 @@ export default {
             "fim": ""
           },
           "url_dub": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Dub-18.mp4",
-          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-17.mp4"
+          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-18.mp4"
         },
         {
           "id": "sakamoto days_s02e08",
@@ -385,7 +385,7 @@ export default {
             "fim": ""
           },
           "url_dub": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Dub-19.mp4",
-          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-18.mp4"
+          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-19.mp4"
         },
         {
           "id": "sakamoto days_s02e09",
@@ -404,7 +404,7 @@ export default {
             "fim": ""
           },
           "url_dub": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Dub-20.mp4",
-          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-19.mp4"
+          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-20.mp4"
         },
         {
           "id": "sakamoto days_s02e10",
@@ -423,7 +423,7 @@ export default {
             "fim": ""
           },
           "url_dub": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Dub-21.mp4",
-          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-20.mp4"
+          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-21.mp4"
         },
         {
           "id": "sakamoto days_s02e11",
@@ -442,7 +442,7 @@ export default {
             "fim": ""
           },
           "url_dub": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Dub-22.mp4",
-          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-21.mp4"
+          "url_leg": "https://ia801606.us.archive.org/15/items/SakamoDubLeg/Leg-22.mp4"
         }
       ]
     }
