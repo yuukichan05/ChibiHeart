@@ -2,7 +2,6 @@
    ADAPTAÇÃO DESKTOP (#INFO) - ESTILO NETFLIX / DISNEY+ AMBIENTE IMMERSIVE
    ========================================================================== */
 
-@media (min-width: 1024px) {
     /* 1. Oculta a view inativa */
     #info:not(.active) {
         display: none !important;

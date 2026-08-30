@@ -10,7 +10,6 @@
    ADAPTAÇÃO DESKTOP: APENAS PARA A TELA DO PLAYER (#PLAYER)
    ========================================================================== */
 
-@media (min-width: 1024px) {
     /* 1. TRAVA DE ROLAGEM GLOBAL APENAS QUANDO O PLAYER ESTIVER ATIVO */
     body:has(#player.active) {
         overflow: hidden !important;
@@ -119,4 +118,4 @@
         font-size: 0.85rem;
         flex: 1;
     }
-}
+

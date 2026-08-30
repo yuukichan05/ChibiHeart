@@ -1,0 +1,10 @@
+/* ==========================================================================
+   MÓDULOS DESKTOP (Carregam APENAS em telas a partir de 1024px)
+   ========================================================================== */
+@import url("modules/media/base-desktop.css") (min-width: 1024px);
+@import url("modules/media/player-desktop.css") (min-width: 1024px);
+@import url("modules/media/inicio-desktop.css") (min-width: 1024px);
+@import url("modules/media/perfil-desktop.css") (min-width: 1024px);
+@import url("modules/media/views-desktop.css") (min-width: 1024px);
+@import url("modules/media/historico-desktop.css") (min-width: 1024px);
+@import url("modules/media/pesquisa-desktop.css") (min-width: 1024px);

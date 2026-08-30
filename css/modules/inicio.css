@@ -90,6 +90,69 @@ body {
 }
 
 /* ==========================================================================
+   SWEETALERT2 - APPLE GLASS ROXO DEEP
+   ========================================================================== */
+
+/* Container Principal Popup */
+.swal-glass-popup {
+    background: var(--bg-panel) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--border-glass-purple) !important;
+    border-radius: 20px !important;
+    color: var(--text-main) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px var(--accent-glow) !important;
+    font-family: var(--font-main) !important;
+}
+
+/* Título e Texto */
+.swal-glass-title {
+    color: var(--text-main) !important;
+    font-weight: 700 !important;
+    font-size: 1.25rem !important;
+}
+
+.swal-glass-html {
+    color: var(--text-secondary) !important;
+    font-size: 0.95rem !important;
+}
+
+/* Botão Principal */
+.swal-glass-confirm {
+    background: var(--accent-gradient) !important;
+    color: #ffffff !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    padding: 10px 24px !important;
+    box-shadow: 0 4px 15px var(--accent-glow) !important;
+    transition: all 0.2s ease !important;
+}
+
+.swal-glass-confirm:hover {
+    box-shadow: 0 6px 20px var(--accent-glow-strong) !important;
+    transform: translateY(-1px);
+}
+
+/* Ícones de Alerta / Informação */
+.swal2-icon.swal2-info {
+    border-color: var(--accent-purple) !important;
+    color: var(--accent-purple) !important;
+}
+
+.swal2-icon.swal2-warning {
+    border-color: #f59e0b !important;
+    color: #f59e0b !important;
+}
+
+/* Fundo Escuro ao Fundo (Backdrop) */
+.swal2-container.swal2-backdrop-show {
+    background: rgba(10, 5, 18, 0.75) !important;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+
+/* ==========================================================================
    SELETOR DE PERFIL (NETFLIX STYLE)
    ========================================================================== */
 .perfis-container {

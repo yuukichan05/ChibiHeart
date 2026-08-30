@@ -2,7 +2,6 @@
    ADAPTAÇÃO DESKTOP: APENAS PARA A TELA DE PERFIL (#PERFIL)
    ========================================================================== */
 
-@media (min-width: 1024px) {
     /* 1. CONTAINER DA VIEW DE PERFIL (CENTRALIZADO E COM LARGURA MÁXIMA CONTROLADA) */
     #perfil {
         max-width: 680px;
@@ -86,4 +85,4 @@
         padding: 32px;
         border-radius: 20px;
     }
-}
+

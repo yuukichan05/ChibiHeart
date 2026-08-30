@@ -17,13 +17,5 @@
 @import url("modules/assistindo.css");
 
 
-/*@Media */
 
-@import url("modules/media/base-desktop.css");
-@import url("modules/media/player-desktop.css"); 
-@import url("modules/media/inicio-desktop.css");
-@import url("modules/media/perfil-desktop.css");
-@import url("modules/media/views-desktop.css");
-@import url("modules/media/historico-desktop.css");
-@import url("modules/media/pesquisa-desktop.css");
 

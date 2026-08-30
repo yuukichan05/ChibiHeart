@@ -2,7 +2,6 @@
    ADAPTAÇÃO DESKTOP (1024px+): TELA DE HISTÓRICO (#HISTORICO)
    ========================================================================== */
 
-@media (min-width: 1024px) {
 
     /* 1. TRAVA DE BLOQUEIO QUANDO INATIVO */
     #historico:not(.active) {
@@ -105,4 +104,4 @@
     body:has(#historico.active) footer {
         display: none !important;
     }
-}
+

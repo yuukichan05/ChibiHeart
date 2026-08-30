@@ -2,7 +2,6 @@
    ADAPTAÇÃO DESKTOP (1024px+): TELA DE PESQUISA (#PESQUISA)
    ========================================================================== */
 
-@media (min-width: 1024px) {
 
     /* 1. TRAVA DE BLOQUEIO QUANDO INATIVO */
     #pesquisa:not(.active) {
@@ -78,4 +77,4 @@
     body:has(#pesquisa.active) footer {
         display: none !important;
     }
-}
+

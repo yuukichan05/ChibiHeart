@@ -2,7 +2,6 @@
    ADAPTAÇÃO DESKTOP: APENAS PARA TELA INICIAL (#INICIO) + SIDEBAR REGRAS
    ========================================================================== */
 
-@media (min-width: 1024px) {
     /* ----------------------------------------------------------------------
        1. CONTROLE DE ESPAÇAMENTO DA MAIN-CONTENT E TELAS ESPECÍFICAS
        ---------------------------------------------------------------------- */
@@ -142,38 +141,75 @@
         transform: translateX(0);
     }
 
-    /* ----------------------------------------------------------------------
-       3. TELA INICIAL (#INICIO) - ISOLADA PARA AUMENTAR APENAS NELA
-       ---------------------------------------------------------------------- */
-    #inicio .secao-categoria,
-    #inicio .secao-genero-container {
-        margin-bottom: 16px;
-    }
+/* ==========================================================================
+   ADAPTAÇÃO DESKTOP (1024px+): TELA INICIAL (#INICIO) OTIMIZADA
+   ========================================================================== */
 
-    #inicio .titulo-categoria {
-        font-size: 1.25rem !important;
-        padding: 0 32px;
-        margin: 20px 0 10px 0;
-    }
-
-    #inicio .cards-row,
-    #inicio .cards-grid,
-    #inicio #grade-continuar-assistindo {
-        padding: 6px 32px 16px 32px;
-        gap: 14px;
-    }
-
-    #inicio .card.poster {
-        width: 10.5rem;
-    }
-
-    #inicio .card.landscape,
-    #inicio .card-continuar {
-        width: 260px;
-        min-width: 260px;
-    }
-
-    #inicio .card-title {
-        font-size: 0.88rem;
-    }
+/* 1. CAMADA INDEPENDENTE DE RENDERIZAÇÃO (Alivia processadores limitados) */
+#inicio .secao-categoria,
+#inicio .secao-genero-container {
+    margin-bottom: 28px;
+    content-visibility: auto; /* Só processa a fileira quando ela entra na tela */
+    contain-intrinsic-size: 320px; /* Altura estimada para evitar pulos no scroll */
 }
+
+#inicio .titulo-categoria {
+    font-size: 1.5rem !important;
+    padding: 0 32px;
+    margin: 24px 0 14px 0;
+}
+
+/* 2. CONFIGURAÇÃO DAS FILEIRAS COM SUPORTE A SETAS DE NAVEGAÇÃO */
+#inicio .cards-row,
+#inicio .cards-grid,
+#inicio #grade-continuar-assistindo {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important; /* Mantém o scroll ativo para cliques/teclado */
+    scroll-behavior: smooth;     /* Transição suave ao navegar pelas setas */
+    padding: 6px 32px 16px 32px;
+    gap: 20px !important;        /* Espaçamento maior e mais elegante no PC */
+}
+
+/* Esconde a barra de rolagem padrão para manter o visual limpo */
+#inicio .cards-row::-webkit-scrollbar,
+#inicio .cards-grid::-webkit-scrollbar,
+#inicio #grade-continuar-assistindo::-webkit-scrollbar {
+    display: none;
+}
+
+/* 3. CAMADA DE ACELERAÇÃO DE HARDWARE NOS CARDS (Evita telas brancas/flickering) */
+#inicio .card.poster,
+#inicio .card.landscape,
+#inicio .card-continuar {
+    transform: translateZ(0); /* Força o uso da GPU (placa gráfica) */
+    will-change: transform;
+    contain: paint;           /* Isola o card para o PC não recalcular a tela toda */
+}
+
+/* 4. CÁLCULO DINÂMICO DE TAMANHOS (Garante quantidade fixa de 5 a 6 na tela) */
+
+/* Exibe exatamente 6 Pôsteres por fileira visível */
+#inicio .card.poster {
+    width: calc((100% - (5 * 20px)) / 6) !important; 
+    min-width: calc((100% - (5 * 20px)) / 6) !important;
+}
+
+/* Exibe exatamente 5 cards Landscape por fileira visível */
+#inicio .card.landscape {
+    width: calc((100% - (4 * 20px)) / 5) !important;
+    min-width: calc((100% - (4 * 20px)) / 5) !important;
+}
+
+/* CARDS CONTINUAR ASSISTINDO (Aumentados: Exibe exatamente 4 por fileira visível)
+   Como eles costumam ter barra de progresso e mais detalhes, menos itens na tela 
+   melhora a leitura e o destaque visual */
+#inicio .card-continuar {
+    width: calc((100% - (3 * 20px)) / 4) !important;
+    min-width: calc((100% - (3 * 20px)) / 4) !important;
+}
+
+#inicio .card-title {
+    font-size: 1rem;
+}
+

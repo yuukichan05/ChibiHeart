@@ -19,8 +19,18 @@ import {
     alternarOrdemEpisodios,
     alternarStatusTemporada
 } from './detalhesEpisodes.js';
-
 const DEFAULT_FALLBACK_IMAGE = "assets/images/placeholder.jpg";
+
+// Configuração visual personalizada para o SweetAlert2 (Apple Glass)
+const swalEstilo = {
+    customClass: {
+        popup: 'swal-glass-popup',
+        title: 'swal-glass-title',
+        htmlContainer: 'swal-glass-html',
+        confirmButton: 'swal-glass-confirm'
+    },
+    buttonsStyling: false
+};
 
 export async function gerenciarTelaInfo() {
     const rawHash = window.location.hash || "#inicio";
@@ -146,14 +156,24 @@ function configurarOuvintesEventos(containerEps) {
 
             if (meta?.ep?.data_lancamento && ehEpisodioFuturo(meta.ep.data_lancamento)) {
                 const dataFmt = formatarDataEpisodio(meta.ep.data_lancamento);
-                alert(`Este episódio estará disponível em ${dataFmt || 'breve'}.`);
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Indisponível',
+                    text: `Este episódio estará disponível em ${dataFmt || 'breve'}.`,
+                    ...swalEstilo
+                });
                 return;
             }
 
             if (meta && temVideoDisponivel(meta.ep)) {
                 window.location.hash = `#player?anime=${encodeURIComponent(meta.animeId)}&ep=${encodeURIComponent(meta.ep.id)}`;
             } else {
-                alert("Vídeo indisponível para este episódio.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Aviso',
+                    text: 'Vídeo indisponível para este episódio.',
+                    ...swalEstilo
+                });
             }
         }
     });
@@ -178,7 +198,6 @@ function preencherMetadados(item, containerGeneros) {
     if (infoBanner || infoBackdrop) {
         const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
         
-        // Encadeamento de fallback do banner principal
         const posterEfetivo = item.poster_detalhes || item.poster || DEFAULT_FALLBACK_IMAGE;
         const bannerEfetivo = item.banner || posterEfetivo;
 
@@ -303,7 +322,12 @@ function configurarModoAnunciado(blocoFilme, blocoEpisodios) {
         btnPlay.classList.add("disabled");
         btnPlay.onclick = (e) => {
             e.preventDefault();
-            alert("Este título ainda não foi lançado.");
+            Swal.fire({
+                icon: 'info',
+                title: 'Em breve',
+                text: 'Este título ainda não foi lançado.',
+                ...swalEstilo
+            });
         };
     }
 }
@@ -328,14 +352,24 @@ function configurarModoFilme(item, itemId, blocoFilme, blocoEpisodios) {
 
             if (epFilme?.data_lancamento && ehEpisodioFuturo(epFilme.data_lancamento)) {
                 const dataFmt = formatarDataEpisodio(epFilme.data_lancamento);
-                alert(`Este título estará disponível em ${dataFmt || 'breve'}.`);
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Indisponível',
+                    text: `Este título estará disponível em ${dataFmt || 'breve'}.`,
+                    ...swalEstilo
+                });
                 return;
             }
 
             if (temVideoDisponivel(item) || temVideoDisponivel(epFilme)) {
                 window.location.hash = `#player?anime=${encodeURIComponent(itemId)}&ep=${encodeURIComponent(epId)}`;
             } else {
-                alert("Vídeo indisponível para este título.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Aviso',
+                    text: 'Vídeo indisponível para este título.',
+                    ...swalEstilo
+                });
             }
         };
     }
@@ -346,7 +380,6 @@ async function configurarModoSerie(item, itemId, tempParam, dom) {
     if (dom.blocoFilme) dom.blocoFilme.style.display = "block";
     if (dom.blocoEpisodios) dom.blocoEpisodios.style.display = "block";
 
-    // Define a capa padrão do anime para usar como fallback na thumb do episódio
     const capaPadraoAnime = item.banner || item.poster_detalhes || item.poster || "";
 
     const { temporadasAtuais, temporadaIndex } = inicializarTemporadas(
@@ -428,14 +461,24 @@ async function configurarModoSerie(item, itemId, tempParam, dom) {
 
                 if (epAlvo?.data_lancamento && ehEpisodioFuturo(epAlvo.data_lancamento)) {
                     const dataFmt = formatarDataEpisodio(epAlvo.data_lancamento);
-                    alert(`Este episódio estará disponível em ${dataFmt || 'breve'}.`);
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Indisponível',
+                        text: `Este episódio estará disponível em ${dataFmt || 'breve'}.`,
+                        ...swalEstilo
+                    });
                     return;
                 }
 
                 if (temVideoDisponivel(epAlvo)) {
                     window.location.hash = `#player?anime=${encodeURIComponent(itemId)}&ep=${encodeURIComponent(epAlvo.id)}`;
                 } else {
-                    alert("Vídeo indisponível para este episódio.");
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Aviso',
+                        text: 'Vídeo indisponível para este episódio.',
+                        ...swalEstilo
+                    });
                 }
             };
         } else {

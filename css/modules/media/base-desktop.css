@@ -1,4 +1,3 @@
-@media (min-width: 1024px) {
     /* ==========================================================================
        1. REGRAS GLOBAIS DE ESTRUTURA DESKTOP (ESCOPO CONTROLADO POR TELA ATIVA)
        ========================================================================== */
@@ -19,4 +18,4 @@
         margin-left: 72px !important;
         width: calc(100% - 72px) !important;
     }
-}
+
