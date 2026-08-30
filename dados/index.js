@@ -19,10 +19,12 @@ import plastic_memo from './animes/plastic memo.js';
 import plunderer from './animes/plunderer.js';
 import reiDemonioDaimao from './animes/reiDemonioDaimao.js';
 import romantic_killer from './animes/romantic killer.js';
+import sakamoto_days from './animes/sakamoto days.js';
 import seihantaiNaKimiToBoku from './animes/seihantaiNaKimiToBoku.js';
 import tamako_marker from './animes/tamako marker.js';
 import that_time_i_got_s01 from './animes/that time i got_s01.js';
 import that_time_i_got_s04 from './animes/that-time-i-got_s04.js';
+import toradora from './animes/toradora.js';
 
 export const animesData = {
   "100NamoradasQueTeAmamMuuuuuito": _100NamoradasQueTeAmamMuuuuuito,
@@ -46,8 +48,10 @@ export const animesData = {
   "plunderer": plunderer,
   "reiDemonioDaimao": reiDemonioDaimao,
   "romantic killer": romantic_killer,
+  "sakamoto days": sakamoto_days,
   "seihantaiNaKimiToBoku": seihantaiNaKimiToBoku,
   "tamako marker": tamako_marker,
   "that time i got_s01": that_time_i_got_s01,
-  "that-time-i-got_s04": that_time_i_got_s04
+  "that-time-i-got_s04": that_time_i_got_s04,
+  "toradora": toradora
 };
