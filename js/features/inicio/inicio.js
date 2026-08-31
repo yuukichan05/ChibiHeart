@@ -169,13 +169,17 @@ export async function carregarAnimesPorGenero() {
       if (!tituloSecao || !gradeCards) return;
 
       tituloSecao.textContent = generoAlvo;
-      const animesEmbaralhados = embaralharLista(Object.keys(infoCompleta));
+      
+      // 1. Filtra animes pertencentes ao gênero
+      const animesDoGenero = Object.entries(infoCompleta)
+        .filter(([_, anime]) => anime.generos && anime.generos.includes(generoAlvo));
 
-      animesEmbaralhados.forEach(animeId => { 
-        const anime = infoCompleta[animeId]; 
-        if (anime.generos && anime.generos.includes(generoAlvo)) { 
-          gradeCards.appendChild(criarElementoCard(animeId, anime, modeloCard));
-        }
+      // 2. Embaralha a lista
+      const animesEmbaralhados = embaralharLista(animesDoGenero);
+
+      // 3. Pega exatamente 15 animes e adiciona à grade
+      animesEmbaralhados.slice(0, 15).forEach(([animeId, anime]) => { 
+        gradeCards.appendChild(criarElementoCard(animeId, anime, modeloCard));
       });
 
       if (gradeCards.children.length > 0) { 

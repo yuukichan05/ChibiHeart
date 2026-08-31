@@ -64,6 +64,18 @@ const MAPA_TEMPORADAS = {
 
 const ORDEM_TEMPORADAS = ['winter', 'spring', 'summer', 'fall'];
 
+/**
+ * Função auxiliar para embaralhar arrays (Fisher-Yates)
+ */
+function embaralharLista(array) {
+  let copia = [...array];
+  for (let i = copia.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copia[i], copia[j]] = [copia[j], copia[i]];
+  }
+  return copia;
+}
+
 function criarElementoCard(animeId, anime, modelo) {
   const clone = modelo.content.cloneNode(true);
   const linkCard = clone.querySelector("a");
@@ -201,6 +213,7 @@ function aplicarFiltros() {
 
   grade.replaceChildren();
 
+  // 1. Filtra os animes com base nas escolhas ativas
   const animesFiltrados = Object.entries(dadosAnimes).filter(([_, anime]) => {
     const atendeGenero = filtrosAtivos.genero === 'todos' || 
       (Array.isArray(anime.generos) && anime.generos.includes(filtrosAtivos.genero));
@@ -219,7 +232,11 @@ function aplicarFiltros() {
     return;
   }
 
-  animesFiltrados.forEach(([animeId, anime]) => {
+  // 2. Embaralha o resultado filtrado antes de renderizar
+  const animesEmbaralhados = embaralharLista(animesFiltrados);
+
+  // 3. Renderiza os cards embaralhados
+  animesEmbaralhados.forEach(([animeId, anime]) => {
     grade.appendChild(criarElementoCard(animeId, anime, modelo));
   });
 }

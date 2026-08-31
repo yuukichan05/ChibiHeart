@@ -7,6 +7,18 @@ let cacheRecomendados = null;
 let cacheRecentes = null;
 
 /**
+ * Função auxiliar interna para embaralhar arrays (Fisher-Yates)
+ */
+function embaralharArray(array) {
+  let copia = [...array];
+  for (let i = copia.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copia[i], copia[j]] = [copia[j], copia[i]];
+  }
+  return copia;
+}
+
+/**
  * Retorna os dados completos do objeto de animes
  */
 export async function obterInfoCompleta() {
@@ -31,21 +43,30 @@ export async function obterAnimePorId(animeId) {
 }
 
 /**
- * Busca a lista de animes recomendados (Destaques)
+ * Busca a lista de animes recomendados (Destaques).
+ * Pega TODOS os animes com destaque === true, embaralha a lista completa
+ * e seleciona 15 aleatórios a cada carregamento.
  */
 export async function obterRecomendados() {
-  if (cacheRecomendados) return cacheRecomendados;
+  // Nota: Não utilizamos cacheRecomendados aqui para permitir
+  // que a cada navegação/recarregamento os 15 exibidos sejam dinâmicos.
 
   try {
     const info = await obterInfoCompleta();
     if (!info) return [];
 
-    // Filtra animes que possuem a propriedade destaque definida como true
-    cacheRecomendados = Object.entries(info)
-      .filter(([_, anime]) => anime.destaque === true)
+    // 1. Filtra TODOS os animes que possuem destaque === true
+    const todosDestaques = Object.entries(info)
+      .filter(([_, anime]) => anime.destaque === true);
+
+    // 2. Embaralha a lista completa de destaques
+    const destaquesEmbaralhados = embaralharArray(todosDestaques);
+
+    // 3. Pega os 15 primeiros da lista embaralhada
+    return destaquesEmbaralhados
+      .slice(0, 15)
       .map(([id]) => ({ id }));
 
-    return cacheRecomendados;
   } catch (erro) {
     console.error('❌ [Repository] Falha ao processar animes recomendados:', erro);
     return [];
