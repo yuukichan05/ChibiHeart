@@ -129,7 +129,6 @@ export default {
     }
   ],
   "titulo_en": "",
-  "titulo_pt": "",
   "temporada": "spring",
   "status": "Finalizado",
   "poster_detalhes": "https://media.kitsu.app/anime/45609/poster_image/07dd47da015f3743d9e90991293f47ba.png"

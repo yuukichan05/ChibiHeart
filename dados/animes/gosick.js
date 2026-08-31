@@ -238,7 +238,6 @@ export default {
     }
   ],
   "titulo_en": "",
-  "titulo_pt": "",
   "temporada": "winter",
   "status": "Finalizado",
   "poster_detalhes": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/nx8425-Bn14ayPjnq9o.jpg"

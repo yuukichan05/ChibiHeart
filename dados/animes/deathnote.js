@@ -4,9 +4,8 @@ export default {
   "tipo": "serie",
   "titulo": "Death Note",
   "titulo_en": "",
-  "titulo_pt": "",
   "ano": "2006",
-  "temporada": "spring",
+  "temporada": "fall",
   "status": "Finalizado",
   "classificacao": "+16",
   "generos": [

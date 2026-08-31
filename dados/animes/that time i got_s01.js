@@ -4,9 +4,8 @@ export default {
   "tipo": "serie",
   "titulo": "Tensei shitara Slime Datta Ken",
   "titulo_en": "That Time I Got Reincarnated as a Slime",
-  "titulo_pt": "",
   "ano": "2018",
-  "temporada": "spring",
+  "temporada": "fall",
   "status": "Finalizado",
   "classificacao": "+14",
   "generos": [

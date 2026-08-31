@@ -20,7 +20,7 @@ export default {
   "destaque": true,
   "titulo_en": "",
   "titulo_pt": "",
-  "temporada": "",
-  "status": "",
+  "temporada": "spring",
+  "status": "Finalizado",
   "poster_detalhes": ""
 };

@@ -186,5 +186,10 @@ export default {
         }
       ]
     }
-  ]
+  ],
+  "titulo_en": "",
+  "titulo_pt": "",
+  "temporada": "spring",
+  "status": "",
+  "poster_detalhes": ""
 };

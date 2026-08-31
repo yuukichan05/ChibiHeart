@@ -4,7 +4,6 @@ export default {
   "tipo": "serie",
   "titulo": "Plastic Memories",
   "titulo_en": "",
-  "titulo_pt": "",
   "ano": "2015",
   "temporada": "spring",
   "status": "Finalizado",

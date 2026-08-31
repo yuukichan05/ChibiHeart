@@ -121,7 +121,7 @@ export default {
   "destaque": true,
   "titulo_en": "",
   "titulo_pt": "",
-  "temporada": "",
-  "status": "",
+  "temporada": "winter",
+  "status": "Finalizado",
   "poster_detalhes": ""
 };

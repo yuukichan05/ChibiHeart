@@ -4,7 +4,6 @@ export default {
   "tipo": "serie",
   "titulo": "SAKAMOTO DAYS",
   "titulo_en": "",
-  "titulo_pt": "",
   "ano": "2025",
   "temporada": "winter",
   "status": "Finalizado",

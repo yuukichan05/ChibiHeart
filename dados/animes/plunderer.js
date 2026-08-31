@@ -4,7 +4,6 @@ export default {
   "tipo": "serie",
   "titulo": "Plunderer",
   "titulo_en": "",
-  "titulo_pt": "",
   "ano": "2020",
   "temporada": "winter",
   "status": "Finalizado",

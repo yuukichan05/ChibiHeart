@@ -4,7 +4,6 @@ export default {
   "tipo": "serie",
   "titulo": "Toradora!",
   "titulo_en": "",
-  "titulo_pt": "",
   "ano": "2008",
   "temporada": "fall",
   "status": "Finalizado",
@@ -568,6 +567,386 @@ export default {
             "fim": ""
           },
           "url_leg": "https://ia601503.us.archive.org/15/items/Doratora/55.mp4"
+        },
+        {
+          "id": "ep_06",
+          "index": 6,
+          "titulo": "06. Episódio 6",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_07",
+          "index": 7,
+          "titulo": "07. Episódio 7",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_08",
+          "index": 8,
+          "titulo": "08. Episódio 8",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_09",
+          "index": 9,
+          "titulo": "09. Episódio 9",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_10",
+          "index": 10,
+          "titulo": "10. Episódio 10",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_11",
+          "index": 11,
+          "titulo": "11. Episódio 11",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_12",
+          "index": 12,
+          "titulo": "12. Episódio 12",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_13",
+          "index": 13,
+          "titulo": "13. Episódio 13",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_14",
+          "index": 14,
+          "titulo": "14. Episódio 14",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_15",
+          "index": 15,
+          "titulo": "15. Episódio 15",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_16",
+          "index": 16,
+          "titulo": "16. Episódio 16",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_17",
+          "index": 17,
+          "titulo": "17. Episódio 17",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_18",
+          "index": 18,
+          "titulo": "18. Episódio 18",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_19",
+          "index": 19,
+          "titulo": "19. Episódio 19",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_20",
+          "index": 20,
+          "titulo": "20. Episódio 20",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_21",
+          "index": 21,
+          "titulo": "21. Episódio 21",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_22",
+          "index": 22,
+          "titulo": "22. Episódio 22",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_23",
+          "index": 23,
+          "titulo": "23. Episódio 23",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_24",
+          "index": 24,
+          "titulo": "24. Episódio 24",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
+        },
+        {
+          "id": "ep_25",
+          "index": 25,
+          "titulo": "25. Episódio 25",
+          "descricao": "",
+          "thumb": "",
+          "duracao": "24 min",
+          "data_lancamento": "",
+          "url_dub": "",
+          "url_leg": "",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          }
         }
       ]
     }

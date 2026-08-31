@@ -264,7 +264,6 @@ export default {
   "adicionado_em": "",
   "destaque": true,
   "titulo_en": "",
-  "titulo_pt": "",
   "temporada": "spring",
   "status": "Finalizado",
   "poster_detalhes": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx5680-r3AI3Cwfv0Aq.png"

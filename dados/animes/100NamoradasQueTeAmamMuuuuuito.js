@@ -120,7 +120,6 @@ export default {
     }
   ],
   "titulo_en": "The 100 Girlfriends Who Really, Really, Really, Really, REALLY Love You",
-  "titulo_pt": "",
   "temporada": "fall",
   "status": "Finalizado",
   "poster_detalhes": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx162694-QFBei5pbjSh8.png"

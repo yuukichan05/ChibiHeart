@@ -128,7 +128,6 @@ export default {
   "adicionado_em": "",
   "destaque": true,
   "titulo_en": "Love, Chunibyo & Other Delusions - Heart Throb -",
-  "titulo_pt": "",
   "temporada": "winter",
   "status": "Finalizado",
   "poster_detalhes": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx18671-RVIY9TGd737H.jpg"

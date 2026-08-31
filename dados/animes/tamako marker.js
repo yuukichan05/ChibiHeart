@@ -4,9 +4,8 @@ export default {
   "tipo": "serie",
   "titulo": "Tamako Market",
   "titulo_en": "",
-  "titulo_pt": "",
   "ano": "2013",
-  "temporada": "spring",
+  "temporada": "winter",
   "status": "Finalizado",
   "classificacao": "Livre",
   "generos": [

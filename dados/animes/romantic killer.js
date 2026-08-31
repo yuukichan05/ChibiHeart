@@ -4,7 +4,6 @@ export default {
   "tipo": "serie",
   "titulo": "Romantic Killer",
   "titulo_en": "",
-  "titulo_pt": "",
   "ano": "2022",
   "temporada": "fall",
   "status": "Finalizado",

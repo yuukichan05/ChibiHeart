@@ -346,7 +346,6 @@ export default {
   "adicionado_em": "",
   "destaque": true,
   "titulo_en": "OSHI NO KO",
-  "titulo_pt": "",
   "temporada": "spring",
   "status": "Finalizado",
   "poster_detalhes": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx150672-WqmmwZ4nMzAy.png"

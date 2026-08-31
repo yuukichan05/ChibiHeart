@@ -242,7 +242,6 @@ export default {
   "adicionado_em": "",
   "destaque": true,
   "titulo_en": "You and I Are Polar Opposites",
-  "titulo_pt": "",
   "temporada": "winter",
   "status": "Finalizado",
   "poster_detalhes": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx184951-s8Lg2muPBhdX.jpg"

@@ -6,7 +6,7 @@ export default {
   "titulo_en": "The Fragrant Flower Blooms With Dignity",
   "titulo_pt": "A Fragrante Flor Desabrocha com Dignidade",
   "ano": "2025",
-  "temporada": "spring",
+  "temporada": "summer",
   "status": "Finalizado",
   "classificacao": "Livre",
   "generos": [

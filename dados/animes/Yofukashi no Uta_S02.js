@@ -4,9 +4,8 @@ export default {
   "tipo": "serie",
   "titulo": "Yofukashi no Uta 2nd Season",
   "titulo_en": "Call of the Night Season 2",
-  "titulo_pt": "",
   "ano": "2025",
-  "temporada": "spring",
+  "temporada": "summer",
   "status": "Finalizado",
   "classificacao": "Livre",
   "generos": [

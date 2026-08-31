@@ -10,7 +10,7 @@ export default {
   "status": "Finalizado",
   "classificacao": "+14",
   "generos": [
-  	"Animação",
+    "Animação",
     "Comédia",
     "Mistério",
     "Romance",
@@ -19,7 +19,7 @@ export default {
   "sinopse": "Ryu Yamada é um estudante do segundo ano da Suzaku High. Ryu está sempre atrasado para a escola, cochila nas aulas e tira notas péssimas. Sua vida é uma chatice mortal. A bela Urara Shiraishi, por outro lado, é a aluna mais brilhante da Suzaku High. Um dia, sem explicação, seus corpos são trocados! Ryu acaba no corpo de Urara, e Urara no corpo de Ryu.",
   "banner": "https://media.themoviedb.org/t/p/w1000_and_h563_face/udCwCPDlWTfKDxXIqMNqxXcibfu.jpg",
   "poster": "https://media.themoviedb.org/t/p/w440_and_h660_face/y7j7cptjQvaMX2l12EkatqC54Q9.jpg",
-  "poster_detalhes": "",
+  "poster_detalhes": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20966-HboUtUzEKWl6.jpg",
   "temporadas": [
     {
       "nome": "1ª Temporada",
@@ -258,24 +258,6 @@ export default {
       "nome": "Especiais",
       "episodios": [
         {
-          "id": "Yamada-kun to 7-nin no Majo_s00e01",
-          "index": 13,
-          "titulo": "01. O Festival Suzaku Está Próximo: Fontes Termais?! Reúnam Todos!",
-          "descricao": "",
-          "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/bWSz7zAvHQ11dhRY31ScDhMZJC6.jpg",
-          "duracao": "30 min",
-          "data_lancamento": "2014-12-17T00:00:00Z",
-          "skip_intro": {
-            "inicio": "",
-            "fim": ""
-          },
-          "skip_outro": {
-            "inicio": "",
-            "fim": ""
-          },
-          "url_leg": "https://ia800108.us.archive.org/15/items/Yamada-kunDubLeg/OVA-1.mp4"
-        },
-        {
           "id": "Yamada-kun to 7-nin no Majo_s00e02",
           "index": 2,
           "titulo": "02. Mais Um Festival Suzaku: Cante! Dance! Clube de Estudos Sobrenaturais!",
@@ -292,6 +274,24 @@ export default {
             "fim": ""
           },
           "url_leg": "https://ia800108.us.archive.org/15/items/Yamada-kunDubLeg/OVA-2.mp4"
+        },
+        {
+          "id": "Yamada-kun to 7-nin no Majo_s00e01",
+          "index": 1,
+          "titulo": "01. O Festival Suzaku Está Próximo: Fontes Termais?! Reúnam Todos!",
+          "descricao": "",
+          "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/bWSz7zAvHQ11dhRY31ScDhMZJC6.jpg",
+          "duracao": "30 min",
+          "data_lancamento": "2014-12-17T00:00:00Z",
+          "skip_intro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "skip_outro": {
+            "inicio": "",
+            "fim": ""
+          },
+          "url_leg": "https://ia800108.us.archive.org/15/items/Yamada-kunDubLeg/OVA-1.mp4"
         }
       ]
     }
