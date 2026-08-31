@@ -1,5 +1,5 @@
 export default {
-  "adicionado_em": "",
+  "adicionado_em": "2026-08-31T03:56:14.979Z",
   "destaque": true,
   "tipo": "serie",
   "titulo": "Xiehou Ta De Shaonu Shidai",
@@ -10,11 +10,9 @@ export default {
   "status": "Finalizado",
   "classificacao": "+14",
   "generos": [
-  	"Donghua",
     "Drama",
     "Slice of Life",
-    "Comédia",
-    "Fantasia"
+    "Comédia"
   ],
   "sinopse": "Para salvar a sua mãe doente terminal, Dong Cui Can faz um acordo com um estranho misterioso, trocando os anos que lhe restam pelos dela. Milagrosamente, o estranho não apenas revive a mãe de Cui Can, mas também a restaura ao que era aos 20 anos. Com uma segunda chance na vida, Yan Jin Yu está determinado a aproveitar cada momento, enquanto Cui Can promete passar o resto de seus dias retribuindo à mãe pelos sacrifícios que ela fez para criá-lo.",
   "banner": "https://media.themoviedb.org/t/p/w1000_and_h563_face/z8PGbivL2zL1kXwYWE24rcJTnMD.jpg",
@@ -119,7 +117,7 @@ export default {
           "index": 6,
           "titulo": "06. Episódio 6",
           "descricao": "",
-          "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/jygaFwsgUDB37C9vDW7jSRXXyMl.jpg",
+          "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/3CaWZJc8NpdTa9TIEzJFJNeee5c.jpg",
           "duracao": "24 min",
           "data_lancamento": "",
           "skip_intro": {
@@ -137,7 +135,7 @@ export default {
           "index": 7,
           "titulo": "07. Episódio 7",
           "descricao": "",
-          "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/7A97zYDYNN7eO7c6o0tQsKmGwzv.jpg",
+          "thumb": "",
           "duracao": "24 min",
           "data_lancamento": "",
           "skip_intro": {
@@ -155,7 +153,7 @@ export default {
           "index": 8,
           "titulo": "08. Episódio 8",
           "descricao": "",
-          "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/7qIgjRrulx19UnC5cKszY1Af61Y.jpg",
+          "thumb": "",
           "duracao": "24 min",
           "data_lancamento": "",
           "skip_intro": {
@@ -173,7 +171,7 @@ export default {
           "index": 9,
           "titulo": "09. Episódio 9",
           "descricao": "",
-          "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/phFtOfUIeSwwe3zBPGnPDLLozv.jpg",
+          "thumb": "",
           "duracao": "24 min",
           "data_lancamento": "",
           "skip_intro": {
@@ -191,7 +189,7 @@ export default {
           "index": 10,
           "titulo": "10. Episódio 10",
           "descricao": "",
-          "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/v2DNZgCFihtWFR3w5cuWtsP7a99.jpg",
+          "thumb": "",
           "duracao": "24 min",
           "data_lancamento": "",
           "skip_intro": {
@@ -209,7 +207,7 @@ export default {
           "index": 11,
           "titulo": "11. Episódio 11",
           "descricao": "",
-          "thumb": "https://media.themoviedb.org/t/p/w640_and_h360_face/miuYhZy4Ws782KDc6vgzyJEQo4n.jpg",
+          "thumb": "",
           "duracao": "24 min",
           "data_lancamento": "",
           "skip_intro": {

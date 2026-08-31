@@ -7,6 +7,10 @@ import Yofukashi_no_Uta_S02 from './animes/Yofukashi no Uta_S02.js';
 import ayakashiTriagle from './animes/ayakashiTriagle.js';
 import chuunibyouRen from './animes/chuunibyouRen.js';
 import deathnote from './animes/deathnote.js';
+import given from './animes/given.js';
+import given_ao_mar from './animes/given:ao-mar.js';
+import given_hiiragi from './animes/given:hiiragi.js';
+import given_o_filme from './animes/given:o-filme.js';
 import gosick from './animes/gosick.js';
 import kOnS01 from './animes/kOnS01.js';
 import kOnS02 from './animes/kOnS02.js';
@@ -39,6 +43,10 @@ export const animesData = {
   "ayakashiTriagle": ayakashiTriagle,
   "chuunibyouRen": chuunibyouRen,
   "deathnote": deathnote,
+  "given": given,
+  "given:ao-mar": given_ao_mar,
+  "given:hiiragi": given_hiiragi,
+  "given:o-filme": given_o_filme,
   "gosick": gosick,
   "kOnS01": kOnS01,
   "kOnS02": kOnS02,
