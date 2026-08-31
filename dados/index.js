@@ -26,12 +26,21 @@ import reiDemonioDaimao from './animes/reiDemonioDaimao.js';
 import romantic_killer from './animes/romantic killer.js';
 import sakamoto_days from './animes/sakamoto days.js';
 import seihantaiNaKimiToBoku from './animes/seihantaiNaKimiToBoku.js';
+import sentenced_to_be_a_hero from './animes/sentenced-to-be-a-hero.js';
 import tamako_marker from './animes/tamako marker.js';
 import tensuraS01 from './animes/tensuraS01.js';
 import tensuraS04 from './animes/tensuraS04.js';
 import that_time_i_got_s01 from './animes/that time i got_s01.js';
 import that_time_i_got_s04 from './animes/that-time-i-got_s04.js';
 import toradora from './animes/toradora.js';
+import violet_evergarden from './animes/violet-evergarden.js';
+import yozakura_san_chi_no_daisakuse_2 from './animes/yozakura-san-chi-no-daisakuse-2.js';
+import yozakura_san_chi_no_daisakuse from './animes/yozakura-san-chi-no-daisakuse.js';
+import yu_yu_hakusho from './animes/yu-yu-hakusho.js';
+import zatch_bell from './animes/zatch-bell.js';
+import zom_100 from './animes/zom-100.js';
+import zombie_land_saga_revenge from './animes/zombie-land-saga-revenge.js';
+import zombie_land_saga from './animes/zombie-land-saga.js';
 
 export const animesData = {
   "100NamoradasQueTeAmamMuuuuuito": _100NamoradasQueTeAmamMuuuuuito,
@@ -62,10 +71,19 @@ export const animesData = {
   "romantic killer": romantic_killer,
   "sakamoto days": sakamoto_days,
   "seihantaiNaKimiToBoku": seihantaiNaKimiToBoku,
+  "sentenced-to-be-a-hero": sentenced_to_be_a_hero,
   "tamako marker": tamako_marker,
   "tensuraS01": tensuraS01,
   "tensuraS04": tensuraS04,
   "that time i got_s01": that_time_i_got_s01,
   "that-time-i-got_s04": that_time_i_got_s04,
-  "toradora": toradora
+  "toradora": toradora,
+  "violet-evergarden": violet_evergarden,
+  "yozakura-san-chi-no-daisakuse-2": yozakura_san_chi_no_daisakuse_2,
+  "yozakura-san-chi-no-daisakuse": yozakura_san_chi_no_daisakuse,
+  "yu-yu-hakusho": yu_yu_hakusho,
+  "zatch-bell": zatch_bell,
+  "zom-100": zom_100,
+  "zombie-land-saga-revenge": zombie_land_saga_revenge,
+  "zombie-land-saga": zombie_land_saga
 };

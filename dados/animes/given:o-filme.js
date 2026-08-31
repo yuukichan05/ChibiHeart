@@ -1,7 +1,7 @@
 export default {
   "adicionado_em": "2026-08-31T09:23:11.693Z",
   "destaque": true,
-  "tipo": "filme",
+  "tipo": "serie",
   "titulo": "Given: O Filme",
   "titulo_en": "Given: O Filme",
   "titulo_pt": "",
@@ -26,10 +26,10 @@ export default {
         {
           "id": "given:o-filme_s01e01",
           "index": 1,
-          "titulo": "Given, O Filme",
+          "titulo": "01. Episódio 1",
           "descricao": "",
           "thumb": "",
-          "duracao": "59min",
+          "duracao": "59",
           "data_lancamento": "",
           "skip_intro": {
             "inicio": "",

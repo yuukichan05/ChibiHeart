@@ -1,7 +1,7 @@
 export default {
   "adicionado_em": "2026-08-31T09:30:38.514Z",
   "destaque": true,
-  "tipo": "filme",
+  "tipo": "serie",
   "titulo": "Given Movie: Hiiragi Mix",
   "titulo_en": "映画 ギヴン 柊mix",
   "titulo_pt": "",
@@ -26,10 +26,10 @@ export default {
         {
           "id": "given:hiiragi_s01e01",
           "index": 1,
-          "titulo": "Given Movie: Hiiragi Mix",
+          "titulo": "01. Episódio 1",
           "descricao": "",
           "thumb": "",
-          "duracao": "1h10min",
+          "duracao": "70",
           "data_lancamento": "",
           "skip_intro": {
             "inicio": "",
