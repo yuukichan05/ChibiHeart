@@ -2,13 +2,13 @@ export default {
   "tipo": "serie",
   "titulo": "KONOSUBA: As Bênçãos de Deus Neste Mundo Maravilhoso!",
   "ano": "2027",
+  "temporada": "",
+  "status": "Anunciado",
   "classificacao": "+14",
   "generos": [
-    "Comédia",
-    "Fantasia",
-    "Isekai"
+    
   ],
-  "sinopse": "Estreia • 2027",
+  "sinopse": "Sem sinopse disponivel para esta serie",
   "banner": "",
   "poster": "https://media.themoviedb.org/t/p/w440_and_h660_face/bC05OouYffb6gBmUmGnlqUsoyNe.jpg",
   "temporadas": [
@@ -16,11 +16,4 @@ export default {
       "nome": "4ª Temporada"
     }
   ],
-  "adicionado_em": "",
-  "destaque": true,
-  "titulo_en": "",
-  "titulo_pt": "",
-  "temporada": "spring",
-  "status": "Finalizado",
-  "poster_detalhes": ""
 };
