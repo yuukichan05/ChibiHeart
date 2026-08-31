@@ -1,4 +1,5 @@
 import _100NamoradasQueTeAmamMuuuuuito from './animes/100NamoradasQueTeAmamMuuuuuito.js';
+import Mom_I_m_Sorry from './animes/Mom-I-m-Sorry.js';
 import Sparks_of_Tomorrow from './animes/Sparks of Tomorrow.js';
 import Yamada_kun_to_7_nin_no_Majo from './animes/Yamada-kun to 7-nin no Majo.js';
 import Yofukashi_no_Uta from './animes/Yofukashi no Uta.js';
@@ -22,12 +23,15 @@ import romantic_killer from './animes/romantic killer.js';
 import sakamoto_days from './animes/sakamoto days.js';
 import seihantaiNaKimiToBoku from './animes/seihantaiNaKimiToBoku.js';
 import tamako_marker from './animes/tamako marker.js';
+import tensuraS01 from './animes/tensuraS01.js';
+import tensuraS04 from './animes/tensuraS04.js';
 import that_time_i_got_s01 from './animes/that time i got_s01.js';
 import that_time_i_got_s04 from './animes/that-time-i-got_s04.js';
 import toradora from './animes/toradora.js';
 
 export const animesData = {
   "100NamoradasQueTeAmamMuuuuuito": _100NamoradasQueTeAmamMuuuuuito,
+  "Mom-I-m-Sorry": Mom_I_m_Sorry,
   "Sparks of Tomorrow": Sparks_of_Tomorrow,
   "Yamada-kun to 7-nin no Majo": Yamada_kun_to_7_nin_no_Majo,
   "Yofukashi no Uta": Yofukashi_no_Uta,
@@ -51,6 +55,8 @@ export const animesData = {
   "sakamoto days": sakamoto_days,
   "seihantaiNaKimiToBoku": seihantaiNaKimiToBoku,
   "tamako marker": tamako_marker,
+  "tensuraS01": tensuraS01,
+  "tensuraS04": tensuraS04,
   "that time i got_s01": that_time_i_got_s01,
   "that-time-i-got_s04": that_time_i_got_s04,
   "toradora": toradora
