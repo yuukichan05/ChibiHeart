@@ -19,6 +19,7 @@ import {
     alternarOrdemEpisodios,
     alternarStatusTemporada
 } from './detalhesEpisodes.js';
+
 const DEFAULT_FALLBACK_IMAGE = "assets/images/placeholder.jpg";
 
 // Configuração visual personalizada para o SweetAlert2 (Apple Glass)
@@ -31,6 +32,19 @@ const swalEstilo = {
     },
     buttonsStyling: false
 };
+
+// Auxiliar para formatar segundos em HH:MM:SS ou MM:SS
+function formatarTempoProgresso(segundos) {
+    if (!segundos || isNaN(segundos)) return "";
+    const h = Math.floor(segundos / 3600);
+    const m = Math.floor((segundos % 3600) / 60);
+    const s = Math.floor(segundos % 60);
+
+    if (h > 0) {
+        return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+    return `${m}:${s.toString().padStart(2, '0')}`;
+}
 
 export async function gerenciarTelaInfo() {
     const rawHash = window.location.hash || "#inicio";
@@ -70,13 +84,18 @@ export async function gerenciarTelaInfo() {
 
         preencherMetadados(item, containerGeneros);
 
-        const ehConteudoUnico = item.tipo === "filme" ||
-            (item.tipo !== "serie" && (!item.temporadas || item.temporadas.length === 0) && (!item.episodios || item.episodios.length <= 1));
+        // Contagem total de episódios/filmes nas temporadas
+        const totalEpisodios = (item.temporadas || []).reduce((acc, t) => acc + (t.episodios?.length || 0), 0) 
+            || (item.episodios?.length || 0);
+
+        // Define se é um filme/conteúdo individual único
+        const ehConteudoUnico = (item.tipo === "filme" && totalEpisodios <= 1) ||
+            (item.tipo !== "serie" && (!item.temporadas || item.temporadas.length === 0) && totalEpisodios <= 1);
 
         if (item.status === "Anunciado") {
             configurarModoAnunciado(blocoFilme, blocoEpisodios);
         } else if (ehConteudoUnico) {
-            configurarModoFilme(item, itemId, blocoFilme, blocoEpisodios);
+            await configurarModoFilme(item, itemId, blocoFilme, blocoEpisodios);
         } else {
             await configurarModoSerie(item, itemId, tempParam, {
                 blocoFilme,
@@ -332,47 +351,81 @@ function configurarModoAnunciado(blocoFilme, blocoEpisodios) {
     }
 }
 
-function configurarModoFilme(item, itemId, blocoFilme, blocoEpisodios) {
+async function configurarModoFilme(item, itemId, blocoFilme, blocoEpisodios) {
     const infoTemporadas = document.getElementById("info-temporadas");
     if (blocoEpisodios) blocoEpisodios.style.display = "none";
     if (blocoFilme) blocoFilme.style.display = "block";
     if (infoTemporadas) infoTemporadas.style.display = "none";
 
     const btnPlay = document.getElementById("btn-play-filme");
-    if (btnPlay) {
-        btnPlay.classList.remove("disabled");
-        btnPlay.innerHTML = `
-            <span class="material-symbols-outlined">play_arrow</span>
-            ASSISTIR
-        `;
-        btnPlay.onclick = (e) => {
-            e.preventDefault();
-            const epFilme = item.episodios?.[0] || item;
-            const epId = item.episodios?.[0]?.id || itemId;
+    if (!btnPlay) return;
 
-            if (epFilme?.data_lancamento && ehEpisodioFuturo(epFilme.data_lancamento)) {
-                const dataFmt = formatarDataEpisodio(epFilme.data_lancamento);
-                Swal.fire({
-                    icon: 'info',
-                    title: 'Indisponível',
-                    text: `Este título estará disponível em ${dataFmt || 'breve'}.`,
-                    ...swalEstilo
-                });
-                return;
-            }
+    btnPlay.classList.remove("disabled");
 
-            if (temVideoDisponivel(item) || temVideoDisponivel(epFilme)) {
-                window.location.hash = `#player?anime=${encodeURIComponent(itemId)}&ep=${encodeURIComponent(epId)}`;
+    // Extrai o objeto único do filme
+    const epFilme = item.temporadas?.[0]?.episodios?.[0] || item.episodios?.[0] || item;
+    const epId = epFilme?.id || itemId;
+
+    // Busca progresso do filme
+    const mapaProgresso = await buscarTodoProgressoDB();
+    const prog = mapaProgresso[epId];
+
+    let textoBotao = "ASSISTIR";
+
+    if (prog) {
+        const estaConcluido = prog.concluido || (prog.total > 0 && (prog.tempo / prog.total) >= 0.85);
+        if (estaConcluido) {
+            textoBotao = "REASSISTIR";
+        } else if (prog.tempo > 15) {
+            const tempoFmt = formatarTempoProgresso(prog.tempo);
+            
+            // Obtém e limpa o título do filme
+            const rawTitle = epFilme?.titulo || item?.titulo || "";
+            const nomeFilme = stripLeadingNumber(rawTitle) || rawTitle;
+
+            // Formata o botão no padrão: RETOMAR • {NOME} • {DURAÇÃO}
+            if (nomeFilme && tempoFmt) {
+                textoBotao = `RETOMAR • ${nomeFilme} • ${tempoFmt}`;
+            } else if (nomeFilme) {
+                textoBotao = `RETOMAR • ${nomeFilme}`;
+            } else if (tempoFmt) {
+                textoBotao = `RETOMAR • ${tempoFmt}`;
             } else {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Aviso',
-                    text: 'Vídeo indisponível para este título.',
-                    ...swalEstilo
-                });
+                textoBotao = "RETOMAR";
             }
-        };
+        }
     }
+
+    btnPlay.innerHTML = `
+        <span class="material-symbols-outlined">play_arrow</span>
+        ${textoBotao.toUpperCase()}
+    `;
+
+    btnPlay.onclick = (e) => {
+        e.preventDefault();
+
+        if (epFilme?.data_lancamento && ehEpisodioFuturo(epFilme.data_lancamento)) {
+            const dataFmt = formatarDataEpisodio(epFilme.data_lancamento);
+            Swal.fire({
+                icon: 'info',
+                title: 'Indisponível',
+                text: `Este título estará disponível em ${dataFmt || 'breve'}.`,
+                ...swalEstilo
+            });
+            return;
+        }
+
+        if (temVideoDisponivel(epFilme)) {
+            window.location.hash = `#player?anime=${encodeURIComponent(itemId)}&ep=${encodeURIComponent(epId)}`;
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Aviso',
+                text: 'Vídeo indisponível para este título.',
+                ...swalEstilo
+            });
+        }
+    };
 }
 
 async function configurarModoSerie(item, itemId, tempParam, dom) {
@@ -422,6 +475,8 @@ async function configurarModoSerie(item, itemId, tempParam, dom) {
         }
     });
 
+    const ehColecaoFilmes = item.tipo === "filme";
+
     if (ultimoInteragido) {
         const { ep, idx, prog } = ultimoInteragido;
         const estaConcluido = prog.concluido || (prog.total > 0 && (prog.tempo / prog.total) >= 0.85);
@@ -434,17 +489,25 @@ async function configurarModoSerie(item, itemId, tempParam, dom) {
                 textoBotao = `PRÓXIMO: ${epAlvo.index} • ${baseTitle}`;
             } else {
                 epAlvo = todosEpisodios[0];
-                textoBotao = `REASSISTIR DESDE O EP. 1`;
+                textoBotao = ehColecaoFilmes ? `REASSISTIR DESDE O FILME 1` : `REASSISTIR DESDE O EP. 1`;
             }
         } else {
             epAlvo = ep;
             const rawTitle = epAlvo.titulo || `Episódio ${epAlvo.index}`;
             const baseTitle = stripLeadingNumber(rawTitle) || rawTitle;
-            textoBotao = `Resume:  ${epAlvo.index} • ${baseTitle}`;
+            const tempoFmt = formatarTempoProgresso(prog.tempo);
+
+            if (ehColecaoFilmes) {
+                // Formato Múltiplos Filmes: Retomar • {nome} • {duração}
+                const duracaoTexto = tempoFmt || `${epAlvo.duracao || ''}`;
+                textoBotao = `RETOMAR • ${baseTitle}${duracaoTexto ? ' • ' + duracaoTexto : ''}`;
+            } else {
+                textoBotao = `RETOMAR: ${epAlvo.index} • ${baseTitle}`;
+            }
         }
     } else {
         epAlvo = todosEpisodios[0];
-        textoBotao = `ASSISTIR AO PRIMEIRO EPISÓDIO`;
+        textoBotao = ehColecaoFilmes ? "ASSISTIR AO PRIMEIRO FILME" : "ASSISTIR AO PRIMEIRO EPISÓDIO";
     }
 
     const btnPlay = document.getElementById("btn-play-filme");
@@ -464,7 +527,7 @@ async function configurarModoSerie(item, itemId, tempParam, dom) {
                     Swal.fire({
                         icon: 'info',
                         title: 'Indisponível',
-                        text: `Este episódio estará disponível em ${dataFmt || 'breve'}.`,
+                        text: `Este item estará disponível em ${dataFmt || 'breve'}.`,
                         ...swalEstilo
                     });
                     return;
@@ -476,7 +539,7 @@ async function configurarModoSerie(item, itemId, tempParam, dom) {
                     Swal.fire({
                         icon: 'warning',
                         title: 'Aviso',
-                        text: 'Vídeo indisponível para este episódio.',
+                        text: 'Vídeo indisponível para este item.',
                         ...swalEstilo
                     });
                 }
@@ -505,7 +568,7 @@ async function configurarModoSerie(item, itemId, tempParam, dom) {
             capaPadraoAnime
         );
     } else {
-        dom.containerEps.innerHTML = "<p style='color: #888; padding: 10px;'>Nenhum episódio disponível nesta temporada.</p>";
+        dom.containerEps.innerHTML = "<p style='color: #888; padding: 10px;'>Nenhum item disponível.</p>";
     }
 }
 
