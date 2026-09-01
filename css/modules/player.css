@@ -3,6 +3,14 @@
    ========================================================================== */
 
 /* ESTRUTURA GLOBAL DO PLAYER (ISOLAMENTO E ACELERAÇÃO GPU) */
+/* Desativa e oculta botões nativos de Cast e AirPlay */
+video::-webkit-media-controls-cast-button,
+video::-internal-media-controls-cast-button {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
 #player { 
     position: fixed;
     top: 0;

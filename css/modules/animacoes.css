@@ -1,21 +1,37 @@
 /* ==========================================================================
-   ANIMAÇÕES E TRANSIÇÕES GLOBAIS
+   ANIMAÇÕES E TRANSIÇÕES GLOBAIS (ESTILO iOS / IPHONE)
    ========================================================================== */
 
-/* Transição de entrada das views */
-@keyframes surgiraTela { 
-    to { 
-        opacity: 1; 
-        transform: translateY(0) translateZ(0); 
-    } 
+/* Variáveis de timing e física do iOS */
+:root {
+  --ios-spring: cubic-bezier(0.32, 0.72, 0, 1);
+  --ios-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Efeito de carregamento Skeleton */
+/* Transição de entrada estilo iOS (Slide + Fade + Zoom de Entrada) */
+@keyframes surgiraTela { 
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+    will-change: transform, opacity;
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  } 
+}
+
+/* Efeito Skeleton Shimmer ultra-suave estilo Apple */
 @keyframes shimmer-efeito {
   0% {
-    background-position: -150px 0;
+    background-position: -200% 0;
   }
   100% {
-    background-position: 150px 0;
+    background-position: 200% 0;
   }
+}
+
+/* Classe utilitária para aplicar a animação de entrada */
+.view-ios-enter {
+  animation: surgiraTela 0.4s var(--ios-spring) forwards;
 }

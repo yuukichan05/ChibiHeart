@@ -70,6 +70,48 @@ export async function verificarESincronizarAoSairDoPlayer() {
   }
 }
 
+// Atualiza a posição da bolinha (thumb), o progresso e o buffer na barra
+function atualizarBarraProgressoEBuffer() {
+  const progressBar = document.getElementById("player-progress");
+  const videoElement = document.getElementById("player-video");
+
+  if (!progressBar || !videoElement || !videoElement.duration) return;
+
+  const tempoAtual = videoElement.currentTime;
+  const duracaoTotal = videoElement.duration;
+
+  // Porcentagem reproduzida
+  const pctProgresso = (tempoAtual / duracaoTotal) * 100;
+
+  // Atualiza o valor do input range para mover a bolinha (thumb)
+  progressBar.value = pctProgresso;
+
+  // Porcentagem do buffer carregado a partir do ponto atual
+  let pctBuffer = 0;
+  if (videoElement.buffered.length > 0) {
+    for (let i = 0; i < videoElement.buffered.length; i++) {
+      if (videoElement.buffered.start(i) <= tempoAtual && tempoAtual <= videoElement.buffered.end(i)) {
+        pctBuffer = (videoElement.buffered.end(i) / duracaoTotal) * 100;
+        break;
+      }
+    }
+  }
+
+  // Se o buffer for menor que o progresso atual, alinha o buffer ao progresso
+  if (pctBuffer < pctProgresso) {
+    pctBuffer = pctProgresso;
+  }
+
+  // Linear-gradient em 3 níveis: Progresso (Roxo), Buffer (Cinza) e Fundo (Translúcido)
+  progressBar.style.background = `linear-gradient(to right, 
+    #a855f7 0%, 
+    #a855f7 ${pctProgresso}%, 
+    rgba(255, 255, 255, 0.4) ${pctProgresso}%, 
+    rgba(255, 255, 255, 0.4) ${pctBuffer}%, 
+    rgba(255, 255, 255, 0.15) ${pctBuffer}%, 
+    rgba(255, 255, 255, 0.15) 100%)`;
+}
+
 export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios }) {
   todosEpisodiosAtuais = todosEpisodios;
   epIdAtual = epId;
@@ -139,7 +181,6 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
   if (!listenersAtivos) {
     listenersAtivos = true;
 
-    // Controla se o mouse está sobre o contêiner do vídeo
     let isHoveringContainer = false;
 
     function mostrarControles() {
@@ -254,6 +295,9 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
       });
     }
 
+    // Listener para o download do buffer
+    videoElement.addEventListener("progress", atualizarBarraProgressoEBuffer);
+
     videoElement.addEventListener("timeupdate", () => {
       const tempoAtual = videoElement.currentTime;
       const duracaoTotal = videoElement.duration || 0;
@@ -262,11 +306,8 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
         setAssistiuAlgo(true);
       }
 
-      if (progressBar && duracaoTotal > 0) {
-        const porcentagem = (tempoAtual / duracaoTotal) * 100;
-        progressBar.value = porcentagem;
-        progressBar.style.background = `linear-gradient(to right, #ff4081 ${porcentagem}%, rgba(255,255,255,0.3) ${porcentagem}%)`;
-      }
+      // Atualiza visualmente o progresso, buffer e a posição da bolinha
+      atualizarBarraProgressoEBuffer();
 
       if (timeDisplay) {
         timeDisplay.textContent = `${formatarTempo(tempoAtual)} • ${formatarTempo(duracaoTotal)}`;
