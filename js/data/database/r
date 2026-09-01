@@ -1,23 +1,101 @@
-// js/modules//database/repository.js
+// js/data/database/repository.js
+
+import { animesData } from '../../../dados/index.js';
 
 let cacheInfo = null;
 let cacheRecomendados = null;
 let cacheRecentes = null;
-let cacheNovosEpisodios = null;
 
 /**
- * Busca e armazena em cache os dados do info.json
+ * Função auxiliar interna para embaralhar arrays (Fisher-Yates)
+ */
+function embaralharArray(array) {
+  let copia = [...array];
+  for (let i = copia.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copia[i], copia[j]] = [copia[j], copia[i]];
+  }
+  return copia;
+}
+
+/**
+ * Sanitiza o título do episódio para remover numerações duplicadas do tipo "01. 01. Título" -> "01. Título".
+ * Mantém inalterado se for apenas "01. Título", "01 Título" ou se for filme (sem números).
+ */
+function sanitizarTituloEpisodio(titulo) {
+  if (!titulo || typeof titulo !== 'string') return titulo;
+  
+  // Regex busca padroes como "01. 01. " ou "01.01. " no início da string e remove a primeira ocorrência
+  return titulo.replace(/^(\d{2}\.\s*)(\d{2}\.\s*)/, '$2');
+}
+
+/**
+ * Avalia a data de lançamento do anime. Se o status for "Anunciado" 
+ * e a data de lançamento/estreia já tiver chegado, converte o status para "Em exibição".
+ * Também garante que episódios sem thumb recebam o banner da obra como fallback
+ * e sanitiza títulos de episódios duplicados.
+ */
+function normalizarAnime(anime) {
+  if (!anime) return anime;
+
+  let animeAtualizado = { ...anime };
+
+  // 1. Normalização do Status
+  const dataReferencia = animeAtualizado.data_lancamento || animeAtualizado.data_estreia;
+
+  if (animeAtualizado.status === "Anunciado" && dataReferencia) {
+    const dataLancamento = new Date(dataReferencia);
+    const agora = new Date();
+
+    if (!isNaN(dataLancamento.getTime()) && dataLancamento <= agora) {
+      animeAtualizado.status = "Em exibição";
+    }
+  }
+
+  // 2. Fallback de Thumb e Sanitização dos Títulos dos Episódios
+  if (Array.isArray(animeAtualizado.temporadas)) {
+    const fallbackImage = animeAtualizado.banner || animeAtualizado.poster || '';
+
+    animeAtualizado.temporadas = animeAtualizado.temporadas.map(temporada => {
+      if (!Array.isArray(temporada.episodios)) return temporada;
+
+      const episodiosTratados = temporada.episodios.map(episodio => {
+        const thumbVazio = !episodio.thumb || episodio.thumb.trim() === '';
+        
+        return {
+          ...episodio,
+          titulo: sanitizarTituloEpisodio(episodio.titulo),
+          thumb: thumbVazio ? fallbackImage : episodio.thumb
+        };
+      });
+
+      return {
+        ...temporada,
+        episodios: episodiosTratados
+      };
+    });
+  }
+
+  return animeAtualizado;
+}
+
+/**
+ * Retorna os dados completos do objeto de animes com os status, thumbs e títulos atualizados.
  */
 export async function obterInfoCompleta() {
   if (cacheInfo) return cacheInfo;
 
   try {
-    const resposta = await fetch('./dados/animes.json');
-    if (!resposta.ok) throw new Error(`Erro ao carregar animes.json: status ${resposta.status}`);
-    cacheInfo = await resposta.json();
+    const dadosTratados = {};
+
+    for (const [id, anime] of Object.entries(animesData)) {
+      dadosTratados[id] = normalizarAnime(anime);
+    }
+
+    cacheInfo = dadosTratados;
     return cacheInfo;
   } catch (erro) {
-    console.error('❌ [Repository] Falha crítica ao carregar info.json:', erro);
+    console.error('❌ [Repository] Falha crítica ao carregar info:', erro);
     return null;
   }
 }
@@ -32,21 +110,24 @@ export async function obterAnimePorId(animeId) {
 }
 
 /**
- * Busca a lista de animes recomendados (Destaques) diretamente do info.json
+ * Busca a lista de animes recomendados (Destaques).
+ * Pega TODOS os animes com destaque === true, embaralha a lista completa
+ * e seleciona 15 aleatórios a cada carregamento.
  */
 export async function obterRecomendados() {
-  if (cacheRecomendados) return cacheRecomendados;
-
   try {
     const info = await obterInfoCompleta();
     if (!info) return [];
 
-    // Filtra animes que possuem a propriedade destaque definida como true
-    cacheRecomendados = Object.entries(info)
-      .filter(([_, anime]) => anime.destaque === true)
+    const todosDestaques = Object.entries(info)
+      .filter(([_, anime]) => anime.destaque === true);
+
+    const destaquesEmbaralhados = embaralharArray(todosDestaques);
+
+    return destaquesEmbaralhados
+      .slice(0, 15)
       .map(([id]) => ({ id }));
 
-    return cacheRecomendados;
   } catch (erro) {
     console.error('❌ [Repository] Falha ao processar animes recomendados:', erro);
     return [];
@@ -54,7 +135,7 @@ export async function obterRecomendados() {
 }
 
 /**
- * Busca os 15 animes adicionados mais recentemente diretamente do info.json,
+ * Busca os 15 animes adicionados mais recentemente,
  * ordenando do mais recente para o mais antigo pela data em "adicionado_em".
  */
 export async function obterRecentes() {
@@ -64,7 +145,6 @@ export async function obterRecentes() {
     const info = await obterInfoCompleta();
     if (!info) return [];
 
-    // Filtra animes com 'adicionado_em', ordena do mais recente para o mais antigo e pega apenas os 15 primeiros
     cacheRecentes = Object.entries(info)
       .filter(([_, anime]) => anime.adicionado_em)
       .sort((a, b) => new Date(b[1].adicionado_em) - new Date(a[1].adicionado_em))
@@ -79,28 +159,10 @@ export async function obterRecentes() {
 }
 
 /**
- * Busca a lista de novos episódios
- */
-export async function obterNovosEpisodios() {
-  if (cacheNovosEpisodios) return cacheNovosEpisodios;
-
-  try {
-    const resposta = await fetch('./dados/novos_episodios.json');
-    if (!resposta.ok) return [];
-    cacheNovosEpisodios = await resposta.json();
-    return cacheNovosEpisodios;
-  } catch (erro) {
-    console.error('❌ [Repository] Falha ao carregar novos_episodios.json:', erro);
-    return [];
-  }
-}
-
-/**
  * Limpa o cache caso precise forçar a atualização dos dados sem recarregar a página
  */
 export function limparCacheRepository() {
   cacheInfo = null;
   cacheRecomendados = null;
   cacheRecentes = null;
-  cacheNovosEpisodios = null;
 }
