@@ -2,9 +2,20 @@
 
 import { animesData } from '../../../dados/index.js';
 
-let cacheInfo = null;
-let cacheRecomendados = null;
-let cacheRecentes = null;
+// 1. Configuração do Tempo de Vida do Cache (ex: 5 minutos em milissegundos)
+const CACHE_TTL = 5 * 60 * 1000; 
+
+// Estruturas para armazenar os dados e o timestamp do momento da gravação
+let cacheInfo = { dados: null, timestamp: 0 };
+let cacheRecomendados = { dados: null, timestamp: 0 };
+let cacheRecentes = { dados: null, timestamp: 0 };
+
+/**
+ * Helper para verificar se os dados em cache ainda estão dentro do tempo limite
+ */
+function cacheValido(cache) {
+  return cache.dados !== null && (Date.now() - cache.timestamp < CACHE_TTL);
+}
 
 /**
  * Função auxiliar interna para embaralhar arrays (Fisher-Yates)
@@ -25,7 +36,7 @@ function embaralharArray(array) {
 function sanitizarTituloEpisodio(titulo) {
   if (!titulo || typeof titulo !== 'string') return titulo;
   
-  // Regex busca padroes como "01. 01. " ou "01.01. " no início da string e remove a primeira ocorrência
+  // Regex busca padrões como "01. 01. " ou "01.01. " no início da string e remove a primeira ocorrência
   return titulo.replace(/^(\d{2}\.\s*)(\d{2}\.\s*)/, '$2');
 }
 
@@ -83,7 +94,7 @@ function normalizarAnime(anime) {
  * Retorna os dados completos do objeto de animes com os status, thumbs e títulos atualizados.
  */
 export async function obterInfoCompleta() {
-  if (cacheInfo) return cacheInfo;
+  if (cacheValido(cacheInfo)) return cacheInfo.dados;
 
   try {
     const dadosTratados = {};
@@ -92,8 +103,12 @@ export async function obterInfoCompleta() {
       dadosTratados[id] = normalizarAnime(anime);
     }
 
-    cacheInfo = dadosTratados;
-    return cacheInfo;
+    cacheInfo = {
+      dados: dadosTratados,
+      timestamp: Date.now()
+    };
+
+    return cacheInfo.dados;
   } catch (erro) {
     console.error('❌ [Repository] Falha crítica ao carregar info:', erro);
     return null;
@@ -139,19 +154,24 @@ export async function obterRecomendados() {
  * ordenando do mais recente para o mais antigo pela data em "adicionado_em".
  */
 export async function obterRecentes() {
-  if (cacheRecentes) return cacheRecentes;
+  if (cacheValido(cacheRecentes)) return cacheRecentes.dados;
 
   try {
     const info = await obterInfoCompleta();
     if (!info) return [];
 
-    cacheRecentes = Object.entries(info)
+    const dados = Object.entries(info)
       .filter(([_, anime]) => anime.adicionado_em)
       .sort((a, b) => new Date(b[1].adicionado_em) - new Date(a[1].adicionado_em))
       .slice(0, 15)
       .map(([id]) => ({ id }));
 
-    return cacheRecentes;
+    cacheRecentes = {
+      dados: dados,
+      timestamp: Date.now()
+    };
+
+    return cacheRecentes.dados;
   } catch (erro) {
     console.error('❌ [Repository] Falha ao processar animes recentes:', erro);
     return [];
@@ -162,7 +182,7 @@ export async function obterRecentes() {
  * Limpa o cache caso precise forçar a atualização dos dados sem recarregar a página
  */
 export function limparCacheRepository() {
-  cacheInfo = null;
-  cacheRecomendados = null;
-  cacheRecentes = null;
+  cacheInfo = { dados: null, timestamp: 0 };
+  cacheRecomendados = { dados: null, timestamp: 0 };
+  cacheRecentes = { dados: null, timestamp: 0 };
 }
