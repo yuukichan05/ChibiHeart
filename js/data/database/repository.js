@@ -19,9 +19,21 @@ function embaralharArray(array) {
 }
 
 /**
+ * Sanitiza o título do episódio para remover numerações duplicadas do tipo "01. 01. Título" -> "01. Título".
+ * Mantém inalterado se for apenas "01. Título", "01 Título" ou se for filme (sem números).
+ */
+function sanitizarTituloEpisodio(titulo) {
+  if (!titulo || typeof titulo !== 'string') return titulo;
+  
+  // Regex busca padroes como "01. 01. " ou "01.01. " no início da string e remove a primeira ocorrência
+  return titulo.replace(/^(\d{2}\.\s*)(\d{2}\.\s*)/, '$2');
+}
+
+/**
  * Avalia a data de lançamento do anime. Se o status for "Anunciado" 
  * e a data de lançamento/estreia já tiver chegado, converte o status para "Em exibição".
- * Também garante que episódios sem thumb recebam o banner da obra como fallback.
+ * Também garante que episódios sem thumb recebam o banner da obra como fallback
+ * e sanitiza títulos de episódios duplicados.
  */
 function normalizarAnime(anime) {
   if (!anime) return anime;
@@ -40,7 +52,7 @@ function normalizarAnime(anime) {
     }
   }
 
-  // 2. Fallback de Thumb do Episódio para o Banner do Anime
+  // 2. Fallback de Thumb e Sanitização dos Títulos dos Episódios
   if (Array.isArray(animeAtualizado.temporadas)) {
     const fallbackImage = animeAtualizado.banner || animeAtualizado.poster || '';
 
@@ -49,8 +61,10 @@ function normalizarAnime(anime) {
 
       const episodiosTratados = temporada.episodios.map(episodio => {
         const thumbVazio = !episodio.thumb || episodio.thumb.trim() === '';
+        
         return {
           ...episodio,
+          titulo: sanitizarTituloEpisodio(episodio.titulo),
           thumb: thumbVazio ? fallbackImage : episodio.thumb
         };
       });
@@ -66,7 +80,7 @@ function normalizarAnime(anime) {
 }
 
 /**
- * Retorna os dados completos do objeto de animes com os status e thumbs atualizados.
+ * Retorna os dados completos do objeto de animes com os status, thumbs e títulos atualizados.
  */
 export async function obterInfoCompleta() {
   if (cacheInfo) return cacheInfo;
