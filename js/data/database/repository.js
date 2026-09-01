@@ -19,13 +19,66 @@ function embaralharArray(array) {
 }
 
 /**
- * Retorna os dados completos do objeto de animes
+ * Avalia a data de lançamento do anime. Se o status for "Anunciado" 
+ * e a data de lançamento/estreia já tiver chegado, converte o status para "Em exibição".
+ * Também garante que episódios sem thumb recebam o banner da obra como fallback.
+ */
+function normalizarAnime(anime) {
+  if (!anime) return anime;
+
+  let animeAtualizado = { ...anime };
+
+  // 1. Normalização do Status
+  const dataReferencia = animeAtualizado.data_lancamento || animeAtualizado.data_estreia;
+
+  if (animeAtualizado.status === "Anunciado" && dataReferencia) {
+    const dataLancamento = new Date(dataReferencia);
+    const agora = new Date();
+
+    if (!isNaN(dataLancamento.getTime()) && dataLancamento <= agora) {
+      animeAtualizado.status = "Em exibição";
+    }
+  }
+
+  // 2. Fallback de Thumb do Episódio para o Banner do Anime
+  if (Array.isArray(animeAtualizado.temporadas)) {
+    const fallbackImage = animeAtualizado.banner || animeAtualizado.poster || '';
+
+    animeAtualizado.temporadas = animeAtualizado.temporadas.map(temporada => {
+      if (!Array.isArray(temporada.episodios)) return temporada;
+
+      const episodiosTratados = temporada.episodios.map(episodio => {
+        const thumbVazio = !episodio.thumb || episodio.thumb.trim() === '';
+        return {
+          ...episodio,
+          thumb: thumbVazio ? fallbackImage : episodio.thumb
+        };
+      });
+
+      return {
+        ...temporada,
+        episodios: episodiosTratados
+      };
+    });
+  }
+
+  return animeAtualizado;
+}
+
+/**
+ * Retorna os dados completos do objeto de animes com os status e thumbs atualizados.
  */
 export async function obterInfoCompleta() {
   if (cacheInfo) return cacheInfo;
 
   try {
-    cacheInfo = animesData;
+    const dadosTratados = {};
+
+    for (const [id, anime] of Object.entries(animesData)) {
+      dadosTratados[id] = normalizarAnime(anime);
+    }
+
+    cacheInfo = dadosTratados;
     return cacheInfo;
   } catch (erro) {
     console.error('❌ [Repository] Falha crítica ao carregar info:', erro);
@@ -48,21 +101,15 @@ export async function obterAnimePorId(animeId) {
  * e seleciona 15 aleatórios a cada carregamento.
  */
 export async function obterRecomendados() {
-  // Nota: Não utilizamos cacheRecomendados aqui para permitir
-  // que a cada navegação/recarregamento os 15 exibidos sejam dinâmicos.
-
   try {
     const info = await obterInfoCompleta();
     if (!info) return [];
 
-    // 1. Filtra TODOS os animes que possuem destaque === true
     const todosDestaques = Object.entries(info)
       .filter(([_, anime]) => anime.destaque === true);
 
-    // 2. Embaralha a lista completa de destaques
     const destaquesEmbaralhados = embaralharArray(todosDestaques);
 
-    // 3. Pega os 15 primeiros da lista embaralhada
     return destaquesEmbaralhados
       .slice(0, 15)
       .map(([id]) => ({ id }));
@@ -84,7 +131,6 @@ export async function obterRecentes() {
     const info = await obterInfoCompleta();
     if (!info) return [];
 
-    // Filtra animes com 'adicionado_em', ordena do mais recente para o mais antigo e pega apenas os 15 primeiros
     cacheRecentes = Object.entries(info)
       .filter(([_, anime]) => anime.adicionado_em)
       .sort((a, b) => new Date(b[1].adicionado_em) - new Date(a[1].adicionado_em))

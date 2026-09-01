@@ -1,4 +1,5 @@
 import _100NamoradasQueTeAmamMuuuuuito from './animes/100NamoradasQueTeAmamMuuuuuito.js';
+import Dragon_Girl_Problem from './animes/Dragon-Girl-Problem.js';
 import Mom_I_m_Sorry from './animes/Mom-I-m-Sorry.js';
 import Sparks_of_Tomorrow from './animes/Sparks of Tomorrow.js';
 import Yamada_kun_to_7_nin_no_Majo from './animes/Yamada-kun to 7-nin no Majo.js';
@@ -44,6 +45,7 @@ import zombie_land_saga from './animes/zombie-land-saga.js';
 
 export const animesData = {
   "100NamoradasQueTeAmamMuuuuuito": _100NamoradasQueTeAmamMuuuuuito,
+  "Dragon-Girl-Problem": Dragon_Girl_Problem,
   "Mom-I-m-Sorry": Mom_I_m_Sorry,
   "Sparks of Tomorrow": Sparks_of_Tomorrow,
   "Yamada-kun to 7-nin no Majo": Yamada_kun_to_7_nin_no_Majo,
