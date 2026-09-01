@@ -1,7 +1,7 @@
 export default {
   "adicionado_em": "2026-08-31T09:33:40.286Z",
   "destaque": true,
-  "tipo": "serie",
+  "tipo": "filme",
   "titulo": "Given, o filme: Ao Mar",
   "titulo_en": "Given",
   "titulo_pt": "",
@@ -26,10 +26,10 @@ export default {
         {
           "id": "given:ao-mar_s01e01",
           "index": 1,
-          "titulo": "01. Episódio 1",
+          "titulo": "Given, o filme: Ao Mar",
           "descricao": "",
-          "thumb": "",
-          "duracao": "80",
+          "thumb": "https://media.themoviedb.org/t/p/w1000_and_h563_face/52LNB5OfxLwO5v6MIFR3FUYrM0Y.jpg",
+          "duracao": "1h20min",
           "data_lancamento": "",
           "skip_intro": {
             "inicio": "",

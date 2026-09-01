@@ -1,5 +1,5 @@
 export default {
-  "adicionado_em": "2026-08-31T03:56:14.979Z",
+  "adicionado_em": "",
   "destaque": true,
   "tipo": "serie",
   "titulo": "Xiehou Ta De Shaonu Shidai",
