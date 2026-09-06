@@ -5,6 +5,7 @@ import Sparks_of_Tomorrow from './animes/Sparks of Tomorrow.js';
 import Yamada_kun_to_7_nin_no_Majo from './animes/Yamada-kun to 7-nin no Majo.js';
 import Yofukashi_no_Uta from './animes/Yofukashi no Uta.js';
 import Yofukashi_no_Uta_S02 from './animes/Yofukashi no Uta_S02.js';
+import akatsuki_no_yona from './animes/akatsuki-no-yona.js';
 import ayakashiTriagle from './animes/ayakashiTriagle.js';
 import chuunibyouRen from './animes/chuunibyouRen.js';
 import deathnote from './animes/deathnote.js';
@@ -51,6 +52,7 @@ export const animesData = {
   "Yamada-kun to 7-nin no Majo": Yamada_kun_to_7_nin_no_Majo,
   "Yofukashi no Uta": Yofukashi_no_Uta,
   "Yofukashi no Uta_S02": Yofukashi_no_Uta_S02,
+  "akatsuki-no-yona": akatsuki_no_yona,
   "ayakashiTriagle": ayakashiTriagle,
   "chuunibyouRen": chuunibyouRen,
   "deathnote": deathnote,

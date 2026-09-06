@@ -7,7 +7,7 @@ export default {
   "titulo_pt": "",
   "ano": "2026",
   "temporada": "",
-  "status": "Finalizado",
+  "status": "Em Exibição",
   "classificacao": "+16",
   "generos": [
     "Animação",
