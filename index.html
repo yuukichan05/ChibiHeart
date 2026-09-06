@@ -7,11 +7,14 @@
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-F368W8MWCX"></script>
 	<script>
 	  window.dataLayer = window.dataLayer || [];
-	    function gtag(){dataLayer.push(arguments);}
-	      gtag('js', new Date());
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
 
-	        gtag('config', 'G-F368W8MWCX');
-	        </script>
+	  // Configura o GA4 e desativa o envio automático de page_view inicial (gerenciado pela SPA no main.js)
+	  gtag('config', 'G-F368W8MWCX', {
+	    send_page_view: false
+	  });
+	</script>
 
 	
   <meta charset="UTF-8">

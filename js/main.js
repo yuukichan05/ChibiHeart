@@ -21,6 +21,38 @@ import {
 import { limparRegistrosZeradosDB } from './data/database/dbProgresso.js';
 
 /* ==========================================================================
+   RASTREAMENTO DO GOOGLE ANALYTICS (SPA)
+   ========================================================================== */
+function trackPageView(pageTitle, pageLocation) {
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', 'page_view', {
+      page_title: pageTitle,
+      page_location: pageLocation || window.location.href,
+      page_path: window.location.hash || '/'
+    });
+  }
+}
+
+function registrarVisualizacaoDePagina(rota) {
+  const titulosDePagina = {
+    '#inicio': 'Início',
+    '#explorar': 'Explorar',
+    '#info': 'Detalhes do Anime',
+    '#player': 'Player de Vídeo',
+    '#lista': 'Minha Lista',
+    '#pesquisa': 'Pesquisar',
+    '#historico': 'Histórico',
+    '#perfil': 'Perfil',
+    '#configuracoes': 'Configurações',
+    '#conta': 'Conta',
+    '#notificacoes': 'Notificações'
+  };
+
+  const title = titulosDePagina[rota] || 'ChibiHeart';
+  trackPageView(title, window.location.href);
+}
+
+/* ==========================================================================
    CAPTURA GLOBAL DE IMAGENS
    ========================================================================== */
 document.addEventListener('load', (event) => {
@@ -94,6 +126,9 @@ async function processarRota() {
   document.querySelectorAll(".tab-item, .sidebar-item, .nav-item, .nav-link").forEach((navItem) => {
     navItem.classList.toggle("active", navItem.getAttribute("href") === novaRota);
   });
+
+  // Registra a mudança de rota no Google Analytics
+  registrarVisualizacaoDePagina(novaRota);
 
   switch (novaRota) {
     case "#inicio":
