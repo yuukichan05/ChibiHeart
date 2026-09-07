@@ -3,7 +3,9 @@
    ========================================================================== */
 
 
-@import url("modules/inicio.css");
+@import url("modules/base.css");
+@import url("modules/layout.css");
+@import url("modules/components.css");
 @import url("modules/player.css");
 @import url("modules/views.css");
 @import url("modules/perfil.css");

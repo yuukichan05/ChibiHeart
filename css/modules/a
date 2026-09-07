@@ -1,0 +1,21 @@
+/* ==========================================================================
+   ANIMAÇÕES E TRANSIÇÕES GLOBAIS
+   ========================================================================== */
+
+/* Transição de entrada das views */
+@keyframes surgiraTela { 
+    to { 
+        opacity: 1; 
+        transform: translateY(0) translateZ(0); 
+    } 
+}
+
+/* Efeito de carregamento Skeleton */
+@keyframes shimmer-efeito {
+  0% {
+    background-position: -150px 0;
+  }
+  100% {
+    background-position: 150px 0;
+  }
+}

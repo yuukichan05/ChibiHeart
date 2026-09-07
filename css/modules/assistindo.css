@@ -1,10 +1,12 @@
 /* ==========================================================================
    6. CARDS DE CONTINUAR ASSISTINDO (LANDSCAPE 16:9)
    ========================================================================== */
-
 #secao-continuar-assistindo {
-    margin-bottom: 20px;
+    margin-bottom: 0 !important;
+    display: block;
+    overflow: hidden; /* Evita que margens internas vazem */
 }
+
 
 #grade-continuar-assistindo {
     display: flex !important;
