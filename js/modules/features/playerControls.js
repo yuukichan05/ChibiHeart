@@ -34,14 +34,18 @@ let faixaLegendaAtivaIndex = -1;
  * @returns {Promise<Array>} Array de faixas com { id, title, lang, data }
  */
 async function extrairLegendasMKV(urlVideo) {
-  if (!urlVideo) return [];
+  if (!urlVideo) {
+    console.warn("URL do vídeo não fornecida");
+    return [];
+  }
 
   try {
+    console.log("🔄 Lendo legendas do MKV...", urlVideo);
     exibirToast("Lendo legendas do arquivo...");
 
     // Faz download apenas do header do MKV (onde ficam os metadados)
     const response = await fetch(urlVideo, {
-      headers: { Range: "bytes=0-10485760" } // 10MB deve ser suficiente
+      headers: { Range: "bytes=0-10485760" } // 10MB
     });
 
     if (!response.ok) {
@@ -60,9 +64,13 @@ async function extrairLegendasMKV(urlVideo) {
     const demuxer = new window.MKVDemuxer.Demuxer(new Uint8Array(arrayBuffer));
     const tracks = [];
 
+    console.log(`📋 Total de faixas no arquivo: ${demuxer.tracks.length}`);
+
     // Iterar sobre as faixas disponíveis
     for (let i = 0; i < demuxer.tracks.length; i++) {
       const track = demuxer.tracks[i];
+
+      console.log(`Faixa ${i}: tipo=${track.type}, codec=${track.codec}, name=${track.name}`);
 
       // Verificar se é uma faixa de subtítulos
       if (track.type === "subtitles") {
@@ -73,15 +81,19 @@ async function extrairLegendasMKV(urlVideo) {
           type: track.codec, // "S_TEXT/ASS", "S_TEXT/UTF8", etc.
           trackId: track.number
         });
+
+        console.log(`✅ Legenda encontrada: ${track.name || `Legenda ${i + 1}`}`);
       }
     }
 
-    console.log("✅ Faixas encontradas:", tracks);
+    if (tracks.length === 0) {
+      console.log("⚠️ Nenhuma faixa de subtítulo encontrada no demuxer");
+    }
+
     return tracks;
 
   } catch (erro) {
     console.error("❌ Erro ao extrair legendas:", erro);
-    exibirToast("Erro ao ler legendas do arquivo");
     return [];
   }
 }
@@ -97,28 +109,35 @@ function extrairLegendasFallback(arrayBuffer) {
   const tracks = [];
   let trackIndex = 0;
 
+  console.log("🔍 Usando fallback de extração manual de legendas...");
+
   // Procurar por marcadores conhecidos de faixas de subtítulo no MKV
-  // Padrão: "CodecID" seguido de "S_TEXT/ASS" ou "S_TEXT/UTF8"
-  
   for (let i = 0; i < bytes.length - 20; i++) {
     const slice = bytes.slice(i, i + 50);
     const text = decoder.decode(slice);
 
     // Procurar por CodecID de subtítulo
-    if (text.includes("S_TEXT/ASS")) {
+    if (text.includes("S_TEXT/ASS") || text.includes("S_TEXT/UTF8")) {
+      console.log(`📍 Encontrado codec de legenda em offset ${i}`);
+
       tracks.push({
         id: trackIndex,
         title: `Legenda ${trackIndex + 1}`,
         lang: "Português",
-        type: "S_TEXT/ASS",
+        type: text.includes("S_TEXT/ASS") ? "S_TEXT/ASS" : "S_TEXT/UTF8",
         trackId: trackIndex
       });
+      
       trackIndex++;
-      i += 50; // Pular para evitar duplicatas
+      i += 100; // Pular para evitar duplicatas
     }
   }
 
-  return tracks.length > 0 ? tracks : [];
+  if (tracks.length === 0) {
+    console.log("❌ Nenhuma legenda encontrada no fallback");
+  }
+
+  return tracks;
 }
 
 /**
@@ -128,37 +147,49 @@ function extrairLegendasFallback(arrayBuffer) {
  */
 async function carregarConteudoLegenda(trackIndex, urlVideo) {
   try {
+    console.log(`📥 Carregando conteúdo da legenda ${trackIndex}...`);
+
     const response = await fetch(urlVideo, {
       headers: { Range: "bytes=0-52428800" } // 50MB para garantir todo conteúdo
     });
 
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
     const arrayBuffer = await response.arrayBuffer();
 
     if (typeof window.MKVDemuxer === "undefined") {
-      console.warn("Não foi possível carregar o demuxer MKV");
+      console.warn("MKV Demuxer não disponível para carregar conteúdo");
       return null;
     }
 
     const demuxer = new window.MKVDemuxer.Demuxer(new Uint8Array(arrayBuffer));
     
-    // Procurar pela faixa de legendas
-    if (demuxer.tracks[trackIndex] && demuxer.tracks[trackIndex].type === "subtitles") {
-      // O demuxer fornece um método para extrair o conteúdo da faixa
-      // Isso depende da implementação do mkv-demuxer
-      
-      // Alternativa: extrair manualmente o bloco de dados
-      const track = demuxer.tracks[trackIndex];
-      
-      // Se o demuxer suporta extrair dados brutos
-      if (track.data) {
-        const decoder = new TextDecoder("utf-8", { fatal: false });
-        return decoder.decode(track.data);
-      }
+    if (!demuxer.tracks[trackIndex]) {
+      console.warn(`Faixa ${trackIndex} não encontrada`);
+      return null;
     }
 
+    const track = demuxer.tracks[trackIndex];
+
+    if (track.type !== "subtitles") {
+      console.warn(`Faixa ${trackIndex} não é uma faixa de legendas`);
+      return null;
+    }
+
+    // Tentar extrair dados da faixa
+    if (track.data) {
+      const decoder = new TextDecoder("utf-8", { fatal: false });
+      const conteudo = decoder.decode(track.data);
+      console.log("✅ Conteúdo da legenda carregado com sucesso");
+      return conteudo;
+    }
+
+    console.warn("Faixa não possui dados extraíveis");
     return null;
   } catch (erro) {
-    console.error("Erro ao carregar legenda:", erro);
+    console.error("❌ Erro ao carregar legenda:", erro);
     return null;
   }
 }
@@ -237,12 +268,12 @@ async function ativarFaixaLegenda(indexTrack, videoElement, urlVideo) {
       workerUrl: "https://cdn.jsdelivr.net/npm/jassub@latest/dist/jassub-worker.js",
       legacyWasmUrl: "https://cdn.jsdelivr.net/npm/jassub@latest/dist/jassub-worker.wasm",
       onError: (error) => {
-        console.error("Erro JASSUB:", error);
+        console.error("❌ Erro JASSUB:", error);
         exibirToast("Erro ao renderizar legenda");
       }
     });
 
-    exibirToast(`Legenda: ${faixaSelecionada.title}`);
+    exibirToast(`✅ Legenda: ${faixaSelecionada.title}`);
     console.log("✅ Legenda ativada:", faixaSelecionada.title);
 
   } catch (erro) {
@@ -268,39 +299,83 @@ function atualizarUIListaLegendas() {
   listaContainer.appendChild(liDesativado);
 
   // Opções de legendas disponíveis
-  faixasLegendaDisponiveis.forEach((track, idx) => {
-    const li = document.createElement("li");
-    li.className = `subtitles-item ${faixaLegendaAtivaIndex === idx ? "active" : ""}`;
-    li.dataset.track = String(idx);
-    li.textContent = `${track.title} (${track.lang || "Unknown"})`;
-    listaContainer.appendChild(li);
-  });
+  if (faixasLegendaDisponiveis.length === 0) {
+    const liSemLegenda = document.createElement("li");
+    liSemLegenda.className = "subtitles-item disabled";
+    liSemLegenda.textContent = "Nenhuma legenda disponível";
+    liSemLegenda.style.opacity = "0.5";
+    liSemLegenda.style.pointerEvents = "none";
+    listaContainer.appendChild(liSemLegenda);
+  } else {
+    faixasLegendaDisponiveis.forEach((track, idx) => {
+      const li = document.createElement("li");
+      li.className = `subtitles-item ${faixaLegendaAtivaIndex === idx ? "active" : ""}`;
+      li.dataset.track = String(idx);
+      li.textContent = `${track.title} (${track.lang || "Unknown"})`;
+      listaContainer.appendChild(li);
+    });
+  }
 }
 
 /**
- * Inicializa o menu de legendas
+ * Inicializa o menu de legendas quando o vídeo está pronto
  */
 export async function inicializarMenuLegendas(urlVideo, videoElement) {
   if (!urlVideo) {
-    console.warn("URL do vídeo não fornecida");
+    console.warn("❌ URL do vídeo não fornecida");
+    atualizarUIListaLegendas(); // Mostrar "Nenhuma legenda disponível"
     return;
   }
 
   console.log("📹 Inicializando legendas para:", urlVideo);
 
-  // Extrair legendas do MKV
-  faixasLegendaDisponiveis = await extrairLegendasMKV(urlVideo);
+  // IMPORTANTE: Aguardar o vídeo carregar antes de ler as legendas
+  // Isso evita que a mensagem "nenhuma legenda disponível" apareça antes de terminar
+  return new Promise((resolve) => {
+    const videoReady = () => {
+      console.log("✅ Vídeo pronto para ler legendas");
+      extrairLegendasMKV(urlVideo).then((legendas) => {
+        faixasLegendaDisponiveis = legendas;
 
-  // Atualizar UI
-  atualizarUIListaLegendas();
+        // Atualizar UI
+        atualizarUIListaLegendas();
 
-  // Se houver legendas, ativar a primeira por padrão
-  if (faixasLegendaDisponiveis.length > 0) {
-    await ativarFaixaLegenda(0, videoElement, urlVideo);
-  } else {
-    console.log("ℹ️ Nenhuma legenda encontrada no arquivo");
-    exibirToast("Nenhuma legenda disponível");
-  }
+        // Se houver legendas, ativar a primeira por padrão
+        if (faixasLegendaDisponiveis.length > 0) {
+          console.log(`🎬 Ativando primeira legenda de ${faixasLegendaDisponiveis.length} disponíveis`);
+          ativarFaixaLegenda(0, videoElement, urlVideo).then(() => resolve());
+        } else {
+          console.log("ℹ️ Nenhuma legenda encontrada no arquivo");
+          exibirToast("Nenhuma legenda disponível neste episódio");
+          resolve();
+        }
+      }).catch((erro) => {
+        console.error("❌ Erro ao extrair legendas:", erro);
+        atualizarUIListaLegendas();
+        resolve();
+      });
+    };
+
+    // Verificar diferentes eventos para ter certeza que o vídeo está pronto
+    if (videoElement.readyState >= 1) {
+      // Vídeo já tem metadados carregados
+      videoReady();
+    } else {
+      // Aguardar carregamento dos metadados
+      videoElement.addEventListener('loadedmetadata', videoReady, { once: true });
+      
+      // Timeout de segurança (5 segundos)
+      setTimeout(() => {
+        if (videoElement.readyState >= 1) {
+          videoReady();
+        } else {
+          console.warn("⚠️ Timeout aguardando metadados do vídeo");
+          atualizarUIListaLegendas();
+          resolve();
+        }
+      }, 5000);
+    }
+  });
 }
 
 export function limparPlayer() {
@@ -429,7 +504,7 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
   videoElement.src = videoInicial;
   videoElement.poster = episodioAtual.thumb || "";
 
-  // Inicializar legendas
+  // Inicializar legendas APÓS o vídeo estar configurado e pronto
   inicializarMenuLegendas(videoInicial, videoElement);
 
   async function restaurarTempoSalvo() {
