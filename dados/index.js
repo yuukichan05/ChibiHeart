@@ -35,6 +35,7 @@ import tensuraS04 from './animes/tensuraS04.js';
 import that_time_i_got_s01 from './animes/that time i got_s01.js';
 import that_time_i_got_s04 from './animes/that-time-i-got_s04.js';
 import toradora from './animes/toradora.js';
+import tsuihou_sareta_tensei from './animes/tsuihou-sareta-tensei.js';
 import violet_evergarden from './animes/violet-evergarden.js';
 import yozakura_san_chi_no_daisakuse_2 from './animes/yozakura-san-chi-no-daisakuse-2.js';
 import yozakura_san_chi_no_daisakuse from './animes/yozakura-san-chi-no-daisakuse.js';
@@ -82,6 +83,7 @@ export const animesData = {
   "that time i got_s01": that_time_i_got_s01,
   "that-time-i-got_s04": that_time_i_got_s04,
   "toradora": toradora,
+  "tsuihou-sareta-tensei": tsuihou_sareta_tensei,
   "violet-evergarden": violet_evergarden,
   "yozakura-san-chi-no-daisakuse-2": yozakura_san_chi_no_daisakuse_2,
   "yozakura-san-chi-no-daisakuse": yozakura_san_chi_no_daisakuse,
