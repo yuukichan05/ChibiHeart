@@ -26,8 +26,8 @@ let urlLegAtual = '';
 // Variáveis de controle de legenda
 let legendasEpisodio = [];
 let opcaoLegendaAtivaId = 'desativado';
+let urlLegendaSelecionada = null;
 
-// Função para identificar e mapear legendas no objeto do episódio
 function extrairLegendasEpisodio(episodioAtual) {
   const legendas = [];
   if (!episodioAtual) return legendas;
@@ -35,21 +35,21 @@ function extrairLegendasEpisodio(episodioAtual) {
   const keys = Object.keys(episodioAtual);
 
   keys.forEach(key => {
-    if ((key.startsWith("url_legenda") || key === "url_leg") && episodioAtual[key]) {
+    // Agora verifica APENAS chaves que começam com "url_legenda" (ignora url_leg)
+    if (key.startsWith("url_legenda") && episodioAtual[key]) {
       const url = episodioAtual[key];
       let rotulo = "";
 
       if (key === "url_legenda_forced" || key.endsWith("_forced") || key.includes("forced")) {
         rotulo = "Português [Forced]";
-      } else if (key === "url_legenda_pt" || key === "url_legenda" || key === "url_leg" || key.endsWith("_pt")) {
+      } else if (key === "url_legenda_pt" || key === "url_legenda" || key.endsWith("_pt")) {
         rotulo = "Português";
       } else {
-        const sufixo = key.replace(/^url_legenda_?/, "").replace(/^url_leg_?/, "");
+        const sufixo = key.replace(/^url_legenda_?/, "");
         rotulo = sufixo ? (sufixo.charAt(0).toUpperCase() + sufixo.slice(1)) : "Português";
       }
 
-      // Evita entradas duplicadas apontando para a mesma URL
-      if (!legendas.some(l => l.url === url)) {
+      if (!legendas.some(l => l.url === url || l.label === rotulo)) {
         legendas.push({
           id: key,
           label: rotulo,
@@ -62,7 +62,7 @@ function extrairLegendasEpisodio(episodioAtual) {
   return legendas;
 }
 
-// Desaloca buffers e limpa o player
+
 export function limparPlayer() {
   limparTimersSync();
 
@@ -76,6 +76,7 @@ export function limparPlayer() {
   const trackElement = document.getElementById("player-track");
   if (trackElement) {
     trackElement.removeAttribute("src");
+    trackElement.removeAttribute("label");
     if (trackElement.track) {
       trackElement.track.mode = 'disabled';
     }
@@ -99,9 +100,9 @@ export function limparPlayer() {
   idiomaAtual = 'dub';
   legendasEpisodio = [];
   opcaoLegendaAtivaId = 'desativado';
+  urlLegendaSelecionada = null;
 }
 
-// Chamado ao trocar de rota para verificar se algo foi assistido e sincronizar
 export async function verificarESincronizarAoSairDoPlayer() {
   limparTimersSync();
 
@@ -125,7 +126,6 @@ export async function verificarESincronizarAoSairDoPlayer() {
   }
 }
 
-// Atualiza a posição da bolinha (thumb), o progresso e o buffer na barra
 function atualizarBarraProgressoEBuffer() {
   const progressBar = document.getElementById("player-progress");
   const videoElement = document.getElementById("player-video");
@@ -134,14 +134,10 @@ function atualizarBarraProgressoEBuffer() {
 
   const tempoAtual = videoElement.currentTime;
   const duracaoTotal = videoElement.duration;
-
-  // Porcentagem reproduzida
   const pctProgresso = (tempoAtual / duracaoTotal) * 100;
 
-  // Atualiza o valor do input range para mover a bolinha (thumb)
   progressBar.value = pctProgresso;
 
-  // Porcentagem do buffer carregado a partir do ponto atual
   let pctBuffer = 0;
   if (videoElement.buffered.length > 0) {
     for (let i = 0; i < videoElement.buffered.length; i++) {
@@ -152,12 +148,10 @@ function atualizarBarraProgressoEBuffer() {
     }
   }
 
-  // Se o buffer for menor que o progresso atual, alinha o buffer ao progresso
   if (pctBuffer < pctProgresso) {
     pctBuffer = pctProgresso;
   }
 
-  // Linear-gradient em 3 níveis: Progresso (Roxo), Buffer (Cinza) e Fundo (Translúcido)
   progressBar.style.background = `linear-gradient(to right, 
     #a855f7 0%, 
     #a855f7 ${pctProgresso}%, 
@@ -174,7 +168,6 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
   ultimoTempoSalvoDB = 0;
   setAssistiuAlgo(false);
 
-  // Seleção e verificação de URLs de mídia
   urlDubAtual = episodioAtual.url_dub || episodioAtual.video_dub || "";
   urlLegAtual = episodioAtual.url_leg || episodioAtual.video_leg || "";
   const urlVideoUnico = episodioAtual.video || "";
@@ -216,25 +209,23 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
   const btnFullscreen = document.getElementById("btn-player-fullscreen");
   const btnAudio = document.getElementById("btn-player-audio");
 
-  // Elementos do sistema de legendas
   const btnSubtitles = document.getElementById("btn-player-subtitles");
   const menuSubtitles = document.getElementById("player-subtitles-menu");
   const optionsListSubtitles = document.getElementById("subtitles-options-list");
+  const btnSubDownload = document.getElementById("btn-subtitles-download");
   const inputSubFile = document.getElementById("input-subtitles-file");
   const trackElement = document.getElementById("player-track");
 
   atualizarBotaoAudio(btnAudio, idiomaAtual, temAmbos);
 
-  // Extrai legendas do episódio atual e configura o botão de legenda
   legendasEpisodio = extrairLegendasEpisodio(episodioAtual);
   opcaoLegendaAtivaId = 'desativado';
+  urlLegendaSelecionada = null;
 
   if (btnSubtitles) {
-    // O botão fica visível sempre ou quando houver legendas no BD
     btnSubtitles.style.display = "inline-flex";
   }
 
-  // Renderiza a lista de opções de legendas no menu
   function atualizarOpcoesAtivasUI() {
     if (!optionsListSubtitles) return;
     const botoes = optionsListSubtitles.querySelectorAll(".btn-sub-option");
@@ -251,6 +242,7 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
     });
   }
 
+  // Renderização limpa do menu de opções
   if (optionsListSubtitles) {
     optionsListSubtitles.innerHTML = "";
 
@@ -264,10 +256,19 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
 
     btnDesativar.addEventListener("click", () => {
       opcaoLegendaAtivaId = "desativado";
+      urlLegendaSelecionada = null;
       
       if (trackElement) {
         trackElement.removeAttribute("src");
+        trackElement.removeAttribute("label");
         if (trackElement.track) trackElement.track.mode = "disabled";
+      }
+
+      if (btnSubDownload) {
+        btnSubDownload.disabled = true;
+        btnSubDownload.style.cursor = "not-allowed";
+        btnSubDownload.style.background = "#333";
+        btnSubDownload.style.color = "#888";
       }
 
       atualizarOpcoesAtivasUI();
@@ -276,7 +277,7 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
 
     optionsListSubtitles.appendChild(btnDesativar);
 
-    // Adiciona as legendas detectadas no BD
+    // Adiciona uma única opção para cada legenda extraída do BD
     legendasEpisodio.forEach(leg => {
       const btnOp = document.createElement("button");
       btnOp.type = "button";
@@ -287,14 +288,21 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
 
       btnOp.addEventListener("click", () => {
         opcaoLegendaAtivaId = leg.id;
+        urlLegendaSelecionada = leg.url;
 
         if (trackElement) {
-          trackElement.src = leg.url;
-          if (trackElement.track) trackElement.track.mode = "showing";
+          trackElement.setAttribute("label", leg.label);
+        }
+
+        if (btnSubDownload) {
+          btnSubDownload.disabled = false;
+          btnSubDownload.style.cursor = "pointer";
+          btnSubDownload.style.background = "#a855f7";
+          btnSubDownload.style.color = "#fff";
         }
 
         atualizarOpcoesAtivasUI();
-        exibirToast(`Legenda "${leg.label}" selecionada`);
+        exibirToast(`Legenda "${leg.label}" selecionada.`);
       });
 
       optionsListSubtitles.appendChild(btnOp);
@@ -302,8 +310,54 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
 
     atualizarOpcoesAtivasUI();
   }
+if (btnSubDownload) {
+    btnSubDownload.onclick = async () => {
+      if (!urlLegendaSelecionada) return;
 
-  // Evento de abrir/fechar o menu de legendas
+      try {
+        // Copia a URL da legenda direto para a área de transferência
+        await navigator.clipboard.writeText(urlLegendaSelecionada);
+        exibirToast("Link copiado para a área de transferência!");
+      } catch (err) {
+        console.error("Erro ao copiar link da legenda:", err);
+        
+        // Fallback para navegadores sem suporte ao Clipboard API ou sem permissão
+        const inputTemp = document.createElement("input");
+        inputTemp.value = urlLegendaSelecionada;
+        document.body.appendChild(inputTemp);
+        inputTemp.select();
+        document.execCommand("copy");
+        document.body.removeChild(inputTemp);
+
+        exibirToast("Link copiado!");
+      }
+    };
+  }
+
+
+
+
+  if (inputSubFile) {
+    inputSubFile.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file && trackElement) {
+        const localUrl = URL.createObjectURL(file);
+        trackElement.src = localUrl;
+        trackElement.setAttribute("label", file.name);
+
+        if (trackElement.track) {
+          trackElement.track.mode = "showing";
+        }
+
+        opcaoLegendaAtivaId = "local";
+        atualizarOpcoesAtivasUI();
+
+        exibirToast(`Legenda "${file.name}" carregada!`);
+        if (menuSubtitles) menuSubtitles.style.display = "none";
+      }
+    };
+  }
+
   if (btnSubtitles && menuSubtitles) {
     btnSubtitles.onclick = (e) => {
       e.stopPropagation();
@@ -316,26 +370,6 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
         menuSubtitles.style.display = "none";
       }
     });
-  }
-
-  // Evento do input de arquivo local (do dispositivo)
-  if (inputSubFile) {
-    inputSubFile.onchange = (e) => {
-      const file = e.target.files[0];
-      if (file && trackElement) {
-        const localUrl = URL.createObjectURL(file);
-        trackElement.src = localUrl;
-        if (trackElement.track) {
-          trackElement.track.mode = "showing";
-        }
-
-        opcaoLegendaAtivaId = "local";
-        atualizarOpcoesAtivasUI();
-
-        exibirToast(`Legenda "${file.name}" carregada!`);
-        if (menuSubtitles) menuSubtitles.style.display = "none";
-      }
-    };
   }
 
   if (!videoElement) return;
@@ -470,7 +504,6 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
       });
     }
 
-    // Listener para o download do buffer
     videoElement.addEventListener("progress", atualizarBarraProgressoEBuffer);
 
     videoElement.addEventListener("timeupdate", () => {
@@ -481,7 +514,6 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
         setAssistiuAlgo(true);
       }
 
-      // Atualiza visualmente o progresso, buffer e a posição da bolinha
       atualizarBarraProgressoEBuffer();
 
       if (timeDisplay) {
@@ -566,7 +598,6 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
     document.addEventListener("fullscreenchange", atualizarIconeFullscreen);
     document.addEventListener("webkitfullscreenchange", atualizarIconeFullscreen);
 
-    // Atalhos globais de teclado
     window.addEventListener("keydown", (e) => {
       if (!window.location.hash.startsWith("#player")) return;
 
