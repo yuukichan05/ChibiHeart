@@ -23,6 +23,45 @@ let idiomaAtual = 'dub';
 let urlDubAtual = '';
 let urlLegAtual = '';
 
+// Variáveis de controle de legenda
+let legendasEpisodio = [];
+let opcaoLegendaAtivaId = 'desativado';
+
+// Função para identificar e mapear legendas no objeto do episódio
+function extrairLegendasEpisodio(episodioAtual) {
+  const legendas = [];
+  if (!episodioAtual) return legendas;
+
+  const keys = Object.keys(episodioAtual);
+
+  keys.forEach(key => {
+    if ((key.startsWith("url_legenda") || key === "url_leg") && episodioAtual[key]) {
+      const url = episodioAtual[key];
+      let rotulo = "";
+
+      if (key === "url_legenda_forced" || key.endsWith("_forced") || key.includes("forced")) {
+        rotulo = "Português [Forced]";
+      } else if (key === "url_legenda_pt" || key === "url_legenda" || key === "url_leg" || key.endsWith("_pt")) {
+        rotulo = "Português";
+      } else {
+        const sufixo = key.replace(/^url_legenda_?/, "").replace(/^url_leg_?/, "");
+        rotulo = sufixo ? (sufixo.charAt(0).toUpperCase() + sufixo.slice(1)) : "Português";
+      }
+
+      // Evita entradas duplicadas apontando para a mesma URL
+      if (!legendas.some(l => l.url === url)) {
+        legendas.push({
+          id: key,
+          label: rotulo,
+          url: url
+        });
+      }
+    }
+  });
+
+  return legendas;
+}
+
 // Desaloca buffers e limpa o player
 export function limparPlayer() {
   limparTimersSync();
@@ -33,6 +72,20 @@ export function limparPlayer() {
     videoElement.removeAttribute("src");
     videoElement.load();
   }
+
+  const trackElement = document.getElementById("player-track");
+  if (trackElement) {
+    trackElement.removeAttribute("src");
+    if (trackElement.track) {
+      trackElement.track.mode = 'disabled';
+    }
+  }
+
+  const menuLegendas = document.getElementById("player-subtitles-menu");
+  if (menuLegendas) {
+    menuLegendas.style.display = "none";
+  }
+
   if (hideControlsTimeout) {
     clearTimeout(hideControlsTimeout);
     hideControlsTimeout = null;
@@ -44,6 +97,8 @@ export function limparPlayer() {
   urlDubAtual = '';
   urlLegAtual = '';
   idiomaAtual = 'dub';
+  legendasEpisodio = [];
+  opcaoLegendaAtivaId = 'desativado';
 }
 
 // Chamado ao trocar de rota para verificar se algo foi assistido e sincronizar
@@ -161,7 +216,127 @@ export function inicializarPlayer({ episodioAtual, animeId, epId, todosEpisodios
   const btnFullscreen = document.getElementById("btn-player-fullscreen");
   const btnAudio = document.getElementById("btn-player-audio");
 
+  // Elementos do sistema de legendas
+  const btnSubtitles = document.getElementById("btn-player-subtitles");
+  const menuSubtitles = document.getElementById("player-subtitles-menu");
+  const optionsListSubtitles = document.getElementById("subtitles-options-list");
+  const inputSubFile = document.getElementById("input-subtitles-file");
+  const trackElement = document.getElementById("player-track");
+
   atualizarBotaoAudio(btnAudio, idiomaAtual, temAmbos);
+
+  // Extrai legendas do episódio atual e configura o botão de legenda
+  legendasEpisodio = extrairLegendasEpisodio(episodioAtual);
+  opcaoLegendaAtivaId = 'desativado';
+
+  if (btnSubtitles) {
+    // O botão fica visível sempre ou quando houver legendas no BD
+    btnSubtitles.style.display = "inline-flex";
+  }
+
+  // Renderiza a lista de opções de legendas no menu
+  function atualizarOpcoesAtivasUI() {
+    if (!optionsListSubtitles) return;
+    const botoes = optionsListSubtitles.querySelectorAll(".btn-sub-option");
+    botoes.forEach(b => {
+      if (b.dataset.id === opcaoLegendaAtivaId) {
+        b.style.borderColor = "#a855f7";
+        b.style.background = "#3b0764";
+        b.style.fontWeight = "bold";
+      } else {
+        b.style.borderColor = "#444";
+        b.style.background = "#222";
+        b.style.fontWeight = "normal";
+      }
+    });
+  }
+
+  if (optionsListSubtitles) {
+    optionsListSubtitles.innerHTML = "";
+
+    // Opção "Desativar"
+    const btnDesativar = document.createElement("button");
+    btnDesativar.type = "button";
+    btnDesativar.className = "btn-sub-option";
+    btnDesativar.dataset.id = "desativado";
+    btnDesativar.style.cssText = "padding: 6px 10px; border-radius: 4px; border: 1px solid #444; background: #222; color: #fff; text-align: left; cursor: pointer; font-size: 0.85rem;";
+    btnDesativar.textContent = "Desativar";
+
+    btnDesativar.addEventListener("click", () => {
+      opcaoLegendaAtivaId = "desativado";
+      
+      if (trackElement) {
+        trackElement.removeAttribute("src");
+        if (trackElement.track) trackElement.track.mode = "disabled";
+      }
+
+      atualizarOpcoesAtivasUI();
+      exibirToast("Legenda desativada");
+    });
+
+    optionsListSubtitles.appendChild(btnDesativar);
+
+    // Adiciona as legendas detectadas no BD
+    legendasEpisodio.forEach(leg => {
+      const btnOp = document.createElement("button");
+      btnOp.type = "button";
+      btnOp.className = "btn-sub-option";
+      btnOp.dataset.id = leg.id;
+      btnOp.style.cssText = "padding: 6px 10px; border-radius: 4px; border: 1px solid #444; background: #222; color: #fff; text-align: left; cursor: pointer; font-size: 0.85rem;";
+      btnOp.textContent = leg.label;
+
+      btnOp.addEventListener("click", () => {
+        opcaoLegendaAtivaId = leg.id;
+
+        if (trackElement) {
+          trackElement.src = leg.url;
+          if (trackElement.track) trackElement.track.mode = "showing";
+        }
+
+        atualizarOpcoesAtivasUI();
+        exibirToast(`Legenda "${leg.label}" selecionada`);
+      });
+
+      optionsListSubtitles.appendChild(btnOp);
+    });
+
+    atualizarOpcoesAtivasUI();
+  }
+
+  // Evento de abrir/fechar o menu de legendas
+  if (btnSubtitles && menuSubtitles) {
+    btnSubtitles.onclick = (e) => {
+      e.stopPropagation();
+      const visivel = menuSubtitles.style.display === "block";
+      menuSubtitles.style.display = visivel ? "none" : "block";
+    };
+
+    document.addEventListener("click", (e) => {
+      if (menuSubtitles && !btnSubtitles.contains(e.target) && !menuSubtitles.contains(e.target)) {
+        menuSubtitles.style.display = "none";
+      }
+    });
+  }
+
+  // Evento do input de arquivo local (do dispositivo)
+  if (inputSubFile) {
+    inputSubFile.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file && trackElement) {
+        const localUrl = URL.createObjectURL(file);
+        trackElement.src = localUrl;
+        if (trackElement.track) {
+          trackElement.track.mode = "showing";
+        }
+
+        opcaoLegendaAtivaId = "local";
+        atualizarOpcoesAtivasUI();
+
+        exibirToast(`Legenda "${file.name}" carregada!`);
+        if (menuSubtitles) menuSubtitles.style.display = "none";
+      }
+    };
+  }
 
   if (!videoElement) return;
 

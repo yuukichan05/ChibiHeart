@@ -455,3 +455,96 @@ video::-internal-media-controls-cast-button {
 .btn-player-icon:active {
     transform: scale(0.9) translateZ(0);
 }
+
+/* ==========================================================================
+   MENU DROPDOWN DE LEGENDAS (ESTILO APPLE GLASS)
+   ========================================================================== */
+
+/* Botão de Toggle de Legenda */
+.btn-toggle-subtitles {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-toggle-subtitles:active {
+    transform: scale(0.95);
+    background-color: rgba(255, 255, 255, 0.18);
+}
+
+/* Painel Suspenso (Dropdown) */
+.subtitles-menu-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 100;
+    min-width: 240px;
+    background: rgba(20, 13, 33, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    animation: fadeInSubMenu 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInSubMenu {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Cabeçalho do Menu */
+.subtitles-menu-panel .menu-header {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Botões de Seleção de Legenda */
+.btn-sub-option {
+    transition: all 0.2s ease !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.btn-sub-option:hover,
+.btn-sub-option:active {
+    background: rgba(168, 85, 247, 0.25) !important;
+    border-color: rgba(168, 85, 247, 0.5) !important;
+}
+
+/* Divisor */
+.menu-divider {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Ações de Download e Upload Local */
+.btn-sub-action {
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-sub-action:not(:disabled):active {
+    transform: scale(0.97);
+}
+
+.btn-sub-action-label {
+    background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.btn-sub-action-label:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 6px rgba(168, 85, 247, 0.2);
+}

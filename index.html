@@ -342,10 +342,14 @@
 
     <!-- VIEW DO PLAYER -->
     <!-- VIEW DO PLAYER -->
+<!-- VIEW DO PLAYER -->
 <section id="player" class="app-view">
   <div class="player-media-block">
     <div id="custom-player-container" class="custom-player-wrapper">
-      <video id="player-video" playsinline poster="" src=""></video>
+      <video id="player-video" playsinline poster="" src="">
+        <!-- Tag track dinamicamente alimentada via JavaScript -->
+        <track id="player-track" kind="subtitles" srclang="pt" label="Português" default>
+      </video>
 
       <div id="custom-player-controls" class="custom-player-controls">
         <button type="button" id="btn-player-rewind" class="btn-player-center btn-rewind" aria-label="Voltar 10s" tabindex="0">
@@ -378,10 +382,41 @@
   <div class="player-episode-detail">
     <span id="player-meta-tag" class="player-meta">K-ON!! T01E01</span>
     <h2 id="player-titulo-ep">Carregando...</h2>
-    <div class="player-badges">
+    
+    <div class="player-badges" style="display: flex; gap: 8px; align-items: center; position: relative;">
       <button type="button" id="btn-player-audio" class="badge-tag btn-toggle-audio" tabindex="0">
         Dublado
       </button>
+
+      <!-- Botão para abrir o menu de Legendas -->
+      <button type="button" id="btn-player-subtitles" class="badge-tag btn-toggle-subtitles" tabindex="0" style="display: none;">
+        <span class="material-symbols-outlined" style="font-size: 1.1rem; vertical-align: middle; margin-right: 4px;">subtitles</span>
+        Legendas
+      </button>
+
+      <!-- Menu Dropdown/Painel de Legendas -->
+      <div id="player-subtitles-menu" class="subtitles-menu-panel" style="display: none;">
+        <div class="menu-header" style="font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid #333; padding-bottom: 4px;">
+          Opções de Legenda
+        </div>
+
+        <!-- Opções detectadas do banco serão inseridas aqui via JS -->
+        <div id="subtitles-options-list" class="subtitles-options-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
+
+        <div class="menu-divider" style="height: 1px; background: #333; margin: 8px 0;"></div>
+
+        <!-- Ações de Download e Seleção de Arquivo Local -->
+        <div class="menu-actions" style="display: flex; flex-direction: column; gap: 6px;">
+          <button type="button" id="btn-subtitles-download" class="btn-sub-action" disabled style="padding: 6px 10px; border-radius: 4px; border: none; background: #333; color: #888; font-weight: bold; cursor: not-allowed;">
+            1. Baixar Legenda (.vtt)
+          </button>
+
+          <label for="input-subtitles-file" class="btn-sub-action-label" style="display: inline-block; padding: 6px 10px; border-radius: 4px; background: #ff9800; color: #000; font-weight: bold; text-align: center; cursor: pointer;">
+            2. Selecionar do Dispositivo
+          </label>
+          <input type="file" id="input-subtitles-file" accept=".vtt" style="display: none;">
+        </div>
+      </div>
     </div>
   </div>
 
